@@ -1,19 +1,40 @@
 ---
+// Hrefs are relative to Astro's configured `base` (empty string here == the
+// site root). Prefixing with `base` keeps links correct whether this deploys
+// at a domain root (base: '/') or under a subpath (e.g. GitHub Pages
+// project sites: base: '/young-ai-engineers-lab').
+// Strip any trailing slash so we always join with exactly one '/' below,
+// regardless of whether BASE_URL itself ends with one.
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const links = [
-  { href: '/', label: 'Home' },
-  { href: '/about', label: 'About' },
-  { href: '/our-team', label: 'Our Team' },
-  { href: '/contact', label: 'Contact Us' },
-  { href: '/for-investors', label: 'For Investors' },
+  { href: '', label: 'Home' },
+  { href: 'about', label: 'About' },
+  { href: 'our-team', label: 'Our Team' },
+  { href: 'contact', label: 'Contact Us' },
+  { href: 'for-investors', label: 'For Investors' },
 ];
 ---
 <header class="border-b border-gray-200">
   <nav class="max-w-5xl mx-auto flex items-center justify-between px-4 py-4">
-    <a href="/" class="font-bold text-lg text-slate-900">Young AI Engineers Lab</a>
-    <ul class="flex gap-6 text-sm text-slate-700">
+    <a href={`${base}/`} class="font-bold text-lg text-slate-900">Young AI Engineers Lab</a>
+
+    <ul class="hidden sm:flex gap-6 text-sm text-slate-700">
       {links.map((link) => (
-        <li><a href={link.href} class="hover:text-orange-600">{link.label}</a></li>
+        <li><a href={`${base}/${link.href}`} class="hover:text-orange-600">{link.label}</a></li>
       ))}
     </ul>
+
+    <details class="sm:hidden relative">
+      <summary class="list-none cursor-pointer p-2 -mr-2" aria-label="Open menu">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </summary>
+      <ul class="absolute right-0 mt-2 w-48 rounded-md border border-gray-200 bg-white shadow-lg py-2 text-sm text-slate-700 z-10">
+        {links.map((link) => (
+          <li><a href={`${base}/${link.href}`} class="block px-4 py-2 hover:bg-slate-50 hover:text-orange-600">{link.label}</a></li>
+        ))}
+      </ul>
+    </details>
   </nav>
 </header>

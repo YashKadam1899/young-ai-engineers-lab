@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
 const stats = [
   { value: '250M+', label: 'students in Grades 6–12 across India (govt. + private, est.)' },
   { value: '417', label: "CBSE's new mandatory AI subject code — but almost no trained teachers to deliver it" },
@@ -22,9 +24,9 @@ const pillars = [
     <p class="mt-4 text-lg text-slate-600">
       Built for CBSE classrooms, priced for every pin code.
     </p>
-    <div class="mt-8 flex justify-center gap-4">
-      <a href="/contact" class="rounded-md bg-orange-500 px-5 py-3 text-white font-medium hover:bg-orange-600">Contact Us</a>
-      <a href="/for-investors" class="rounded-md border border-slate-300 px-5 py-3 text-slate-700 font-medium hover:bg-slate-50">For Investors</a>
+    <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4">
+      <a href={`${base}/contact`} class="rounded-md bg-orange-500 px-5 py-3 text-white font-medium hover:bg-orange-600">Contact Us</a>
+      <a href={`${base}/for-investors`} class="rounded-md border border-slate-300 px-5 py-3 text-slate-700 font-medium hover:bg-slate-50">For Investors</a>
     </div>
   </section>
 
