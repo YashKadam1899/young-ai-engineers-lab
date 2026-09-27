@@ -1,11 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-
-const CONTACT_EMAIL = 'hello@youngaiengineerslab.com'; // TODO: replace with a real, monitored inbox before launch
+import { EMAILS, mailto } from '../emails';
 
 const traction = [
   { title: 'Instructor secured', body: 'IIT Bombay alumnus & AI specialist committed as founding co-instructor.' },
-  { title: 'Curriculum locked', body: "12-session, 4-week 'Winter Lab' syllabus — prompt engineering, computer vision, ethics, capstone demo." },
+  { title: 'Curriculum locked', body: "12-session, 6-week 'Winter Lab' main program — beginner, intermediate and practitioner tiers — plus a selective 8-session expert stage for capstone builds." },
   { title: 'Founding batch open', body: '15–20 seats at ₹7,499 (valued at ₹11,999) — filled with zero paid ad spend.' },
   { title: 'Demo Day → proof', body: 'Parent-attended capstone showcase becomes the case-study asset for our first school pitches.' },
 ];
@@ -17,7 +16,7 @@ const traction = [
       We're proving the model works with one strong paying cohort — before we pitch a single school.
     </p>
     <p class="mt-2 text-ink-600">
-      CBSE just made AI a mandatory subject for Grades 9–10, and almost no schools have anyone qualified to teach it. That gap is the opportunity.
+      CBSE has made Artificial Intelligence a board-recognised Skill Subject for Grades 9–10 (Code 417), and introduced a Computational Thinking &amp; AI curriculum for Classes 3–8 from session 2026-27. Schools now need delivery partners, not just textbooks. That gap is the opportunity.
     </p>
     <div class="mt-8 grid gap-6 sm:grid-cols-2">
       {traction.map((t) => (
@@ -29,11 +28,12 @@ const traction = [
     </div>
     <div class="mt-10 text-center">
       <a
-        href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Investor deck request')}`}
+        href={mailto(EMAILS.invest, 'Investor deck request')}
         class="inline-block rounded-full bg-coral-500 px-6 py-3.5 text-white font-semibold shadow-lg shadow-coral-500/25 transition-all hover:-translate-y-0.5 hover:bg-coral-600 hover:shadow-xl hover:shadow-coral-500/30"
       >
         Request the full deck
       </a>
+      <p class="mt-3 text-sm text-ink-400">Or write to {EMAILS.invest} directly.</p>
     </div>
   </section>
 </BaseLayout>

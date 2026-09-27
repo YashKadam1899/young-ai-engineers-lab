@@ -1,11 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { EMAILS, mailto } from '../emails';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const stats = [
   { value: '250M+', label: 'school students in India, Grades 6–12 (government and private, estimated)' },
-  { value: '417', label: "CBSE's new mandatory AI subject — with almost no trained teachers to teach it" },
+  { value: '417', label: "CBSE's AI Skill Subject code for Grades 9–10 — schools that offer it still need someone who can deliver it" },
   { value: '<5%', label: "of India's computer-science and IT teachers feel confident teaching AI concepts (estimated, pilot interviews)" },
 ];
 
@@ -14,6 +15,82 @@ const pillars = [
   { title: 'Computational Thinking', body: "Breaking a big problem into small steps, spotting patterns, and ignoring what doesn't matter — the same thinking that helps with exams and with solving everyday problems." },
   { title: 'Hands-On Creation', body: "Writing prompts that get AI to do what you want, building an app that recognizes images, and creating an AI helper with no coding required — all practiced in Hindi and regional languages, not just English." },
   { title: 'Ethics & Evaluation', body: "Testing AI for unfair bias, learning to catch AI when it makes things up, spotting deepfakes, and seeing what real AI careers look like." },
+];
+
+const tiers = [
+  {
+    step: '1',
+    title: 'Beginner',
+    meta: '4 sessions',
+    body: "How AI actually works and where it came from, the types of AI, chatbots versus purpose-built AI tools, the buzzwords decoded — and where your data really goes when you use a chatbot.",
+  },
+  {
+    step: '2',
+    title: 'Intermediate',
+    meta: '4 sessions',
+    body: "How today's AI tools are built on large language models, why two models answer the same question differently, what prompts, context, tokens and parameters actually are, the basics of AI governance, what is safe to share with an AI tool, and where AI image generation breaks down.",
+  },
+  {
+    step: '3',
+    title: 'Practitioner',
+    meta: '4 sessions',
+    body: 'Prompt engineering as a craft, keeping a long conversation on track, spotting and fact-checking AI hallucinations — and a lot of hands-on practice.',
+  },
+];
+
+const differentiators = [
+  {
+    title: 'Taught in the language they think in',
+    usually: 'Global AI courses are English-first by design.',
+    ours: "Bhashini's language APIs are built into every module, so students train and test models on Hindi and regional-language data — not just translated English examples.",
+  },
+  {
+    title: 'A lab companion to Code 417, not a weekend add-on',
+    usually: 'AI for teenagers is usually sold as an extracurricular luxury, bolted on after school hours.',
+    ours: "We're built to sit alongside CBSE's Artificial Intelligence Skill Subject (Code 417) inside the timetable — reinforcing the subject a school already teaches rather than competing with it.",
+  },
+  {
+    title: 'Depth on the two skills that decide everything',
+    usually: "Prompt engineering isn't a named unit in the Grade 9–10 syllabus, and neither is checking an AI's output for things it made up.",
+    ours: 'Both get dedicated sessions here: how to instruct a model precisely, and how to catch it when it is confidently wrong. These are the skills a teenager uses every single day.',
+  },
+];
+
+const faqs = [
+  {
+    q: 'Who is this for?',
+    a: "Students aged 13 to 15 — roughly Grades 8 to 10. It's the age where AI tools are already part of daily life, and where CBSE's own AI Skill Subject begins.",
+  },
+  {
+    q: 'Does my child need to know how to code?',
+    a: 'No prior coding required. We start from what AI is and what it is not, and the building happens through prompts, image classifiers and no-code tools. Curiosity matters more here than any head start in programming.',
+  },
+  {
+    q: 'What language is it taught in?',
+    a: "English and Hindi, with regional-language material through Bhashini's APIs. Students work with Hindi and regional-language data inside the projects themselves, so the language isn't just a translation layer on top.",
+  },
+  {
+    q: "How does this relate to CBSE's AI subject (Code 417)? Does it replace school?",
+    a: "It supplements school — it replaces nothing. Code 417 is CBSE's board-recognised Artificial Intelligence Skill Subject for Grades 9 and 10, and it's a substantial, practical syllabus. We're designed as a lab companion to it: a short, project-dense block that gives students reps on building and questioning AI systems.",
+  },
+  {
+    q: 'What is the Student AI Portfolio, and why does it matter?',
+    a: "It's a public, verifiable record of what your child actually built, rather than a private folder of files. CBSE's 417 syllabus already asks Grade 9 and 10 students to keep a portfolio of their AI activities; ours is built to be opened and checked by someone else — the kind of evidence that holds up on a college or hackathon application.",
+  },
+  {
+    q: 'What will my child actually build?',
+    a: 'Modules end in something real rather than a quiz — working prompts, hands-on exercises with AI tools, and their own tests of where a model breaks down. Students invited into the selective Expert tier go on to build one full capstone — a chatbot, an image classifier, or a bias audit — and present it at a parent-attended Demo Day.',
+  },
+  {
+    q: 'What does it cost, and when does the next cohort start?',
+    a: 'The founding Winter Lab cohort is open now. Email us and we will send you the current dates and fees, with no obligation.',
+    cta: { href: mailto(EMAILS.learn, 'Winter Lab — dates and fees'), label: `Email ${EMAILS.learn}` },
+  },
+  {
+    q: 'How do schools bring this to their students?',
+    a: "We work as a delivery partner for CBSE Code 417 — curriculum packs, teacher enablement, and a moderated student sandbox that fit into a school's existing computer lab or Atal Tinkering Lab. Funded implementations for government and rural schools are possible through CSR and state partnerships.",
+    cta: { href: mailto(EMAILS.partner, 'School partnership enquiry'), label: `Email ${EMAILS.partner}` },
+  },
 ];
 ---
 <BaseLayout title="Home">
@@ -35,7 +112,7 @@ const pillars = [
   </section>
 
   <section class="max-w-5xl mx-auto px-4 py-12">
-    <h2 class="font-display text-2xl font-bold text-ink-950 text-center sm:text-3xl">Indian teenagers use AI every day — almost no one is teaching them how it works</h2>
+    <h2 class="font-display text-2xl font-bold text-ink-950 text-center sm:text-3xl">Indian teenagers use AI every day — and most are never taught how it works</h2>
     <div class="mt-8 grid gap-6 sm:grid-cols-3">
       {stats.map((s) => (
         <div class="rounded-2xl border border-indigo-100 bg-cream-50 p-6 text-center shadow-sm transition-shadow hover:shadow-md">
@@ -60,7 +137,183 @@ const pillars = [
       ))}
     </div>
     <p class="mt-8 text-center text-ink-600 italic">
-      Every module ends with something real — a chatbot, a plant-identifying app, a bias audit — saved to a public Student AI Portfolio that colleges and employers can actually check, not just a certificate that says they showed up.
+      Every module ends with something the student has actually made, not a quiz score — and that work is saved to a public Student AI Portfolio colleges and employers can open and check for themselves.
     </p>
+  </section>
+
+  <section id="how-it-works" class="max-w-5xl mx-auto px-4 py-12">
+    <h2 class="font-display text-2xl font-bold text-ink-950 text-center sm:text-3xl">How the Winter Lab actually runs</h2>
+    <p class="mx-auto mt-3 max-w-2xl text-center text-ink-600">
+      The founding cohort is open now. It runs in two stages — live and online, so a student can join from any city.
+    </p>
+
+    <div class="mt-8 flex flex-col gap-2 sm:flex-row sm:items-baseline sm:gap-3">
+      <p class="text-xs font-semibold uppercase tracking-wider text-indigo-600">Stage 1 · Main program</p>
+      <p class="text-sm text-ink-600">12 live sessions over 6 weeks, in three tiers of four.</p>
+    </div>
+    <ol class="mt-4 grid gap-6 md:grid-cols-3">
+      {tiers.map((item) => (
+        <li class="rounded-2xl border border-indigo-100 bg-cream-50 p-6 shadow-sm transition-shadow hover:shadow-md">
+          <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-indigo-600 font-display font-bold text-white">{item.step}</span>
+          <h3 class="mt-4 font-display font-semibold text-ink-950">{item.title}</h3>
+          <p class="text-xs font-semibold uppercase tracking-wider text-ink-400">{item.meta}</p>
+          <p class="mt-2 text-sm text-ink-600">{item.body}</p>
+        </li>
+      ))}
+    </ol>
+
+    <div class="mt-8 rounded-2xl border-2 border-dashed border-coral-200 bg-coral-50 p-6 sm:p-8">
+      <div class="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:gap-3">
+        <p class="text-xs font-semibold uppercase tracking-wider text-coral-700">Stage 2 · Expert tier</p>
+        <p class="text-sm text-ink-600">A separate 8-session stage, by invitation.</p>
+      </div>
+      <h3 class="mt-3 font-display text-xl font-bold text-ink-950">The capstone stage, earned by the students who go furthest</h3>
+      <p class="mt-2 text-sm text-ink-600">
+        After the main program, a select few students — the ones who show the strongest potential across the three tiers — are invited into eight further sessions built around one real capstone: a chatbot, an image classifier, or a bias audit of their own. It ends with a presentation at a parent-attended Demo Day and a published entry in their Student AI Portfolio.
+      </p>
+      <p class="mt-2 text-sm font-medium text-ink-600">
+        This is an earned next step, not an automatic one — and not something every student needs to finish the main program feeling proud of what they built.
+      </p>
+    </div>
+
+    <div class="mt-8 text-center">
+      <a
+        href={mailto(EMAILS.learn, 'Winter Lab — dates and fees')}
+        class="inline-block rounded-full bg-coral-500 px-6 py-3.5 text-white font-semibold shadow-lg shadow-coral-500/25 transition-all hover:-translate-y-0.5 hover:bg-coral-600 hover:shadow-xl hover:shadow-coral-500/30"
+      >
+        Ask about dates and fees
+      </a>
+      <p class="mt-3 text-sm text-ink-400">Writes to {EMAILS.learn} — a real person replies.</p>
+    </div>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-4 py-12">
+    <h2 class="font-display text-2xl font-bold text-ink-950 text-center sm:text-3xl">What makes this different</h2>
+    <p class="mx-auto mt-3 max-w-2xl text-center text-ink-600">
+      Plenty of short AI and coding programs are already on offer. Three things about ours are deliberately not the same.
+    </p>
+    <div class="mt-8 grid gap-6 md:grid-cols-3">
+      {differentiators.map((d) => (
+        <div class="flex flex-col rounded-2xl border border-indigo-100 bg-cream-50 p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md">
+          <h3 class="font-display font-semibold text-lg text-ink-950">{d.title}</h3>
+          <p class="mt-4 text-xs font-semibold uppercase tracking-wider text-ink-400">Usually</p>
+          <p class="mt-1 text-sm text-ink-400">{d.usually}</p>
+          <div class="my-4 h-px bg-indigo-100"></div>
+          <p class="text-xs font-semibold uppercase tracking-wider text-indigo-600">Here</p>
+          <p class="mt-1 text-sm text-ink-600">{d.ours}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="bg-ink-950 text-white">
+    <div class="max-w-5xl mx-auto px-4 py-16">
+      <div class="grid items-center gap-8 md:grid-cols-5">
+        <div class="md:col-span-3">
+          <p class="text-xs font-semibold uppercase tracking-wider text-indigo-300">Who teaches it</p>
+          <h2 class="mt-3 font-display text-2xl font-bold sm:text-3xl">An IIT Bombay alumnus joining as instructor for each session</h2>
+          <p class="mt-4 text-ink-100/80">
+            Our co-founder and Head of Curriculum is an IIT Bombay alumnus and a working AI/ML practitioner — and he is in the room for every single session, not just the first one. No recorded video course, and no script read out by a part-time tutor: your child is learning from someone who builds AI systems for a living.
+          </p>
+          <a href={`${base}/our-team`} class="mt-6 inline-block rounded-full border-2 border-indigo-400 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-600">
+            Meet the team
+          </a>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-6 md:col-span-2">
+          <p class="font-display text-lg font-semibold">The founding cohort is the proof</p>
+          <p class="mt-2 text-sm text-ink-100/70">
+            We're deliberately running one strong cohort — taught by the founders, ending in a parent-attended Demo Day — before we pitch a single school. The students' work is the case study.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-4 py-12">
+    <div class="rounded-2xl border border-indigo-100 bg-cream-50 p-6 shadow-sm sm:p-8">
+      <p class="text-xs font-semibold uppercase tracking-wider text-indigo-600">For schools, CSR and state partners</p>
+      <h2 class="mt-3 font-display text-2xl font-bold text-ink-950">A delivery partner for CBSE Code 417</h2>
+      <div class="mt-6 grid gap-6 sm:grid-cols-2">
+        <div>
+          <h3 class="font-display font-semibold text-ink-950">Schools</h3>
+          <p class="mt-1 text-sm text-ink-600">
+            Curriculum packs, teacher enablement, and a moderated student sandbox that fit inside your existing computer lab or Atal Tinkering Lab — so AI is taught in the timetable, not outsourced to a weekend workshop.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-ink-950">CSR &amp; state partners</h3>
+          <p class="mt-1 text-sm text-ink-600">
+            Fully funded implementations are possible for government and rural schools — including Navodaya and Kendriya Vidyalaya-type networks — through corporate CSR budgets and state programmes.
+          </p>
+        </div>
+      </div>
+      <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+        <a
+          href={mailto(EMAILS.partner, 'School partnership enquiry')}
+          class="rounded-full bg-indigo-600 px-5 py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-indigo-700"
+        >
+          Talk to us about a school partnership
+        </a>
+        <a
+          href={mailto(EMAILS.partner, 'CSR or state partnership enquiry')}
+          class="rounded-full border-2 border-indigo-200 px-5 py-3 text-center text-sm font-semibold text-ink-800 transition-colors hover:border-indigo-400 hover:bg-indigo-50"
+        >
+          Discuss a funded implementation
+        </a>
+      </div>
+      <p class="mt-3 text-sm text-ink-400">Both reach {EMAILS.partner}.</p>
+    </div>
+  </section>
+
+  <section id="faq" class="max-w-3xl mx-auto px-4 py-12">
+    <h2 class="font-display text-2xl font-bold text-ink-950 text-center sm:text-3xl">Questions parents ask us first</h2>
+    <div class="mt-8 space-y-3">
+      {faqs.map((f) => (
+        <details class="group rounded-2xl border border-indigo-100 bg-cream-50 p-5 shadow-sm transition-shadow hover:shadow-md">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4">
+            <span class="font-display font-semibold text-ink-950">{f.q}</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 text-indigo-600 transition-transform duration-200 group-open:rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14" />
+            </svg>
+          </summary>
+          <p class="mt-3 text-sm text-ink-600">{f.a}</p>
+          {f.cta && (
+            <a href={f.cta.href} class="mt-3 inline-block text-sm font-semibold text-indigo-600 underline decoration-coral-300 decoration-2 underline-offset-4 transition-colors hover:text-indigo-700">
+              {f.cta.label}
+            </a>
+          )}
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-4 pb-16 pt-4">
+    <div class="relative overflow-hidden rounded-2xl bg-ink-950 px-6 py-14 text-center text-white sm:px-10">
+      <div aria-hidden="true" class="pointer-events-none absolute -top-16 -right-10 h-56 w-56 rounded-full bg-indigo-500/30 blur-3xl"></div>
+      <div aria-hidden="true" class="pointer-events-none absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-coral-500/20 blur-3xl"></div>
+      <div class="relative">
+        <h2 class="font-display text-2xl font-bold sm:text-3xl">Your child is already using AI. Let's teach them to build with it.</h2>
+        <p class="mx-auto mt-4 max-w-2xl text-ink-100/80">
+          The founding Winter Lab cohort is open. Send one email and we will reply with the dates, the fees and exactly what your child will build.
+        </p>
+        <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <a
+            href={mailto(EMAILS.learn, 'Winter Lab enrollment enquiry')}
+            class="w-full rounded-full bg-coral-500 px-6 py-3.5 font-semibold text-white shadow-lg shadow-coral-500/25 transition-all hover:-translate-y-0.5 hover:bg-coral-600 sm:w-auto"
+          >
+            Ask about enrollment
+          </a>
+          <a
+            href={`${base}/contact`}
+            class="w-full rounded-full border-2 border-white/25 px-6 py-3.5 font-semibold text-white transition-colors hover:border-white/60 hover:bg-white/10 sm:w-auto"
+          >
+            Other ways to reach us
+          </a>
+        </div>
+        <p class="mt-6 text-sm text-ink-100/60">
+          Schools, CSR and state partners: <a href={mailto(EMAILS.partner, 'School or CSR partnership enquiry')} class="font-semibold text-indigo-200 underline underline-offset-4 hover:text-white">{EMAILS.partner}</a>
+        </p>
+      </div>
+    </div>
   </section>
 </BaseLayout>

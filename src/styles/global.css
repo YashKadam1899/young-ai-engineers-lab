@@ -73,6 +73,12 @@ h1, h2, h3, h4 {
   color: var(--color-ink-950);
 }
 
+/* `list-none` alone doesn't hide the disclosure triangle in WebKit, and we use
+   <details>/<summary> for both the mobile nav and the homepage FAQ. */
+summary::-webkit-details-marker {
+  display: none;
+}
+
 /* Subtle focus ring that works on both light and dark sections. */
 a:focus-visible,
 button:focus-visible,
