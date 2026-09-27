@@ -1,0 +1,14 @@
+src/pages/for-investors.astro
+  h_b542a96e24ff33 16,19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f3d66f8a596e2794f221dbac71a37bfdd3d55370",
+  "prompts": {},
+  "humans": {
+    "h_b542a96e24ff33": {
+      "author": "YashKadam1899 <yash.kadam@coupa.com>"
+    }
+  }
+}
