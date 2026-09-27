@@ -9,7 +9,7 @@
  *
  * Palette rationale (see project report for full sourcing):
  * - Warm cream canvas instead of stark white — softer, less clinical,
- *   reads well across a teen -> parent -> investor audience.
+ *   reads well across a student -> parent -> investor audience.
  * - Deep indigo-ink as the near-black text/ink color, echoing the primary
  *   brand hue instead of a cool default slate/gray.
  * - Indigo/violet as the confident "AI/tech" primary accent (credible to
@@ -17,7 +17,7 @@
  *   blue).
  * - Coral as the energetic secondary accent used for calls-to-action and
  *   highlights — the warm counterpoint that keeps things approachable for
- *   a 13-15 year-old audience without tipping into juvenile primary colors.
+ *   a 10-15 year-old audience without tipping into juvenile primary colors.
  */
 @theme {
   --font-display: "Bricolage Grotesque Variable", "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;

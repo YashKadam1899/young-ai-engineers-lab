@@ -23,7 +23,7 @@ export const SITE_LOCALE = 'en_IN';
 /** 1200x630 PNG in public/ — see README note on replacing it with a designed asset. */
 export const OG_IMAGE_PATH = 'og-image.png';
 export const OG_IMAGE_ALT =
-  'The Young AI Engineers Lab — turning India’s 13–15 year-olds from AI consumers into AI creators';
+  'The Young AI Engineers Lab — turning India’s 10–15 year-olds from AI consumers into AI creators';
 
 /**
  * Resolves a path against the deployed origin, preserving Astro's configured
@@ -46,7 +46,7 @@ export function organizationSchema(site: URL | undefined) {
     alternateName: SITE_SHORT_NAME,
     url: home,
     description:
-      "An Indian programme that teaches 13–15 year-olds how AI actually works and how to build with it, as a companion to CBSE's Artificial Intelligence Skill Subject (Code 417).",
+      "An Indian programme that teaches 10–15 year-olds how AI actually works and how to build with it, alongside CBSE's Computational Thinking & AI curriculum for Classes 3–8 and its Artificial Intelligence Skill Subject (Code 417).",
     areaServed: { '@type': 'Country', name: 'India' },
     knowsLanguage: ['en', 'hi'],
     email: EMAILS.learn,
@@ -80,13 +80,13 @@ export function courseSchema(site: URL | undefined) {
   return {
     '@type': 'Course',
     '@id': `${home}#course`,
-    name: 'The Winter Lab — AI for 13–15 year-olds',
+    name: 'The Winter Lab — AI for 10–15 year-olds',
     url: `${home}#how-it-works`,
     description:
-      "A live online AI lab for students aged roughly 13 to 15. The main program runs 12 sessions over 6 weeks across three tiers — Beginner, Intermediate and Practitioner — taught in English and Hindi with regional-language material. A separate, selective 8-session Expert tier adds one capstone build and a parent-attended Demo Day. Designed as a companion to CBSE's Artificial Intelligence Skill Subject (Code 417) for Grades 9 and 10.",
+      "A live online AI lab for students aged roughly 10 to 15, with depth scaling by tier. The main program runs 12 sessions over 6 weeks across three tiers — Beginner, Intermediate and Practitioner — taught in English and Hindi with regional-language material. A separate, selective 8-session Expert tier is offered by invitation to students from the main program, and is not separately registrable. Designed as a companion to CBSE's Computational Thinking & AI curriculum for Classes 3 to 8 and its Artificial Intelligence Skill Subject (Code 417) for Grades 9 and 10.",
     provider: { '@id': `${home}#organization` },
     inLanguage: ['en', 'hi'],
-    typicalAgeRange: '13-15',
+    typicalAgeRange: '10-15',
     isAccessibleForFree: false,
     audience: { '@type': 'EducationalAudience', educationalRole: 'student' },
     teaches: [
@@ -99,14 +99,15 @@ export function courseSchema(site: URL | undefined) {
       {
         '@type': 'CourseInstance',
         name: 'Main program — Beginner, Intermediate and Practitioner tiers',
-        description: '12 live sessions over 6 weeks, in three tiers of four sessions.',
+        description:
+          '12 live sessions over 6 weeks, in three tiers of four sessions. This is the stage students enrol in.',
         courseMode: 'Online',
       },
       {
         '@type': 'CourseInstance',
         name: 'Expert tier — capstone stage',
         description:
-          'A separate 8-session stage, by invitation, built around one capstone project and a parent-attended Demo Day.',
+          'A separate 8-session stage built around one capstone project and a parent-attended Demo Day. Offered by invitation to students from the main program; it cannot be registered for directly.',
         courseMode: 'Online',
       },
     ],

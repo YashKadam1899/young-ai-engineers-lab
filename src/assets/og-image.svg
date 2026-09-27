@@ -12,10 +12,10 @@
   <circle cx="40" cy="660" r="200" fill="#ffc0a8" opacity="0.5"/>
   <g font-family="Helvetica, Arial, sans-serif">
     <text x="80" y="118" font-size="34" font-weight="bold" fill="#100f24" letter-spacing="0.5">Young <tspan fill="#5533e0">AI</tspan> Engineers Lab</text>
-    <text x="80" y="268" font-size="58" font-weight="bold" fill="#100f24">Turning India&#8217;s 13&#8211;15 year-olds</text>
+    <text x="80" y="268" font-size="58" font-weight="bold" fill="#100f24">Turning India&#8217;s 10&#8211;15 year-olds</text>
     <text x="80" y="340" font-size="58" font-weight="bold" fill="#100f24">from AI consumers into AI creators</text>
     <text x="80" y="420" font-size="30" fill="#423e6b">Built for CBSE classrooms, priced for every pin code.</text>
-    <text x="80" y="512" font-size="26" font-weight="bold" fill="#5533e0" letter-spacing="1.2">LIVE ONLINE &#183; AGES 13&#8211;15 &#183; ENGLISH &amp; HINDI</text>
+    <text x="80" y="512" font-size="26" font-weight="bold" fill="#5533e0" letter-spacing="1.2">LIVE ONLINE &#183; AGES 10&#8211;15 &#183; ENGLISH &amp; HINDI</text>
   </g>
   <rect x="0" y="606" width="1200" height="24" fill="#fb5f36"/>
 </svg>

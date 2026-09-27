@@ -6,8 +6,9 @@ import { courseSchema, faqPageSchema } from '../seo';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const stats = [
+  { value: '3–8', label: "the CBSE classes where Computational Thinking & AI is built into regular subjects from session 2026-27 — every student, not an opt-in choice" },
   { value: '250M+', label: 'school students in India, Grades 6–12 (government and private, estimated)' },
-  { value: '417', label: "CBSE's AI Skill Subject code for Grades 9–10 — schools that offer it still need someone who can deliver it" },
+  { value: '417', label: "CBSE's optional AI Skill Subject code for Grades 9–10 — schools that offer it still need someone who can deliver it" },
   { value: '<5%', label: "of India's computer-science and IT teachers feel confident teaching AI concepts (estimated, pilot interviews)" },
 ];
 
@@ -46,21 +47,21 @@ const differentiators = [
     ours: "Bhashini's language APIs are built into every module, so students train and test models on Hindi and regional-language data — not just translated English examples.",
   },
   {
-    title: 'A lab companion to Code 417, not a weekend add-on',
-    usually: 'AI for teenagers is usually sold as an extracurricular luxury, bolted on after school hours.',
-    ours: "We're built to sit alongside CBSE's Artificial Intelligence Skill Subject (Code 417) inside the timetable — reinforcing the subject a school already teaches rather than competing with it.",
+    title: 'A lab companion to what CBSE already teaches, not a weekend add-on',
+    usually: 'AI for school students is usually sold as an extracurricular luxury, bolted on after school hours.',
+    ours: "We're built to sit alongside the syllabus a school already runs — Computational Thinking & AI in Classes 6 to 8, and the Artificial Intelligence Skill Subject (Code 417) in Grades 9 and 10 — reinforcing the timetable rather than competing with it.",
   },
   {
     title: 'Depth on the two skills that decide everything',
     usually: "Prompt engineering isn't a named unit in the Grade 9–10 syllabus, and neither is checking an AI's output for things it made up.",
-    ours: 'Both get dedicated sessions here: how to instruct a model precisely, and how to catch it when it is confidently wrong. These are the skills a teenager uses every single day.',
+    ours: 'Both get dedicated sessions here: how to instruct a model precisely, and how to catch it when it is confidently wrong. These are the skills a student uses every single day.',
   },
 ];
 
 const faqs = [
   {
     q: 'Who is this for?',
-    a: "Students aged 13 to 15 — roughly Grades 8 to 10. It's the age where AI tools are already part of daily life, and where CBSE's own AI Skill Subject begins.",
+    a: "Students aged 10 to 15 — roughly Grades 5 to 10. The three tiers of the main program scale with age, so a 10-year-old and a 15-year-old meet the same ideas at different depths rather than sitting through the same material. It's the range where AI tools are already part of daily life, and where CBSE now teaches Computational Thinking & AI inside regular subjects.",
   },
   {
     q: 'Does my child need to know how to code?',
@@ -72,7 +73,7 @@ const faqs = [
   },
   {
     q: "How does this relate to CBSE's AI subject (Code 417)? Does it replace school?",
-    a: "It supplements school — it replaces nothing. Code 417 is CBSE's board-recognised Artificial Intelligence Skill Subject for Grades 9 and 10, and it's a substantial, practical syllabus. We're designed as a lab companion to it: a short, project-dense block that gives students reps on building and questioning AI systems.",
+    a: "It supplements school — it replaces nothing. Code 417 is CBSE's board-recognised Artificial Intelligence Skill Subject for Grades 9 and 10: optional for a school to offer, and a substantial, practical syllabus wherever it is offered. Below that, CBSE's Computational Thinking & AI curriculum is integrated into Classes 3 to 8 for every student. We're designed as a lab companion to both: a short, project-dense block that gives students reps on building and questioning AI systems.",
     more: { href: `${base}/about/`, label: 'Read why this is happening now' },
   },
   {
@@ -81,7 +82,7 @@ const faqs = [
   },
   {
     q: 'What will my child actually build?',
-    a: 'Modules end in something real rather than a quiz — working prompts, hands-on exercises with AI tools, and their own tests of where a model breaks down. Students invited into the selective Expert tier go on to build one full capstone — a chatbot, an image classifier, or a bias audit — and present it at a parent-attended Demo Day.',
+    a: 'Modules end in something real rather than a quiz — working prompts, hands-on exercises with AI tools, and their own tests of where a model breaks down. Students later invited into the selective Expert tier go on to build one full capstone — a chatbot, an image classifier, or a bias audit — and present it at a parent-attended Demo Day. That invitation comes from inside the main program, so there is nothing separate to sign up for.',
     more: { href: `${base}/#how-it-works`, label: 'See how the two stages run' },
   },
   {
@@ -101,9 +102,9 @@ const faqs = [
 const schema = [courseSchema(Astro.site), faqPageSchema(faqs)];
 ---
 <BaseLayout
-  title="Online AI Course for Teens in India | Young AI Engineers Lab"
-  ogTitle="Turning India's 13–15 year-olds from AI consumers into AI creators"
-  description="A live online AI lab for 13–15 year-olds in India: 12 sessions over 6 weeks, taught in English and Hindi, as a companion to CBSE's AI Skill Subject (Code 417)."
+  title="AI Course for Ages 10–15 in India | Young AI Engineers Lab"
+  ogTitle="Turning India's 10–15 year-olds from AI consumers into AI creators"
+  description="A live online AI lab for 10–15 year-olds in India: 12 sessions over 6 weeks in English and Hindi, alongside CBSE's Computational Thinking & AI curriculum for Classes 3–8."
   schema={schema}
 >
   <section class="relative overflow-hidden">
@@ -111,7 +112,7 @@ const schema = [courseSchema(Astro.site), faqPageSchema(faqs)];
     <div aria-hidden="true" class="pointer-events-none absolute -top-10 right-0 h-80 w-80 rounded-full bg-coral-200/40 blur-3xl"></div>
     <div class="relative max-w-5xl mx-auto px-4 py-20 sm:py-28 text-center">
       <h1 class="font-display text-4xl font-bold tracking-tight text-ink-950 sm:text-6xl">
-        Turning India's 13–15 year-olds from AI consumers into AI creators
+        Turning India's 10–15 year-olds from AI consumers into AI creators
       </h1>
       <p class="mt-5 text-lg text-ink-600 sm:text-xl">
         Built for CBSE classrooms, priced for every pin code.
@@ -124,8 +125,11 @@ const schema = [courseSchema(Astro.site), faqPageSchema(faqs)];
   </section>
 
   <section class="max-w-5xl mx-auto px-4 py-12">
-    <h2 class="font-display text-2xl font-bold text-ink-950 text-center sm:text-3xl">Indian teenagers use AI every day — and most are never taught how it works</h2>
-    <div class="mt-8 grid gap-6 sm:grid-cols-3">
+    <h2 class="font-display text-2xl font-bold text-ink-950 text-center sm:text-3xl">AI is now inside the CBSE curriculum from Class 3 — most students still aren't taught how it works</h2>
+    <p class="mx-auto mt-4 max-w-3xl text-center text-ink-600">
+      From session 2026-27, CBSE has introduced Computational Thinking &amp; AI as an integrated part of the curriculum for Classes 3 to 8, with higher classes following. It is built into subjects every student already takes rather than offered as a choice — unplugged activities, puzzles and logical reasoning inside Mathematics and EVS in Classes 3 to 5, then AI awareness, organising data, project work and ethics including algorithmic bias in Classes 6 to 8. Ages 10 to 15 spans roughly Classes 5 to 10, which puts this program right on that cohort.
+    </p>
+    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
       {stats.map((s) => (
         <div class="rounded-2xl border border-indigo-100 bg-cream-50 p-6 text-center shadow-sm transition-shadow hover:shadow-md">
           <div class="font-display text-3xl font-bold text-indigo-600">{s.value}</div>
@@ -182,14 +186,14 @@ const schema = [courseSchema(Astro.site), faqPageSchema(faqs)];
     <div class="mt-8 rounded-2xl border-2 border-dashed border-coral-200 bg-coral-50 p-6 sm:p-8">
       <div class="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:gap-3">
         <p class="text-xs font-semibold uppercase tracking-wider text-coral-700">Stage 2 · Expert tier</p>
-        <p class="text-sm text-ink-600">A separate 8-session stage, by invitation.</p>
+        <p class="text-sm text-ink-600">A separate 8-session stage, by invitation only.</p>
       </div>
       <h3 class="mt-3 font-display text-xl font-bold text-ink-950">The capstone stage, earned by the students who go furthest</h3>
       <p class="mt-2 text-sm text-ink-600">
         After the main program, a select few students — the ones who show the strongest potential across the three tiers — are invited into eight further sessions built around one real capstone: a chatbot, an image classifier, or a bias audit of their own. It ends with a presentation at a parent-attended Demo Day and a published entry in their Student AI Portfolio.
       </p>
       <p class="mt-2 text-sm font-medium text-ink-600">
-        This is an earned next step, not an automatic one — and not something every student needs to finish the main program feeling proud of what they built.
+        There is nothing to register for here. Every student starts with the 12-session main program, and invitations to the Expert tier are made from inside it — so this is an earned next step, not an automatic one. The main program stands complete on its own: every student who finishes it has built real work and learned to question it.
       </p>
     </div>
 
@@ -200,7 +204,7 @@ const schema = [courseSchema(Astro.site), faqPageSchema(faqs)];
       >
         Ask about dates and fees
       </a>
-      <p class="mt-3 text-sm text-ink-400">Writes to {EMAILS.learn} — a real person replies.</p>
+      <p class="mt-3 text-sm text-ink-400">Signing up is for Stage 1, the 12-session main program. Writes to {EMAILS.learn} — a real person replies.</p>
     </div>
   </section>
 
@@ -316,7 +320,7 @@ const schema = [courseSchema(Astro.site), faqPageSchema(faqs)];
       <div class="relative">
         <h2 class="font-display text-2xl font-bold sm:text-3xl">Sign up for the Winter Batch</h2>
         <p class="mx-auto mt-4 max-w-2xl text-ink-100/80">
-          The founding batch of the Winter Lab is open right now. Your child is already using AI — this is where they learn to build with it. Send one email and we will reply with the dates, the fees and exactly what your child will build.
+          The founding batch of the Winter Lab is open right now — the 12-session main program, run over 6 weeks. Your child is already using AI — this is where they learn to build with it. Send one email and we will reply with the dates, the fees and exactly what your child will build.
         </p>
         <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <a

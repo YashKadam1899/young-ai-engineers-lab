@@ -4,20 +4,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const whyNow = [
-  { title: 'NEP 2020 and Classes 3–8', body: "India's National Education Policy pushed computational thinking and AI into school education, and CBSE has introduced a Computational Thinking & AI curriculum for Classes 3 to 8 from session 2026-27. A whole cohort now arrives in Grade 9 having already met these ideas." },
-  { title: 'CBSE Code 417', body: 'Artificial Intelligence is a board-recognised Skill Subject for Grades 9 and 10 — a substantial, practical 210-hour syllabus per year. Schools that offer it need delivery partners, not just a textbook.' },
-  { title: 'Generative AI boom', body: "Every teenager already has ChatGPT in their pocket. Parents want to know their kids are learning from it safely — not just copying answers." },
+  { title: "CBSE's Computational Thinking & AI curriculum, Classes 3–8", body: "India's National Education Policy pushed computational thinking and AI into school education, and CBSE has now introduced Computational Thinking & AI as an integrated part of the curriculum for Classes 3 to 8 from session 2026-27, with higher classes following. Classes 3 to 5 meet it inside existing subjects like Mathematics and EVS through unplugged activities, puzzles and logical reasoning — deliberately no new textbook and no extra screen time. Classes 6 to 8 go deeper: AI awareness, organising data, the lifecycle of a project, and ethics including algorithmic bias. Teachers weave it into daily lessons, supported by official board handbooks for students and teachers." },
+  { title: 'Curriculum-integrated, not opt-in', body: "Because it sits inside subjects every student already takes, every child in Classes 3 to 8 meets these ideas — there is no opting out and no separate elective to choose. Ages 10 to 15 spans roughly Classes 5 to 10, so the students we teach are the same cohort now meeting AI in their regular timetable, not only the smaller group who later choose an optional Skill Subject." },
+  { title: 'CBSE Code 417', body: 'In Grades 9 and 10, Artificial Intelligence remains a board-recognised optional Skill Subject — substantial and practical, at 210 hours per year. Schools that choose to offer it need delivery partners, not just a textbook.' },
+  { title: 'Generative AI boom', body: "Students already have ChatGPT in their pocket. Parents want to know their kids are learning from it safely — not just copying answers." },
   { title: 'Teacher gap', body: "The government has 45-hour teacher-training programs on paper. What's missing is hands-on, project-based teaching that's ready to use in a real classroom." },
 ];
 ---
 <BaseLayout
   title="About Us: Why AI Literacy Now · Young AI Engineers Lab"
-  description="Why we built an AI lab for Indian teenagers now: NEP 2020, CBSE's Code 417 Skill Subject for Grades 9–10, generative AI in every pocket, and the teacher gap."
+  description="Why we built an AI lab for Indian students aged 10–15: CBSE's Computational Thinking & AI curriculum for Classes 3–8 from session 2026-27, Code 417, and the teacher gap."
 >
   <section class="max-w-3xl mx-auto px-4 py-16">
     <h1 class="font-display text-3xl font-bold text-ink-950 sm:text-4xl">Why now</h1>
     <p class="mt-2 text-ink-600">
-      Government policy, the new CBSE syllabus, and growing parent concern are all lining up in the same two years.
+      Government policy, the new CBSE syllabus, and growing parent concern are all lining up in the same two years. The clearest signal: from session 2026-27, Computational Thinking &amp; AI is an integrated part of CBSE's curriculum for Classes 3 to 8 — taught inside subjects every student already takes, rather than offered as a choice.
     </p>
     <div class="mt-8 grid gap-6 sm:grid-cols-2">
       {whyNow.map((item) => (
@@ -33,7 +34,7 @@ const whyNow = [
     <div class="max-w-3xl mx-auto px-4 py-16">
       <h2 class="font-display text-2xl font-bold sm:text-3xl">Our vision</h2>
       <p class="mt-4 text-lg text-ink-100/90">
-        In three years, thousands of Indian teenagers — a meaningful share of them from government and rural schools — will be able to explain how AI works, build something useful with it, and question it critically.
+        In three years, thousands of Indian school students — a meaningful share of them from government and rural schools — will be able to explain how AI works, build something useful with it, and question it critically.
       </p>
       <p class="mt-4 text-ink-100/70">
         Not a coding camp. Not a certificate mill. National infrastructure for a generation that will be judged on whether it can create with AI — not just consume it.
