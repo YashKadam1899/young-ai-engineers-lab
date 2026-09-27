@@ -1,0 +1,34 @@
+package-lock.json
+  h_b542a96e24ff33 11-12,981-998
+package.json
+  h_b542a96e24ff33 15-16
+src/components/Footer.astro
+  h_b542a96e24ff33 4-5
+src/components/Header.astro
+  h_b542a96e24ff33 17,19-21,23,25-30,35-36,40,42
+src/layouts/BaseLayout.astro
+  h_b542a96e24ff33 18
+src/pages/about.astro
+  h_b542a96e24ff33 13-14,19-21,27,29-30,33
+src/pages/contact.astro
+  h_b542a96e24ff33 14-15,22,24-25
+src/pages/for-investors.astro
+  h_b542a96e24ff33 15-16,21-23,30
+src/pages/index.astro
+  h_b542a96e24ff33 20-33,39-41,47,50-52,56
+src/pages/our-team.astro
+  h_b542a96e24ff33 17,20-22
+src/styles/global.css
+  h_b542a96e24ff33 1-83
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "02357b5aa44440e9e5027717b07b56d58878a716",
+  "prompts": {},
+  "humans": {
+    "h_b542a96e24ff33": {
+      "author": "YashKadam1899 <yash.kadam@coupa.com>"
+    }
+  }
+}
