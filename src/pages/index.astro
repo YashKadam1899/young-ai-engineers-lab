@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const stats = [
+  { value: '250M+', label: 'students in Grades 6–12 across India (govt. + private, est.)' },
+  { value: '417', label: "CBSE's new mandatory AI subject code — but almost no trained teachers to deliver it" },
+  { value: '<5%', label: 'of CS/IT teachers report feeling confident teaching AI concepts (est.)' },
+];
+
+const pillars = [
+  { title: 'Foundations', body: "What AI is/isn't, ML vs. rules, everyday examples from UPI, weather apps & Bhashini translation." },
+  { title: 'Computational Thinking', body: 'Decomposition, patterns & abstraction — applied to exam prep and local problem-solving.' },
+  { title: 'Hands-On Creation', body: 'Prompt engineering, image classifiers & no-code agents, built in Hindi/regional languages.' },
+  { title: 'Ethics & Evaluation', body: 'Bias audits, hallucination-spotting, deepfake literacy, and career pathway exposure.' },
+];
+---
+<BaseLayout title="Home">
+  <section class="max-w-5xl mx-auto px-4 py-20 text-center">
+    <h1 class="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
+      Turning India's 13–15 year-olds from AI consumers into AI creators
+    </h1>
+    <p class="mt-4 text-lg text-slate-600">
+      Built for CBSE classrooms, priced for every pin code.
+    </p>
+    <div class="mt-8 flex justify-center gap-4">
+      <a href="/contact" class="rounded-md bg-orange-500 px-5 py-3 text-white font-medium hover:bg-orange-600">Contact Us</a>
+      <a href="/for-investors" class="rounded-md border border-slate-300 px-5 py-3 text-slate-700 font-medium hover:bg-slate-50">For Investors</a>
+    </div>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-4 py-12 grid gap-6 sm:grid-cols-3">
+    {stats.map((s) => (
+      <div class="rounded-lg bg-slate-50 p-6 text-center">
+        <div class="text-3xl font-bold text-slate-900">{s.value}</div>
+        <p class="mt-2 text-sm text-slate-600">{s.label}</p>
+      </div>
+    ))}
+  </section>
+
+  <section class="max-w-5xl mx-auto px-4 py-12">
+    <h2 class="text-2xl font-bold text-slate-900 text-center">A four-pillar, project-first AI curriculum</h2>
+    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {pillars.map((p) => (
+        <div class="rounded-lg bg-slate-900 text-white p-6">
+          <h3 class="font-semibold">{p.title}</h3>
+          <p class="mt-2 text-sm text-slate-300">{p.body}</p>
+        </div>
+      ))}
+    </div>
+    <p class="mt-8 text-center text-slate-600 italic">
+      Every module ends in a tangible artifact — a chatbot, a plant classifier, a bias audit — added to a public, verifiable Student AI Portfolio.
+    </p>
+  </section>
+</BaseLayout>
