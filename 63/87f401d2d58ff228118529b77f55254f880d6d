@@ -1,0 +1,47 @@
+astro.config.mjs
+  s_0fed2d499ecf77::t_aac064a4c031ce 4,13-20,22,26
+package-lock.json
+  s_0fed2d499ecf77::t_f648ef38b1f0b9 11,269-278,2595-2612,2662-2667,4350-4368,4552-4557
+package.json
+  s_0fed2d499ecf77::t_8a81e602b49243 15
+src/assets/og-image.svg
+  s_0fed2d499ecf77::t_73decea500179b 1-21
+src/components/Footer.astro
+  s_0fed2d499ecf77::t_7c8e1cb7e08dc7 2-5,9-19
+src/components/Header.astro
+  s_0fed2d499ecf77::t_676e2ef0f3239e 8-9,31-32
+src/layouts/BaseLayout.astro
+  s_0fed2d499ecf77::t_e38b65e9c19c2d 4-11,15,17-23,25-37,40,44-66
+src/nav.ts
+  s_0fed2d499ecf77::t_d1ff7a6fbe6e00 1-20
+src/pages/about.astro
+  s_0fed2d499ecf77::t_7a5ae6699b028a 4-5,13-16,41-48
+src/pages/contact.astro
+  s_0fed2d499ecf77::t_84d3dfed7dd623 35-38,50,57
+src/pages/for-investors.astro
+  s_0fed2d499ecf77::t_a04d710e0e67cf 5-6,10,14-17,34-36
+src/pages/index.astro
+  s_0fed2d499ecf77::t_bfe49707cc0a89 4,76,85,98-101,103-108,121,139-143,235,302-306,329
+src/pages/our-team.astro
+  s_0fed2d499ecf77::t_9056acddd6f2bc 4-5,17-20,31-33
+src/pages/robots.txt.ts
+  s_0fed2d499ecf77::t_7da92fa9a6e37b 1-33
+src/seo.ts
+  s_0fed2d499ecf77::t_bddaaf6b9f6aae 1-129
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "6387f401d2d58ff228118529b77f55254f880d6d",
+  "prompts": {},
+  "sessions": {
+    "s_0fed2d499ecf77": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fe8c33a7-bf15-42eb-b08f-d1f2a7d770c1",
+        "model": "claude-opus-5"
+      },
+      "human_author": "YashKadam1899 <yash.kadam@coupa.com>"
+    }
+  }
+}
