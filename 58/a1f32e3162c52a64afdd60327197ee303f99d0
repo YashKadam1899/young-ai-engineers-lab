@@ -1,0 +1,14 @@
+src/pages/index.astro
+  h_b542a96e24ff33 108,295,297,301,304
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "58a1f32e3162c52a64afdd60327197ee303f99d0",
+  "prompts": {},
+  "humans": {
+    "h_b542a96e24ff33": {
+      "author": "YashKadam1899 <yash.kadam@coupa.com>"
+    }
+  }
+}
