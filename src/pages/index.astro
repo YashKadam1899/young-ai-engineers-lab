@@ -4,16 +4,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const stats = [
-  { value: '250M+', label: 'students in Grades 6–12 across India (govt. + private, est.)' },
-  { value: '417', label: "CBSE's new mandatory AI subject code — but almost no trained teachers to deliver it" },
-  { value: '<5%', label: 'of CS/IT teachers report feeling confident teaching AI concepts (est.)' },
+  { value: '250M+', label: 'school students in India, Grades 6–12 (government and private, estimated)' },
+  { value: '417', label: "CBSE's new mandatory AI subject — with almost no trained teachers to teach it" },
+  { value: '<5%', label: "of India's computer-science and IT teachers feel confident teaching AI concepts (estimated, pilot interviews)" },
 ];
 
 const pillars = [
-  { title: 'Foundations', body: "What AI is/isn't, ML vs. rules, everyday examples from UPI, weather apps & Bhashini translation." },
-  { title: 'Computational Thinking', body: 'Decomposition, patterns & abstraction — applied to exam prep and local problem-solving.' },
-  { title: 'Hands-On Creation', body: 'Prompt engineering, image classifiers & no-code agents, built in Hindi/regional languages.' },
-  { title: 'Ethics & Evaluation', body: 'Bias audits, hallucination-spotting, deepfake literacy, and career pathway exposure.' },
+  { title: 'Foundations', body: "What AI actually is — and isn't — and how machine learning is different from simple rule-following. Explained through apps you already use: UPI payments, weather forecasts, and Bhashini's Hindi translation." },
+  { title: 'Computational Thinking', body: "Breaking a big problem into small steps, spotting patterns, and ignoring what doesn't matter — the same thinking that helps with exams and with solving everyday problems." },
+  { title: 'Hands-On Creation', body: "Writing prompts that get AI to do what you want, building an app that recognizes images, and creating an AI helper with no coding required — all practiced in Hindi and regional languages, not just English." },
+  { title: 'Ethics & Evaluation', body: "Testing AI for unfair bias, learning to catch AI when it makes things up, spotting deepfakes, and seeing what real AI careers look like." },
 ];
 ---
 <BaseLayout title="Home">
@@ -28,23 +28,29 @@ const pillars = [
         Built for CBSE classrooms, priced for every pin code.
       </p>
       <div class="mt-9 flex flex-col sm:flex-row justify-center gap-4">
-        <a href={`${base}/contact`} class="rounded-full bg-coral-500 px-6 py-3.5 text-white font-semibold shadow-lg shadow-coral-500/25 transition-all hover:-translate-y-0.5 hover:bg-coral-600 hover:shadow-xl hover:shadow-coral-500/30">Contact Us</a>
-        <a href={`${base}/for-investors`} class="rounded-full border-2 border-indigo-200 bg-cream-50 px-6 py-3.5 text-ink-800 font-semibold transition-all hover:-translate-y-0.5 hover:border-indigo-400 hover:bg-indigo-50">For Investors</a>
+        <a href={`${base}/contact`} class="rounded-full bg-coral-500 px-6 py-3.5 text-white font-semibold shadow-lg shadow-coral-500/25 transition-all hover:-translate-y-0.5 hover:bg-coral-600 hover:shadow-xl hover:shadow-coral-500/30">Ask About Enrollment</a>
+        <a href={`${base}/for-investors`} class="rounded-full border-2 border-indigo-200 bg-cream-50 px-6 py-3.5 text-ink-800 font-semibold transition-all hover:-translate-y-0.5 hover:border-indigo-400 hover:bg-indigo-50">See the Investor Overview</a>
       </div>
     </div>
   </section>
 
-  <section class="max-w-5xl mx-auto px-4 py-12 grid gap-6 sm:grid-cols-3">
-    {stats.map((s) => (
-      <div class="rounded-2xl border border-indigo-100 bg-cream-50 p-6 text-center shadow-sm transition-shadow hover:shadow-md">
-        <div class="font-display text-3xl font-bold text-indigo-600">{s.value}</div>
-        <p class="mt-2 text-sm text-ink-600">{s.label}</p>
-      </div>
-    ))}
+  <section class="max-w-5xl mx-auto px-4 py-12">
+    <h2 class="font-display text-2xl font-bold text-ink-950 text-center sm:text-3xl">Indian teenagers use AI every day — almost no one is teaching them how it works</h2>
+    <div class="mt-8 grid gap-6 sm:grid-cols-3">
+      {stats.map((s) => (
+        <div class="rounded-2xl border border-indigo-100 bg-cream-50 p-6 text-center shadow-sm transition-shadow hover:shadow-md">
+          <div class="font-display text-3xl font-bold text-indigo-600">{s.value}</div>
+          <p class="mt-2 text-sm text-ink-600">{s.label}</p>
+        </div>
+      ))}
+    </div>
+    <p class="mt-6 text-center text-ink-600 italic">
+      Urban private-school families already pay ₹5,000–₹15,000 for the few programs that try to fill this gap.
+    </p>
   </section>
 
   <section class="max-w-5xl mx-auto px-4 py-12">
-    <h2 class="font-display text-2xl font-bold text-ink-950 text-center sm:text-3xl">A four-pillar, project-first AI curriculum</h2>
+    <h2 class="font-display text-2xl font-bold text-ink-950 text-center sm:text-3xl">Four modules, one goal: build with AI, not just talk about it</h2>
     <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
       {pillars.map((p) => (
         <div class="rounded-2xl bg-ink-950 text-white p-6 border-t-4 border-indigo-400 shadow-md transition-transform hover:-translate-y-1">
@@ -54,7 +60,7 @@ const pillars = [
       ))}
     </div>
     <p class="mt-8 text-center text-ink-600 italic">
-      Every module ends in a tangible artifact — a chatbot, a plant classifier, a bias audit — added to a public, verifiable Student AI Portfolio.
+      Every module ends with something real — a chatbot, a plant-identifying app, a bias audit — saved to a public Student AI Portfolio that colleges and employers can actually check, not just a certificate that says they showed up.
     </p>
   </section>
 </BaseLayout>

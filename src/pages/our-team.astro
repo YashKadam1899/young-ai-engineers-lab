@@ -4,17 +4,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 const team = [
   {
     role: 'Founder & CEO',
-    bio: 'B2B sales & client engagement leader, currently driving enterprise outbound and executive relationships at a digital-engineering firm backed by a global growth-equity fund. Owns GTM, school partnerships, and operations.',
+    bio: 'Leads enterprise sales and client relationships at a digital-engineering company backed by a global growth-equity fund. At The Young AI Engineers Lab, handles school partnerships, growth, and day-to-day operations.',
   },
   {
     role: 'Co-Founder & Head of Curriculum',
-    bio: 'IIT Bombay alumnus and AI/ML practitioner. Designs and personally delivers the live curriculum; anchors the credibility that drives parent trust and conversion.',
+    bio: 'An IIT Bombay graduate who works professionally in AI/ML. Personally designs and teaches every live session, so your child is learning from someone who builds AI for a living — not reading off a script.',
   },
 ];
 ---
 <BaseLayout title="Our Team">
   <section class="max-w-3xl mx-auto px-4 py-16">
-    <h1 class="font-display text-3xl font-bold text-ink-950 sm:text-4xl">A B2B GTM operator paired with an IIT Bombay AI practitioner</h1>
+    <h1 class="font-display text-3xl font-bold text-ink-950 sm:text-4xl">Who's building this: an enterprise sales leader and an AI engineer from IIT Bombay</h1>
     <div class="mt-8 grid gap-6 sm:grid-cols-2">
       {team.map((member) => (
         <div class="rounded-2xl border border-indigo-100 bg-cream-50 p-6 shadow-sm transition-shadow hover:shadow-md">
