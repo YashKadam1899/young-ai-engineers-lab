@@ -1,1 +1,83 @@
 @import "tailwindcss";
+
+/* Self-hosted variable fonts (no external Google Fonts CDN request). */
+@import "@fontsource-variable/bricolage-grotesque";
+@import "@fontsource-variable/plus-jakarta-sans";
+
+/*
+ * Design tokens for The Young AI Engineers Lab.
+ *
+ * Palette rationale (see project report for full sourcing):
+ * - Warm cream canvas instead of stark white — softer, less clinical,
+ *   reads well across a teen -> parent -> investor audience.
+ * - Deep indigo-ink as the near-black text/ink color, echoing the primary
+ *   brand hue instead of a cool default slate/gray.
+ * - Indigo/violet as the confident "AI/tech" primary accent (credible to
+ *   educators & investors, still vivid enough to not read as dry corporate
+ *   blue).
+ * - Coral as the energetic secondary accent used for calls-to-action and
+ *   highlights — the warm counterpoint that keeps things approachable for
+ *   a 13-15 year-old audience without tipping into juvenile primary colors.
+ */
+@theme {
+  --font-display: "Bricolage Grotesque Variable", "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans Variable", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --color-cream-50: #fffdf8;
+  --color-cream-100: #fbf7ee;
+  --color-cream-200: #f4ecd8;
+
+  --color-ink-50: #f2f1fb;
+  --color-ink-100: #e2e0f7;
+  --color-ink-400: #6f6b9c;
+  --color-ink-600: #423e6b;
+  --color-ink-800: #211f3d;
+  --color-ink-900: #171531;
+  --color-ink-950: #100f24;
+
+  --color-indigo-50: #f1efff;
+  --color-indigo-100: #e3ddff;
+  --color-indigo-200: #c7bcff;
+  --color-indigo-300: #a894ff;
+  --color-indigo-400: #8a6eff;
+  --color-indigo-500: #6c47f5;
+  --color-indigo-600: #5533e0;
+  --color-indigo-700: #4425bd;
+  --color-indigo-800: #331d8c;
+  --color-indigo-900: #241660;
+
+  --color-coral-50: #fff3ee;
+  --color-coral-100: #ffe2d5;
+  --color-coral-200: #ffc0a8;
+  --color-coral-300: #ff9a75;
+  --color-coral-400: #ff7a50;
+  --color-coral-500: #fb5f36;
+  --color-coral-600: #e04822;
+  --color-coral-700: #bd3717;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+}
+
+::selection {
+  background-color: var(--color-coral-200);
+  color: var(--color-ink-950);
+}
+
+/* Subtle focus ring that works on both light and dark sections. */
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--color-coral-400);
+  outline-offset: 2px;
+  border-radius: 4px;
+}

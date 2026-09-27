@@ -12,22 +12,22 @@ const traction = [
 ---
 <BaseLayout title="For Investors">
   <section class="max-w-3xl mx-auto px-4 py-16">
-    <h1 class="text-3xl font-bold text-slate-900">We're raising a pre-seed round through Antler</h1>
-    <p class="mt-2 text-slate-600">
+    <h1 class="font-display text-3xl font-bold text-ink-950 sm:text-4xl">We're raising a pre-seed round through Antler</h1>
+    <p class="mt-2 text-ink-600">
       De-risking the model with a home-run founding cohort before we sell to a single school.
     </p>
     <div class="mt-8 grid gap-6 sm:grid-cols-2">
       {traction.map((t) => (
-        <div class="rounded-lg border border-slate-200 p-5">
-          <h2 class="font-semibold text-slate-900">{t.title}</h2>
-          <p class="mt-1 text-sm text-slate-600">{t.body}</p>
+        <div class="rounded-2xl border border-indigo-100 bg-cream-50 p-5 shadow-sm transition-shadow hover:shadow-md">
+          <h2 class="font-display font-semibold text-ink-950">{t.title}</h2>
+          <p class="mt-1 text-sm text-ink-600">{t.body}</p>
         </div>
       ))}
     </div>
     <div class="mt-10 text-center">
       <a
         href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Investor deck request')}`}
-        class="inline-block rounded-md bg-orange-500 px-5 py-3 text-white font-medium hover:bg-orange-600"
+        class="inline-block rounded-full bg-coral-500 px-6 py-3.5 text-white font-semibold shadow-lg shadow-coral-500/25 transition-all hover:-translate-y-0.5 hover:bg-coral-600 hover:shadow-xl hover:shadow-coral-500/30"
       >
         Request the full deck
       </a>
