@@ -1,0 +1,16 @@
+src/components/Header.astro
+  h_b542a96e24ff33 2-8,10-14,19-21,23,26-38
+src/pages/index.astro
+  h_b542a96e24ff33 4-5,27-29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "892a1e2ea8ecd5c9a92782caa9b0229108cea649",
+  "prompts": {},
+  "humans": {
+    "h_b542a96e24ff33": {
+      "author": "YashKadam1899 <yash.kadam@coupa.com>"
+    }
+  }
+}
