@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
 const team = [
   {
     role: 'Founder & CEO',
@@ -12,7 +14,10 @@ const team = [
   },
 ];
 ---
-<BaseLayout title="Our Team">
+<BaseLayout
+  title="Our Team: Who Teaches the Lab · Young AI Engineers Lab"
+  description="Meet the two founders: an enterprise sales leader who runs school partnerships, and an IIT Bombay AI/ML practitioner who designs and teaches every live session."
+>
   <section class="max-w-3xl mx-auto px-4 py-16">
     <h1 class="font-display text-3xl font-bold text-ink-950 sm:text-4xl">Who's building this: an enterprise sales leader and an AI engineer from IIT Bombay</h1>
     <div class="mt-8 grid gap-6 sm:grid-cols-2">
@@ -23,5 +28,8 @@ const team = [
         </div>
       ))}
     </div>
+    <p class="mt-8 text-sm text-ink-600">
+      See <a href={`${base}/#how-it-works`} class="font-semibold text-indigo-600 underline decoration-coral-300 decoration-2 underline-offset-4 hover:text-indigo-700">how the Winter Lab runs</a>, or <a href={`${base}/contact/`} class="font-semibold text-indigo-600 underline decoration-coral-300 decoration-2 underline-offset-4 hover:text-indigo-700">get in touch</a>.
+    </p>
   </section>
 </BaseLayout>

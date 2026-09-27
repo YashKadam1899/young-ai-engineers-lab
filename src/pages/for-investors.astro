@@ -2,14 +2,19 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { EMAILS, mailto } from '../emails';
 
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
 const traction = [
   { title: 'Instructor secured', body: 'IIT Bombay alumnus & AI specialist committed as founding co-instructor.' },
   { title: 'Curriculum locked', body: "12-session, 6-week 'Winter Lab' main program — beginner, intermediate and practitioner tiers — plus a selective 8-session expert stage for capstone builds." },
-  { title: 'Founding batch open', body: '15–20 seats at ₹7,499 (valued at ₹11,999) — filled with zero paid ad spend.' },
+  { title: 'Founding batch open', body: 'Open and filling with zero paid ad spend.' },
   { title: 'Demo Day → proof', body: 'Parent-attended capstone showcase becomes the case-study asset for our first school pitches.' },
 ];
 ---
-<BaseLayout title="For Investors">
+<BaseLayout
+  title="For Investors: Pre-Seed Overview · Young AI Engineers Lab"
+  description="We're raising a pre-seed round through Antler. How a founding Winter Lab cohort de-risks a CBSE Code 417 delivery business — and how to request the full deck."
+>
   <section class="max-w-3xl mx-auto px-4 py-16">
     <h1 class="font-display text-3xl font-bold text-ink-950 sm:text-4xl">We're raising a pre-seed round through Antler</h1>
     <p class="mt-2 text-ink-600">
@@ -26,6 +31,9 @@ const traction = [
         </div>
       ))}
     </div>
+    <p class="mt-6 text-sm text-ink-600">
+      Product detail: <a href={`${base}/#how-it-works`} class="font-semibold text-indigo-600 underline decoration-coral-300 decoration-2 underline-offset-4 hover:text-indigo-700">how the Winter Lab runs</a> and <a href={`${base}/our-team/`} class="font-semibold text-indigo-600 underline decoration-coral-300 decoration-2 underline-offset-4 hover:text-indigo-700">who teaches it</a>.
+    </p>
     <div class="mt-10 text-center">
       <a
         href={mailto(EMAILS.invest, 'Investor deck request')}
