@@ -1,0 +1,54 @@
+.github/workflows/deploy.yml
+  h_b542a96e24ff33 1-33
+.gitignore
+  h_b542a96e24ff33 1-24
+.vscode/extensions.json
+  h_b542a96e24ff33 1-4
+.vscode/launch.json
+  h_b542a96e24ff33 1-11
+AGENTS.md
+  h_b542a96e24ff33 1-22
+CLAUDE.md
+  h_b542a96e24ff33 1
+README.md
+  h_b542a96e24ff33 1-30
+astro.config.mjs
+  h_b542a96e24ff33 1-17
+package-lock.json
+  h_b542a96e24ff33 1-4855
+package.json
+  h_b542a96e24ff33 1-22
+public/favicon.svg
+  h_b542a96e24ff33 1-9
+src/components/Footer.astro
+  h_b542a96e24ff33 1-8
+src/components/Header.astro
+  h_b542a96e24ff33 1-19
+src/layouts/BaseLayout.astro
+  h_b542a96e24ff33 1-25
+src/pages/about.astro
+  h_b542a96e24ff33 1-38
+src/pages/contact.astro
+  h_b542a96e24ff33 1-30
+src/pages/for-investors.astro
+  h_b542a96e24ff33 1-36
+src/pages/index.astro
+  h_b542a96e24ff33 1-54
+src/pages/our-team.astro
+  h_b542a96e24ff33 1-27
+src/styles/global.css
+  h_b542a96e24ff33 1
+tsconfig.json
+  h_b542a96e24ff33 1-5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d70634d9a6b16266889a3b9855fcf6fa7b55fcc3",
+  "prompts": {},
+  "humans": {
+    "h_b542a96e24ff33": {
+      "author": "YashKadam1899 <yash.kadam@coupa.com>"
+    }
+  }
+}
