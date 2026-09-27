@@ -1,0 +1,19 @@
+.github/workflows/deploy.yml
+  s_0fed2d499ecf77::t_e4c7d971d95d3e 22-24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b64ad919f11c83fdf54689fb9b9727eb6e603cfe",
+  "prompts": {},
+  "sessions": {
+    "s_0fed2d499ecf77": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fe8c33a7-bf15-42eb-b08f-d1f2a7d770c1",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "YashKadam1899 <yash.kadam@coupa.com>"
+    }
+  }
+}
