@@ -1,0 +1,26 @@
+src/assets/og-image.svg
+  h_b542a96e24ff33 16-18
+src/pages/about.astro
+  h_b542a96e24ff33 6-61,65-66,69,71,73-79,85,87-99,103-131
+src/pages/contact.astro
+  h_b542a96e24ff33 16-19,21,33
+src/pages/for-investors.astro
+  h_b542a96e24ff33 15,23
+src/pages/index.astro
+  h_b542a96e24ff33 9,16,18,45,47,51,54-58,64,72,75-81,85,99,110-111,119,129,131,257
+src/pages/our-team.astro
+  h_b542a96e24ff33 6-7,10,12,16,18,25,28-32,36-56,60
+src/seo.ts
+  h_b542a96e24ff33 12-18,29,52,54-71,78,84,106,108
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b123d5d37c1b44723c3771c38ebb057f912b92a9",
+  "prompts": {},
+  "humans": {
+    "h_b542a96e24ff33": {
+      "author": "YashKadam1899 <yash.kadam@coupa.com>"
+    }
+  }
+}
