@@ -6,16 +6,16 @@ import { courseSchema, faqPageSchema } from '../seo';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const stats = [
-  { value: '3–8', label: "the CBSE classes where Computational Thinking & AI is built into regular subjects from session 2026-27 — every student, not an opt-in choice" },
+  { value: '3–8', label: "the classes where CBSE now builds Computational Thinking & AI into regular subjects from session 2026-27 — every student, not an opt-in choice" },
   { value: '250M+', label: 'school students in India, Grades 6–12 (government and private, estimated)' },
   { value: '417', label: "CBSE's optional AI Skill Subject code for Grades 9–10 — schools that offer it still need someone who can deliver it" },
   { value: '<5%', label: "of India's computer-science and IT teachers feel confident teaching AI concepts (estimated, pilot interviews)" },
 ];
 
 const pillars = [
-  { title: 'Foundations', body: "What AI actually is — and isn't — and how machine learning is different from simple rule-following. Explained through apps you already use: UPI payments, weather forecasts, and Bhashini's Hindi translation." },
+  { title: 'Foundations', body: "What AI actually is — and isn't — and how machine learning is different from simple rule-following. Explained through apps you already use: UPI payments, weather forecasts and photo search." },
   { title: 'Computational Thinking', body: "Breaking a big problem into small steps, spotting patterns, and ignoring what doesn't matter — the same thinking that helps with exams and with solving everyday problems." },
-  { title: 'Hands-On Creation', body: "Writing prompts that get AI to do what you want, building an app that recognizes images, and creating an AI helper with no coding required — all practiced in Hindi and regional languages, not just English." },
+  { title: 'Hands-On Creation', body: "Writing prompts that get AI to do what you want, building an app that recognizes images, and creating an AI helper with no coding required." },
   { title: 'Ethics & Evaluation', body: "Testing AI for unfair bias, learning to catch AI when it makes things up, spotting deepfakes, and seeing what real AI careers look like." },
 ];
 
@@ -42,26 +42,26 @@ const tiers = [
 
 const differentiators = [
   {
-    title: 'Taught in the language they think in',
-    usually: 'Global AI courses are English-first by design.',
-    ours: "Bhashini's language APIs are built into every module, so students train and test models on Hindi and regional-language data — not just translated English examples.",
-  },
-  {
-    title: 'A lab companion to what CBSE already teaches, not a weekend add-on',
+    title: 'A lab companion to the syllabus, not a weekend add-on',
     usually: 'AI for school students is usually sold as an extracurricular luxury, bolted on after school hours.',
-    ours: "We're built to sit alongside the syllabus a school already runs — Computational Thinking & AI in Classes 6 to 8, and the Artificial Intelligence Skill Subject (Code 417) in Grades 9 and 10 — reinforcing the timetable rather than competing with it.",
+    ours: "We're built to sit alongside the syllabus a school already runs — reinforcing the timetable rather than competing with it.",
   },
   {
     title: 'Depth on the two skills that decide everything',
-    usually: "Prompt engineering isn't a named unit in the Grade 9–10 syllabus, and neither is checking an AI's output for things it made up.",
+    usually: "Prompt engineering isn't a named unit in most school syllabi, and neither is checking an AI's output for things it made up.",
     ours: 'Both get dedicated sessions here: how to instruct a model precisely, and how to catch it when it is confidently wrong. These are the skills a student uses every single day.',
+  },
+  {
+    title: 'Every module ends in something they built',
+    usually: 'Short AI courses tend to end in a slide deck, a quiz score, or a certificate of attendance.',
+    ours: 'Students finish with working prompts, hands-on exercises, and their own tests of where a model breaks down — recorded in a portfolio someone else can actually open and check.',
   },
 ];
 
 const faqs = [
   {
     q: 'Who is this for?',
-    a: "Students aged 10 to 15 — roughly Grades 5 to 10. The three tiers of the main program scale with age, so a 10-year-old and a 15-year-old meet the same ideas at different depths rather than sitting through the same material. It's the range where AI tools are already part of daily life, and where CBSE now teaches Computational Thinking & AI inside regular subjects.",
+    a: "Students aged 10 to 15 — roughly Grades 5 to 10, across CBSE, ICSE and state boards. The three tiers of the main program scale with age, so a 10-year-old and a 15-year-old meet the same ideas at different depths rather than sitting through the same material. It's the range where AI tools are already part of daily life, and where schools are starting to teach AI inside regular subjects.",
   },
   {
     q: 'Does my child need to know how to code?',
@@ -69,16 +69,20 @@ const faqs = [
   },
   {
     q: 'What language is it taught in?',
-    a: "English and Hindi, with regional-language material through Bhashini's APIs. Students work with Hindi and regional-language data inside the projects themselves, so the language isn't just a translation layer on top.",
+    a: 'English. All sessions, materials and exercises are in English.',
   },
   {
-    q: "How does this relate to CBSE's AI subject (Code 417)? Does it replace school?",
-    a: "It supplements school — it replaces nothing. Code 417 is CBSE's board-recognised Artificial Intelligence Skill Subject for Grades 9 and 10: optional for a school to offer, and a substantial, practical syllabus wherever it is offered. Below that, CBSE's Computational Thinking & AI curriculum is integrated into Classes 3 to 8 for every student. We're designed as a lab companion to both: a short, project-dense block that gives students reps on building and questioning AI systems.",
-    more: { href: `${base}/about/`, label: 'Read why this is happening now' },
+    q: 'Why now?',
+    a: "Government policy, the new CBSE syllabus, and growing parent concern are all lining up in the same two years. The clearest signal: from session 2026-27, Computational Thinking & AI is an integrated part of CBSE's curriculum for Classes 3 to 8 — taught inside subjects every student already takes, rather than offered as a choice. Meanwhile students already have AI in their pocket, and most teachers have had no hands-on, project-based training to work with.",
+    more: { href: `${base}/about/`, label: 'Read our mission, vision and goal' },
+  },
+  {
+    q: 'How does this relate to what school already teaches? Does it replace it?',
+    a: "It supplements school — it replaces nothing. For CBSE schools specifically: Computational Thinking & AI is integrated into Classes 3 to 8 for every student, and Artificial Intelligence (Code 417) is an optional but substantial Skill Subject in Grades 9 and 10. Other boards are moving in the same direction at their own pace. We're designed as a lab companion either way: a short, project-dense block that gives students reps on building and questioning AI systems.",
   },
   {
     q: 'What is the Student AI Portfolio, and why does it matter?',
-    a: "It's a public, verifiable record of what your child actually built, rather than a private folder of files. CBSE's 417 syllabus already asks Grade 9 and 10 students to keep a portfolio of their AI activities; ours is built to be opened and checked by someone else — the kind of evidence that holds up on a college or hackathon application.",
+    a: "It's a public, verifiable record of what your child actually built, rather than a private folder of files. Some school syllabi already ask students to keep a portfolio of their AI activities — CBSE's Code 417 does, for Grades 9 and 10. Ours is built to be opened and checked by someone else: the kind of evidence that holds up on a college or hackathon application.",
   },
   {
     q: 'What will my child actually build?',
@@ -92,7 +96,7 @@ const faqs = [
   },
   {
     q: 'How do schools bring this to their students?',
-    a: "We work as a delivery partner for CBSE Code 417 — curriculum packs, teacher enablement, and a moderated student sandbox that fit into a school's existing computer lab or Atal Tinkering Lab. Funded implementations for government and rural schools are possible through CSR and state partnerships.",
+    a: "We work as a delivery partner to schools across CBSE, ICSE and state boards — curriculum packs, teacher enablement, and a moderated student sandbox that fit into a school's existing computer lab or Atal Tinkering Lab. Funded implementations for government and rural schools are possible through CSR and state partnerships.",
     cta: { href: mailto(EMAILS.partner, 'School partnership enquiry'), label: `Email ${EMAILS.partner}` },
   },
 ];
@@ -103,8 +107,8 @@ const schema = [courseSchema(Astro.site), faqPageSchema(faqs)];
 ---
 <BaseLayout
   title="AI Course for Ages 10–15 in India | Young AI Engineers Lab"
-  ogTitle="Turning India's 10–15 year-olds from AI consumers into AI creators"
-  description="A live online AI lab for 10–15 year-olds in India: 12 sessions over 6 weeks in English and Hindi, alongside CBSE's Computational Thinking & AI curriculum for Classes 3–8."
+  ogTitle="Turning India's 10–15 year-olds from AI consumers into AI developers"
+  description="A live online AI lab for 10–15 year-olds in India: 12 sessions over 6 weeks, taught in English, alongside what schools are now starting to teach about AI."
   schema={schema}
 >
   <section class="relative overflow-hidden">
@@ -112,11 +116,8 @@ const schema = [courseSchema(Astro.site), faqPageSchema(faqs)];
     <div aria-hidden="true" class="pointer-events-none absolute -top-10 right-0 h-80 w-80 rounded-full bg-coral-200/40 blur-3xl"></div>
     <div class="relative max-w-5xl mx-auto px-4 py-20 sm:py-28 text-center">
       <h1 class="font-display text-4xl font-bold tracking-tight text-ink-950 sm:text-6xl">
-        Turning India's 10–15 year-olds from AI consumers into AI creators
+        Turning India's 10–15 year-olds from AI consumers into AI developers
       </h1>
-      <p class="mt-5 text-lg text-ink-600 sm:text-xl">
-        Built for CBSE classrooms, priced for every pin code.
-      </p>
       <div class="mt-9 flex flex-col sm:flex-row justify-center gap-4">
         <a href={mailto(EMAILS.learn, 'Winter Batch signup')} class="rounded-full bg-coral-500 px-6 py-3.5 text-white font-semibold shadow-lg shadow-coral-500/25 transition-all hover:-translate-y-0.5 hover:bg-coral-600 hover:shadow-xl hover:shadow-coral-500/30">Sign Up for the Winter Batch</a>
         <a href={`${base}/for-investors/`} class="rounded-full border-2 border-indigo-200 bg-cream-50 px-6 py-3.5 text-ink-800 font-semibold transition-all hover:-translate-y-0.5 hover:border-indigo-400 hover:bg-indigo-50">See the Investor Overview</a>
@@ -125,9 +126,9 @@ const schema = [courseSchema(Astro.site), faqPageSchema(faqs)];
   </section>
 
   <section class="max-w-5xl mx-auto px-4 py-12">
-    <h2 class="font-display text-2xl font-bold text-ink-950 text-center sm:text-3xl">AI is now inside the CBSE curriculum from Class 3 — most students still aren't taught how it works</h2>
+    <h2 class="font-display text-2xl font-bold text-ink-950 text-center sm:text-3xl">AI is arriving in Indian classrooms from Class 3 — most students still aren't taught how it works</h2>
     <p class="mx-auto mt-4 max-w-3xl text-center text-ink-600">
-      From session 2026-27, CBSE has introduced Computational Thinking &amp; AI as an integrated part of the curriculum for Classes 3 to 8, with higher classes following. It is built into subjects every student already takes rather than offered as a choice — unplugged activities, puzzles and logical reasoning inside Mathematics and EVS in Classes 3 to 5, then AI awareness, organising data, project work and ethics including algorithmic bias in Classes 6 to 8. Ages 10 to 15 spans roughly Classes 5 to 10, which puts this program right on that cohort.
+      From session 2026-27, CBSE has introduced Computational Thinking &amp; AI as an integrated part of the curriculum for Classes 3 to 8 — built into subjects every student already takes rather than offered as a choice. Other boards are moving in the same direction. Ages 10 to 15 spans roughly Classes 5 to 10, which puts this program right on that cohort.
     </p>
     <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
       {stats.map((s) => (
@@ -253,7 +254,7 @@ const schema = [courseSchema(Astro.site), faqPageSchema(faqs)];
   <section class="max-w-5xl mx-auto px-4 py-12">
     <div class="rounded-2xl border border-indigo-100 bg-cream-50 p-6 shadow-sm sm:p-8">
       <p class="text-xs font-semibold uppercase tracking-wider text-indigo-600">For schools, CSR and state partners</p>
-      <h2 class="mt-3 font-display text-2xl font-bold text-ink-950">A delivery partner for CBSE Code 417</h2>
+      <h2 class="mt-3 font-display text-2xl font-bold text-ink-950">A delivery partner for your AI curriculum</h2>
       <div class="mt-6 grid gap-6 sm:grid-cols-2">
         <div>
           <h3 class="font-display font-semibold text-ink-950">Schools</h3>

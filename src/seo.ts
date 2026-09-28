@@ -9,10 +9,13 @@
  * domain root).
  *
  * Everything asserted here must be true and must already be visible on the
- * site. Deliberately absent: aggregateRating, review, Person (no instructor
- * name is published), foundingDate, numberOfStudents, and any price — all of
- * those would be fabricated, and fabricated structured data is a manual
- * action risk, not just a quality problem.
+ * site. Deliberately absent: aggregateRating, review, foundingDate,
+ * numberOfStudents, and any price — all of those would be fabricated, and
+ * fabricated structured data is a manual action risk, not just a quality
+ * problem.
+ *
+ * `founder` (Person) IS included: both names and their LinkedIn profiles are
+ * published on /our-team/, so it asserts nothing the site does not show.
  */
 import { EMAILS } from './emails';
 
@@ -23,7 +26,7 @@ export const SITE_LOCALE = 'en_IN';
 /** 1200x630 PNG in public/ — see README note on replacing it with a designed asset. */
 export const OG_IMAGE_PATH = 'og-image.png';
 export const OG_IMAGE_ALT =
-  'The Young AI Engineers Lab — turning India’s 10–15 year-olds from AI consumers into AI creators';
+  'The Young AI Engineers Lab — turning India’s 10–15 year-olds from AI consumers into AI developers';
 
 /**
  * Resolves a path against the deployed origin, preserving Astro's configured
@@ -46,22 +49,39 @@ export function organizationSchema(site: URL | undefined) {
     alternateName: SITE_SHORT_NAME,
     url: home,
     description:
-      "An Indian programme that teaches 10–15 year-olds how AI actually works and how to build with it, alongside CBSE's Computational Thinking & AI curriculum for Classes 3–8 and its Artificial Intelligence Skill Subject (Code 417).",
+      "An Indian programme that teaches 10–15 year-olds how AI actually works and how to build with it, alongside what schools across CBSE, ICSE and state boards are now starting to teach about AI. Taught in English.",
     areaServed: { '@type': 'Country', name: 'India' },
-    knowsLanguage: ['en', 'hi'],
+    knowsLanguage: ['en'],
+    // Mirrors the two founders shown on /our-team/, including the LinkedIn
+    // profiles published there. sameAs is how a search engine ties the person
+    // to an identity it already knows.
+    founder: [
+      {
+        '@type': 'Person',
+        name: 'Balaji Bhat',
+        jobTitle: 'Founder & CEO',
+        sameAs: 'https://www.linkedin.com/in/balaji-b-9a63731a4/',
+      },
+      {
+        '@type': 'Person',
+        name: 'Yash Kadam',
+        jobTitle: 'Co-Founder & Head of Curriculum',
+        sameAs: 'https://www.linkedin.com/in/yashkadam1899/',
+      },
+    ],
     email: EMAILS.learn,
     contactPoint: [
       {
         '@type': 'ContactPoint',
         contactType: 'admissions',
         email: EMAILS.learn,
-        availableLanguage: ['en', 'hi'],
+        availableLanguage: ['en'],
       },
       {
         '@type': 'ContactPoint',
         contactType: 'school and CSR partnerships',
         email: EMAILS.partner,
-        availableLanguage: ['en', 'hi'],
+        availableLanguage: ['en'],
       },
       { '@type': 'ContactPoint', contactType: 'press', email: EMAILS.press },
       { '@type': 'ContactPoint', contactType: 'investor relations', email: EMAILS.invest },
@@ -83,9 +103,9 @@ export function courseSchema(site: URL | undefined) {
     name: 'The Winter Lab — AI for 10–15 year-olds',
     url: `${home}#how-it-works`,
     description:
-      "A live online AI lab for students aged roughly 10 to 15, with depth scaling by tier. The main program runs 12 sessions over 6 weeks across three tiers — Beginner, Intermediate and Practitioner — taught in English and Hindi with regional-language material. A separate, selective 8-session Expert tier is offered by invitation to students from the main program, and is not separately registrable. Designed as a companion to CBSE's Computational Thinking & AI curriculum for Classes 3 to 8 and its Artificial Intelligence Skill Subject (Code 417) for Grades 9 and 10.",
+      "A live online AI lab for students aged roughly 10 to 15, with depth scaling by tier. The main program runs 12 sessions over 6 weeks across three tiers — Beginner, Intermediate and Practitioner — taught in English. A separate, selective 8-session Expert tier is offered by invitation to students from the main program, and is not separately registrable. Designed as a companion to the AI curriculum Indian schools are now introducing, across CBSE, ICSE and state boards.",
     provider: { '@id': `${home}#organization` },
-    inLanguage: ['en', 'hi'],
+    inLanguage: ['en'],
     typicalAgeRange: '10-15',
     isAccessibleForFree: false,
     audience: { '@type': 'EducationalAudience', educationalRole: 'student' },
