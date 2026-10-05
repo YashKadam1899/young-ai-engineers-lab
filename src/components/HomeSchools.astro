@@ -1,0 +1,41 @@
+---
+// Homepage section 7 of 9: the schools / CSR & state partners panel.
+import { EMAILS, mailto } from '../emails';
+---
+<section data-beat="building" class="bg-surface">
+  <div class="max-w-content mx-auto px-gutter py-section">
+    <div class="rounded-2xl border border-line bg-surface-raised p-6 shadow-sm sm:p-8">
+      <p class="text-xs font-semibold uppercase tracking-wider text-accent">For schools, CSR and state partners</p>
+      <h2 class="mt-3 font-display text-h2 font-bold text-fg">A delivery partner for your AI curriculum</h2>
+      <div class="mt-6 grid gap-grid sm:grid-cols-2">
+        <div>
+          <h3 class="font-display text-h3 font-semibold text-fg">Schools</h3>
+          <p class="mt-1 text-small text-fg-muted">
+            Curriculum packs, teacher enablement, and a moderated student sandbox that fit inside your existing computer lab or Atal Tinkering Lab — so AI is taught in the timetable, not outsourced to a weekend workshop.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-display text-h3 font-semibold text-fg">CSR &amp; state partners</h3>
+          <p class="mt-1 text-small text-fg-muted">
+            Fully funded implementations are possible for government and rural schools — including Navodaya and Kendriya Vidyalaya-type networks — through corporate CSR budgets and state programmes.
+          </p>
+        </div>
+      </div>
+      <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+        <a
+          href={mailto(EMAILS.partner, 'School partnership enquiry')}
+          class="rounded-full bg-accent px-5 py-3 text-center text-small font-semibold text-accent-fg transition-colors hover:bg-accent-strong"
+        >
+          Talk to us about a school partnership
+        </a>
+        <a
+          href={mailto(EMAILS.partner, 'CSR or state partnership enquiry')}
+          class="rounded-full border-2 border-line-medium px-5 py-3 text-center text-small font-semibold text-fg-secondary transition-colors hover:border-line-strong hover:bg-surface-tint"
+        >
+          Discuss a funded implementation
+        </a>
+      </div>
+      <p class="mt-3 text-small text-fg-subtle">Both reach {EMAILS.partner}.</p>
+    </div>
+  </div>
+</section>

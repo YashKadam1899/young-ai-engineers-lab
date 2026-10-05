@@ -1,0 +1,21 @@
+---
+import { NAV_LINKS as links } from '../nav';
+
+// Same base-joining rule as the header: hrefs are relative to Astro's `base`.
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const year = new Date().getFullYear();
+---
+<footer class="border-t border-line bg-surface-inverse">
+  <div class="max-w-content mx-auto px-gutter py-8 text-small text-fg-inverse/70">
+    <nav aria-label="Footer">
+      <ul class="flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-7">
+        {links.map((link) => (
+          <li>
+            <a href={`${base}/${link.href}`} class="transition-colors hover:text-white">{link.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+    <p class="mt-7 text-center">© {year} Young AI Engineers Lab. All rights reserved.</p>
+  </div>
+</footer>

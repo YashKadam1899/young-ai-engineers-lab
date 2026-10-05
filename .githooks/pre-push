@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# SEO gate for the PUBLIC repo (enable once per clone:
+#   git config core.hooksPath .githooks).
+# Every push to `main` (the live site) or `website-1.0` (the frozen /v1/
+# archive) is built exactly as the deploy workflow builds it and must pass
+# scripts/seo-check.mjs. Bypass only knowingly: git push --no-verify.
+set -euo pipefail
+
+while read -r _local_ref local_sha remote_ref _remote_sha; do
+  case "$remote_ref" in
+    refs/heads/main)        mode=live ;;
+    refs/heads/website-1.0) mode=archive ;;
+    *) continue ;;
+  esac
+  [ "$local_sha" = "0000000000000000000000000000000000000000" ] && continue
+
+  if [ "$(git rev-parse HEAD)" != "$local_sha" ] || [ -n "$(git status --porcelain)" ]; then
+    echo "pre-push: check out the exact, clean commit you are pushing to ${remote_ref#refs/heads/}, so it can be built and SEO-checked." >&2
+    exit 1
+  fi
+
+  echo "pre-push: SEO check ($mode) for ${remote_ref#refs/heads/} @ ${local_sha:0:7}"
+  rm -rf dist
+  if [ "$mode" = live ]; then
+    npx astro build >/dev/null
+    node scripts/seo-check.mjs dist
+  else
+    PUBLIC_PREVIEW=1 npx astro build --base /young-ai-engineers-lab/v1 >/dev/null
+    node scripts/seo-check.mjs dist --archive
+  fi
+done

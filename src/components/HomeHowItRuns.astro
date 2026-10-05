@@ -1,0 +1,75 @@
+---
+// Homepage section 4 of 9: "How the Winter Lab actually runs" — the two-stage
+// explainer, three main-program tiers and the dashed Expert-tier panel.
+// Owns the #how-it-works anchor, which the Course JSON-LD `url` and an FAQ
+// entry both link to.
+import { EMAILS, mailto } from '../emails';
+
+const tiers = [
+  {
+    step: '1',
+    title: 'Beginner',
+    meta: '4 sessions',
+    body: "How AI actually works and where it came from, the types of AI, chatbots versus purpose-built AI tools, the buzzwords decoded — and where your data really goes when you use a chatbot.",
+  },
+  {
+    step: '2',
+    title: 'Intermediate',
+    meta: '4 sessions',
+    body: "How today's AI tools are built on large language models, why two models answer the same question differently, what prompts, context, tokens and parameters actually are, the basics of AI governance, what is safe to share with an AI tool, and where AI image generation breaks down.",
+  },
+  {
+    step: '3',
+    title: 'Practitioner',
+    meta: '4 sessions',
+    body: 'Prompt engineering as a craft, keeping a long conversation on track, spotting and fact-checking AI hallucinations — and a lot of hands-on practice.',
+  },
+];
+---
+<section data-beat="building" id="how-it-works" class="bg-surface">
+  <div class="max-w-content mx-auto px-gutter py-section">
+    <h2 class="font-display text-h2 font-bold text-fg text-center">How the Winter Lab actually runs</h2>
+    <p class="mx-auto mt-3 max-w-prose text-center text-fg-muted">
+      The founding cohort is open now. It runs in two stages — live and online, so a student can join from any city.
+    </p>
+
+    <div class="mt-stack flex flex-col gap-2 sm:flex-row sm:items-baseline sm:gap-3">
+      <p class="text-xs font-semibold uppercase tracking-wider text-accent">Stage 1 · Main program</p>
+      <p class="text-small text-fg-muted">12 live sessions over 6 weeks, in three tiers of four.</p>
+    </div>
+    <ol class="mt-4 grid gap-grid md:grid-cols-3">
+      {tiers.map((item) => (
+        <li class="rounded-2xl border border-line bg-surface-raised p-6 shadow-sm transition-shadow hover:shadow-md">
+          <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-accent font-display font-bold text-accent-fg">{item.step}</span>
+          <h3 class="mt-4 font-display text-h3 font-semibold text-fg">{item.title}</h3>
+          <p class="text-xs font-semibold uppercase tracking-wider text-fg-subtle">{item.meta}</p>
+          <p class="mt-2 text-small text-fg-muted">{item.body}</p>
+        </li>
+      ))}
+    </ol>
+
+    <div class="mt-stack rounded-2xl border-2 border-dashed border-highlight bg-surface-warm p-6 sm:p-8">
+      <div class="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:gap-3">
+        <p class="text-xs font-semibold uppercase tracking-wider text-accent-warm-strong">Stage 2 · Expert tier</p>
+        <p class="text-small text-fg-muted">A separate 8-session stage, by invitation only.</p>
+      </div>
+      <h3 class="mt-3 font-display text-h3 font-bold text-fg">The capstone stage, earned by the students who go furthest</h3>
+      <p class="mt-2 max-w-prose text-small text-fg-muted">
+        After the main program, a select few students — the ones who show the strongest potential across the three tiers — are invited into eight further sessions built around one real capstone: a chatbot, an image classifier, or a bias audit of their own. It ends with a presentation at a parent-attended Demo Day and a published entry in their Student AI Portfolio.
+      </p>
+      <p class="mt-2 max-w-prose text-small font-medium text-fg-muted">
+        There is nothing to register for here. Every student starts with the 12-session main program, and invitations to the Expert tier are made from inside it — so this is an earned next step, not an automatic one. The main program stands complete on its own: every student who finishes it has built real work and learned to question it.
+      </p>
+    </div>
+
+    <div class="mt-stack text-center">
+      <a
+        href={mailto(EMAILS.learn, 'Winter Lab — dates and fees')}
+        class="inline-block rounded-full bg-cta px-6 py-3.5 text-cta-fg font-semibold shadow-lg shadow-cta/25 transition-all hover:-translate-y-0.5 hover:bg-cta-hover hover:shadow-xl hover:shadow-cta/30"
+      >
+        Ask about dates and fees
+      </a>
+      <p class="mt-3 text-small text-fg-subtle">Signing up is for Stage 1, the 12-session main program. Writes to {EMAILS.learn} — a real person replies.</p>
+    </div>
+  </div>
+</section>

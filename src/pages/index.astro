@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { courseSchema, faqPageSchema } from '../seo';
+import { faqs } from '../content/faqs';
+
+import HomeHero from '../components/HomeHero.astro';
+import HomeStats from '../components/HomeStats.astro';
+import HomePillars from '../components/HomePillars.astro';
+import HomeHowItRuns from '../components/HomeHowItRuns.astro';
+import HomeDifferentiators from '../components/HomeDifferentiators.astro';
+import HomeInstructor from '../components/HomeInstructor.astro';
+import HomeSchools from '../components/HomeSchools.astro';
+import HomeFaq from '../components/HomeFaq.astro';
+import HomeClosingCta from '../components/HomeClosingCta.astro';
+
+// FAQ schema is built from the same `faqs` array that HomeFaq.astro renders —
+// both import src/content/faqs.ts — so the structured data always matches the
+// visible Q&A exactly. Never let these diverge into two arrays.
+const schema = [courseSchema(Astro.site), faqPageSchema(faqs)];
+---
+<BaseLayout
+  title="AI Course for Ages 10–15 in India | Young AI Engineers Lab"
+  ogTitle="Turning India's 10–15 year-olds from AI consumers into AI developers"
+  description="A live online AI lab for 10–15 year-olds in India: 12 sessions over 6 weeks, taught in English, alongside what schools are now starting to teach about AI."
+  schema={schema}
+>
+  <HomeHero />
+  <HomeStats />
+  <HomePillars />
+  <HomeHowItRuns />
+  <HomeDifferentiators />
+  <HomeInstructor />
+  <HomeSchools />
+  <HomeFaq />
+  <HomeClosingCta />
+</BaseLayout>

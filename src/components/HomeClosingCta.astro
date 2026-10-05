@@ -1,0 +1,38 @@
+---
+// Homepage section 9 of 9: the closing dark CTA card.
+import { EMAILS, mailto } from '../emails';
+
+// Same base-joining rule as the header: hrefs are relative to Astro's `base`.
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<section data-beat="payoff" class="bg-surface">
+  <div class="max-w-content mx-auto px-gutter pb-section pt-4">
+    <div class="relative overflow-hidden rounded-2xl bg-surface-inverse px-6 py-section text-center text-white sm:px-10">
+      <div aria-hidden="true" class="pointer-events-none absolute -top-16 -right-10 h-56 w-56 rounded-full bg-glow-inverse/30 blur-3xl"></div>
+      <div aria-hidden="true" class="pointer-events-none absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-cta/20 blur-3xl"></div>
+      <div class="relative">
+        <h2 class="font-display text-h2 font-bold">Sign up for the Winter Batch</h2>
+        <p class="mx-auto mt-4 max-w-prose text-fg-inverse/80">
+          The founding batch of the Winter Lab is open right now — the 12-session main program, run over 6 weeks. Your child is already using AI — this is where they learn to build with it. Send one email and we will reply with the dates, the fees and exactly what your child will build.
+        </p>
+        <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <a
+            href={mailto(EMAILS.learn, 'Winter Batch signup')}
+            class="w-full rounded-full bg-cta px-6 py-3.5 font-semibold text-cta-fg shadow-lg shadow-cta/25 transition-all hover:-translate-y-0.5 hover:bg-cta-hover sm:w-auto"
+          >
+            Sign up for the Winter Batch
+          </a>
+          <a
+            href={`${base}/contact/`}
+            class="w-full rounded-full border-2 border-white/25 px-6 py-3.5 font-semibold text-white transition-colors hover:border-white/60 hover:bg-white/10 sm:w-auto"
+          >
+            Other ways to reach us
+          </a>
+        </div>
+        <p class="mt-6 text-small text-fg-inverse/60">
+          Schools, CSR and state partners: <a href={mailto(EMAILS.partner, 'School or CSR partnership enquiry')} class="font-semibold text-accent-inverse underline underline-offset-4 hover:text-white">{EMAILS.partner}</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

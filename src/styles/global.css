@@ -1,0 +1,155 @@
+@import "tailwindcss";
+
+/* Self-hosted variable fonts (no external Google Fonts CDN request). */
+@import "@fontsource-variable/bricolage-grotesque";
+@import "@fontsource-variable/plus-jakarta-sans";
+
+/*
+ * The active palette. Swapping the site's colours is this one line: point it
+ * at another file in ./palettes/. Each palette supplies the semantic colour
+ * tokens below, plus optional [data-beat] overrides.
+ * Contract: docs/superpowers/specs/2026-09-29-website-2.0-token-contract.md
+ */
+@import "./palettes/daylight.css";
+
+/*
+ * Design tokens for The Young AI Engineers Lab — Website 2.0.
+ *
+ * Two layers:
+ *   1. Semantic colour tokens (surface, fg, accent, cta ...). Components use
+ *      only these. Their values live in the palette file, never here and never
+ *      as raw hex in a component.
+ *   2. One fluid scale (type, rhythm, containers), defined once below.
+ */
+@theme {
+  --font-display: "Bricolage Grotesque Variable", "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans Variable", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+
+  /* Remove Tailwind's default colour scales: only semantic tokens exist, so a
+     stray primitive colour utility generates no CSS. */
+  --color-*: initial;
+  --color-white: #fff;
+  --color-black: #000;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  /* Core semantic tokens. These values are only the registration defaults
+     (equal to the legacy palette); the imported palette overrides them at
+     :root and inside [data-beat="..."], and utilities read the variable at
+     the element, so beat overrides cascade. */
+  --color-surface: #fbf7ee;
+  --color-surface-raised: #fffdf8;
+  --color-surface-tint: #f1efff;
+  --color-surface-inverse: #100f24;
+  --color-fg: #100f24;
+  --color-fg-muted: #423e6b;
+  --color-fg-subtle: #6f6b9c;
+  --color-fg-inverse: #e2e0f7;
+  --color-accent: #5533e0;
+  --color-accent-strong: #4425bd;
+  --color-accent-soft: #a894ff;
+  --color-line: #e3ddff;
+  --color-line-strong: #8a6eff;
+  --color-cta: #fb5f36;
+  --color-cta-hover: #e04822;
+  --color-cta-fg: #fff;
+  --color-highlight: #ffc0a8;
+}
+
+/*
+ * Optional semantic tokens. "inline" makes each utility carry the var() with
+ * its fallback, so the fallback is resolved at the element: a palette that
+ * omits one of these gets the named core token, beat overrides included.
+ */
+@theme inline {
+  --color-fg-secondary: var(--color-fg-secondary, var(--color-fg));
+  --color-accent-fg: var(--color-accent-fg, var(--color-cta-fg));
+  --color-accent-inverse: var(--color-accent-inverse, var(--color-accent-soft));
+  --color-accent-warm: var(--color-accent-warm, var(--color-cta));
+  --color-accent-warm-strong: var(--color-accent-warm-strong, var(--color-accent-strong));
+  --color-surface-warm: var(--color-surface-warm, var(--color-surface-tint));
+  --color-line-medium: var(--color-line-medium, var(--color-line));
+  --color-link-underline: var(--color-link-underline, var(--color-highlight));
+  --color-glow-cool: var(--color-glow-cool, var(--color-accent-soft));
+  --color-glow-inverse: var(--color-glow-inverse, var(--color-accent));
+}
+
+/*
+ * Fluid scale (contract section 4). Defined once, here; components use only
+ * the named utilities (text-hero, py-section, max-w-content ...), never an
+ * ad-hoc clamp(). Values interpolate between a 390px phone and a ~1920px
+ * desktop and stop growing past that, so 2560px gets a wider, roomier page
+ * without type becoming poster-sized.
+ */
+:root {
+  --space-hero: clamp(4.5rem, 2rem + 5vw, 8rem);        /* hero vertical padding */
+  --space-section: clamp(3rem, 2rem + 2.25vw, 5rem);   /* section vertical padding */
+  --space-stack: clamp(2rem, 1.25rem + 1.5vw, 3.5rem); /* heading block to content block */
+  --space-grid: clamp(1.5rem, 1rem + 1vw, 2.5rem);     /* gap between cards */
+  --space-gutter: clamp(1rem, 0.5rem + 2vw, 2.5rem);   /* page side padding */
+}
+
+@theme {
+  /* Type. Each size carries its own line height. */
+  --text-hero: clamp(2.25rem, 1rem + 3.5vw, 4.75rem);
+  --text-hero--line-height: 1.08;
+  --text-h1: clamp(1.875rem, 1.2rem + 2vw, 3rem);
+  --text-h1--line-height: 1.15;
+  --text-h2: clamp(1.5rem, 1rem + 1.25vw, 2.375rem);
+  --text-h2--line-height: 1.2;
+  --text-h3: clamp(1.0625rem, 0.95rem + 0.35vw, 1.375rem);
+  --text-h3--line-height: 1.3;
+  --text-body: clamp(1rem, 0.9rem + 0.4vw, 1.125rem);
+  --text-body--line-height: 1.65;
+  --text-small: clamp(0.875rem, 0.82rem + 0.2vw, 1rem);
+  --text-small--line-height: 1.6;
+
+  /* Rhythm, exposed as spacing utilities: py-hero, py-section, mt-stack,
+     gap-grid, px-gutter. */
+  --spacing-hero: var(--space-hero);
+  --spacing-section: var(--space-section);
+  --spacing-stack: var(--space-stack);
+  --spacing-grid: var(--space-grid);
+  --spacing-gutter: var(--space-gutter);
+
+  /* Containers, exposed as max-w-prose / max-w-narrow / max-w-content /
+     max-w-wide. Prose is in ch, so it tracks the paragraph's own font size. */
+  --container-prose: 68ch;                                  /* paragraphs */
+  --container-narrow: clamp(48rem, 36rem + 15vw, 56rem);    /* single-column pages, FAQ */
+  --container-content: clamp(64rem, 18rem + 60vw, 80rem);   /* 1024px up to 1280px */
+  --container-wide: clamp(64rem, 8rem + 80vw, 90rem);      /* up to 1440px */
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+}
+
+::selection {
+  background-color: var(--color-highlight);
+  color: var(--color-fg);
+}
+
+/* `list-none` alone doesn't hide the disclosure triangle in WebKit, and we use
+   <details>/<summary> for both the mobile nav and the homepage FAQ. */
+summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Subtle focus ring that works on both light and dark sections. */
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--color-accent-warm, var(--color-cta));
+  outline-offset: 2px;
+  border-radius: 4px;
+}

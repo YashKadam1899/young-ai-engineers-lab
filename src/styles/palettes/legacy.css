@@ -1,0 +1,44 @@
+/*
+ * Palette: legacy — the Website 1.0 indigo / coral / cream, reproduced exactly.
+ *
+ * Rationale: the zero-visual-change baseline for the 2.0 token migration.
+ * Every value below is the 1.0 primitive the semantic token replaced (named in
+ * the trailing comment), so importing this file renders the site as 1.0 did.
+ * No beat overrides: 1.0 had no story-driven colour.
+ *
+ * ui-ux-pro-max palettes drawn on: none (this is the original 1.0 palette).
+ */
+
+:root {
+  /* Core tokens (contract section 1) */
+  --color-surface: #fbf7ee;         /* cream-100 */
+  --color-surface-raised: #fffdf8;  /* cream-50 */
+  --color-surface-tint: #f1efff;    /* indigo-50 */
+  --color-surface-inverse: #100f24; /* ink-950 */
+  --color-fg: #100f24;              /* ink-950 */
+  --color-fg-muted: #423e6b;        /* ink-600 */
+  --color-fg-subtle: #6f6b9c;       /* ink-400 */
+  --color-fg-inverse: #e2e0f7;      /* ink-100 */
+  --color-accent: #5533e0;          /* indigo-600 */
+  --color-accent-strong: #4425bd;   /* indigo-700 */
+  --color-accent-soft: #a894ff;     /* indigo-300 */
+  --color-line: #e3ddff;            /* indigo-100 */
+  --color-line-strong: #8a6eff;     /* indigo-400 */
+  --color-cta: #fb5f36;             /* coral-500 */
+  --color-cta-hover: #e04822;       /* coral-600 */
+  --color-cta-fg: #ffffff;          /* white */
+  --color-highlight: #ffc0a8;       /* coral-200 */
+
+  /* Optional tokens (contract section 1b): each falls back to a core token
+     when a palette omits it, so these are needed only for exact 1.0 parity. */
+  --color-fg-secondary: #211f3d;       /* ink-800 */
+  --color-accent-fg: #ffffff;          /* white */
+  --color-accent-inverse: #c7bcff;     /* indigo-200 */
+  --color-accent-warm: #ff7a50;        /* coral-400 */
+  --color-accent-warm-strong: #bd3717; /* coral-700 */
+  --color-surface-warm: #fff3ee;       /* coral-50 */
+  --color-line-medium: #c7bcff;        /* indigo-200 */
+  --color-link-underline: #ff9a75;     /* coral-300 */
+  --color-glow-cool: #c7bcff;          /* indigo-200 */
+  --color-glow-inverse: #6c47f5;       /* indigo-500 */
+}

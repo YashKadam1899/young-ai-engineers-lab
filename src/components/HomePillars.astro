@@ -1,0 +1,25 @@
+---
+// Homepage section 3 of 9: the four curriculum modules / pillars.
+const pillars = [
+  { title: 'Foundations', body: "What AI actually is — and isn't — and how machine learning is different from simple rule-following. Explained through apps you already use: UPI payments, weather forecasts and photo search." },
+  { title: 'Computational Thinking', body: "Breaking a big problem into small steps, spotting patterns, and ignoring what doesn't matter — the same thinking that helps with exams and with solving everyday problems." },
+  { title: 'Hands-On Creation', body: "Writing prompts that get AI to do what you want, building an app that recognizes images, and creating an AI helper with no coding required." },
+  { title: 'Ethics & Evaluation', body: "Testing AI for unfair bias, learning to catch AI when it makes things up, spotting deepfakes, and seeing what real AI careers look like." },
+];
+---
+<section data-beat="awakening" class="bg-surface">
+  <div class="max-w-content mx-auto px-gutter py-section">
+    <h2 class="font-display text-h2 font-bold text-fg text-center">Four modules, one goal: build with AI, not just talk about it</h2>
+    <div class="mt-stack grid gap-grid sm:grid-cols-2 lg:grid-cols-4">
+      {pillars.map((p) => (
+        <div class="rounded-2xl bg-surface-inverse text-white p-6 border-t-4 border-line-strong shadow-md transition-transform hover:-translate-y-1">
+          <h3 class="font-display text-h3 font-semibold">{p.title}</h3>
+          <p class="mt-2 text-small text-fg-inverse/80">{p.body}</p>
+        </div>
+      ))}
+    </div>
+    <p class="mx-auto mt-stack max-w-prose text-center text-fg-muted italic">
+      Every module ends with something the student has actually made, not a quiz score — and that work is saved to a public Student AI Portfolio colleges and employers can open and check for themselves.
+    </p>
+  </div>
+</section>

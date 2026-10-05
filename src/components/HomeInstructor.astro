@@ -1,0 +1,28 @@
+---
+// Homepage section 6 of 9: the dark instructor credential band.
+
+// Same base-joining rule as the header: hrefs are relative to Astro's `base`.
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<section data-beat="teacher" class="bg-surface-inverse text-white">
+  <div class="max-w-content mx-auto px-gutter py-section">
+    <div class="grid items-center gap-8 md:grid-cols-5">
+      <div class="md:col-span-3">
+        <p class="text-xs font-semibold uppercase tracking-wider text-accent-soft">Who teaches it</p>
+        <h2 class="mt-3 font-display text-h2 font-bold">An IIT Bombay alumnus joining as instructor for each session</h2>
+        <p class="mt-4 text-fg-inverse/80">
+          Our co-founder and Head of Curriculum is an IIT Bombay alumnus and a working AI/ML practitioner — and he is in the room for every single session, not just the first one. No recorded video course, and no script read out by a part-time tutor: your child is learning from someone who builds AI systems for a living.
+        </p>
+        <a href={`${base}/our-team/`} class="mt-6 inline-block rounded-full border-2 border-line-strong px-5 py-2.5 text-small font-semibold text-white transition-colors hover:bg-accent">
+          Meet the team
+        </a>
+      </div>
+      <div class="rounded-2xl border border-white/10 bg-white/5 p-6 md:col-span-2">
+        <p class="font-display text-h3 font-semibold">The founding cohort is the proof</p>
+        <p class="mt-2 text-small text-fg-inverse/70">
+          We're deliberately running one strong cohort — taught by the founders, ending in a parent-attended Demo Day — before we pitch a single school. The students' work is the case study.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

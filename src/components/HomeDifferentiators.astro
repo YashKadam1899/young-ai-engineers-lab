@@ -1,0 +1,41 @@
+---
+// Homepage section 5 of 9: "What makes this different" — three Usually/Here
+// comparison cards.
+const differentiators = [
+  {
+    title: 'A lab companion to the syllabus, not a weekend add-on',
+    usually: 'AI for school students is usually sold as an extracurricular luxury, bolted on after school hours.',
+    ours: "We're built to sit alongside the syllabus a school already runs — reinforcing the timetable rather than competing with it.",
+  },
+  {
+    title: 'Depth on the two skills that decide everything',
+    usually: "Prompt engineering isn't a named unit in most school syllabi, and neither is checking an AI's output for things it made up.",
+    ours: 'Both get dedicated sessions here: how to instruct a model precisely, and how to catch it when it is confidently wrong. These are the skills a student uses every single day.',
+  },
+  {
+    title: 'Every module ends in something they built',
+    usually: 'Short AI courses tend to end in a slide deck, a quiz score, or a certificate of attendance.',
+    ours: 'Students finish with working prompts, hands-on exercises, and their own tests of where a model breaks down — recorded in a portfolio someone else can actually open and check.',
+  },
+];
+---
+<section data-beat="building" class="bg-surface">
+  <div class="max-w-content mx-auto px-gutter py-section">
+    <h2 class="font-display text-h2 font-bold text-fg text-center">What makes this different</h2>
+    <p class="mx-auto mt-3 max-w-prose text-center text-fg-muted">
+      Plenty of short AI and coding programs are already on offer. Three things about ours are deliberately not the same.
+    </p>
+    <div class="mt-stack grid gap-grid md:grid-cols-3">
+      {differentiators.map((d) => (
+        <div class="flex flex-col rounded-2xl border border-line bg-surface-raised p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:border-accent-soft hover:shadow-md">
+          <h3 class="font-display text-h3 font-semibold text-fg">{d.title}</h3>
+          <p class="mt-4 text-xs font-semibold uppercase tracking-wider text-fg-subtle">Usually</p>
+          <p class="mt-1 text-small text-fg-subtle">{d.usually}</p>
+          <div class="my-4 h-px bg-line"></div>
+          <p class="text-xs font-semibold uppercase tracking-wider text-accent">Here</p>
+          <p class="mt-1 text-small text-fg-muted">{d.ours}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

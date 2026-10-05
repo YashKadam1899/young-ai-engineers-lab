@@ -1,0 +1,20 @@
+---
+/*
+ * Canonical link, plus the preview-build noindex.
+ *
+ * PUBLIC_PREVIEW=1 at build time marks the build as an archive served beside
+ * the live site (1.0 frozen at /v1/, see §13 of
+ * docs/website-visual-design-checklist.md). It then:
+ *   - adds <meta name="robots" content="noindex"> to every page, and
+ *   - points the canonical at the matching live page: the same path with the
+ *     final segment of `base` removed (/young-ai-engineers-lab/v1/about/ ->
+ *     /young-ai-engineers-lab/about/).
+ * Unset (the live site), this renders exactly the canonical link BaseLayout
+ * always emitted.
+ */
+import { canonicalUrl, isPreviewBuild } from '../seo';
+
+const href = canonicalUrl(Astro.site, Astro.url);
+---
+{isPreviewBuild && <meta name="robots" content="noindex" />}
+<link rel="canonical" href={href} />

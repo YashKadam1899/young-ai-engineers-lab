@@ -1,0 +1,132 @@
+/*
+ * Palette: Screenglow  (id: screenglow)
+ *
+ * "The story is the light from the screen." The page is warm, unbleached
+ * paper and ink — the calm a parent reads as a serious school. Exactly one hue
+ * family moves: the light of a desktop monitor in a school computer lab. At the
+ * blank screen it is a dim, switched-off grey-blue; at the awakening it flickers
+ * on as a clear cerulean; while building it is a saturated working blue; at the
+ * payoff it is the brightest, most confident azure on the page. The teacher band
+ * turns the screen light down and lets warm paper and a warm dark band carry
+ * the human moment; FAQ/About and the For Investors page keep only a quiet
+ * slate. The CTA is a single marigold (with dark ink text) on every beat —
+ * warm, Indian, and deliberately outside the travelling light so it never gets
+ * lost in it. No indigo/violet anywhere.
+ *
+ * Drawn from ui-ux-pro-max palettes: "Kids Learning (ABC & Math)"
+ * (learning blue #2563EB + play yellow #F59E0B -> our azure + marigold CTA),
+ * "Yoga & Stretching Guide" (warm neutral #F5F5F0 paper + calm teal accent ->
+ * the restrained paper base), and "Healthcare App" (calm cyan #0891B2 -> the
+ * cooler awakening end of the light family).
+ */
+
+:root {
+  --color-surface: #f7f4ee;
+  --color-surface-raised: #fffdf9;
+  --color-surface-tint: #e8f1f5;
+  --color-surface-inverse: #16191d;
+  --color-fg: #1c1b19;
+  --color-fg-muted: #46433e;
+  --color-fg-subtle: #69645c;
+  --color-fg-inverse: #e9e6e0;
+  --color-accent: #0b6a94;
+  --color-accent-strong: #08506f;
+  --color-accent-soft: #7cc4e4;
+  --color-line: #e4e0d8;
+  --color-line-strong: #7aa9c0;
+  --color-cta: #f4a51c;
+  --color-cta-hover: #e08f06;
+  --color-cta-fg: #1c1b19;
+  --color-highlight: #fbd98f;
+
+  /* Text on an accent fill (tier step dots, school-partnership button). Must
+     be set: the fallback is cta-fg (dark ink), which fails on blue (3.2:1). */
+  --color-accent-fg: #ffffff;
+}
+
+/* Arrival: warm morning paper; the monitor is on but it is daylight. */
+[data-beat="arrival"] {
+  --color-surface: #faf3e6;
+  --color-surface-raised: #fffcf5;
+  --color-surface-tint: #fdebc8;
+  --color-line: #ecdfc6;
+}
+
+/* Blank: the screen is off. Coolest, dimmest point — a held breath. */
+[data-beat="blank"] {
+  --color-surface: #eceef0;
+  --color-surface-raised: #f6f7f8;
+  --color-surface-tint: #e0e4e8;
+  --color-fg-muted: #444a50;
+  --color-fg-subtle: #5f666d;
+  --color-accent: #50606e;
+  --color-accent-strong: #3a4753;
+  --color-accent-soft: #a7b2bc;
+  --color-line: #d8dde2;
+  --color-line-strong: #98a4ae;
+  --color-highlight: #d9dfe4;
+}
+
+/* Awakening: the screen flickers on — first real colour. */
+[data-beat="awakening"] {
+  --color-surface-tint: #e0f2f9;
+  --color-accent: #0a7099;
+  --color-accent-strong: #075472;
+  --color-accent-soft: #6fd0f2;
+  --color-line: #d3e8f0;
+  --color-line-strong: #4fb3d9;
+}
+
+/* Building: working light — active, saturated. */
+[data-beat="building"] {
+  --color-surface-tint: #dcf0fb;
+  --color-accent: #006fa8;
+  --color-accent-strong: #00537e;
+  --color-accent-soft: #5cc3f5;
+  --color-line: #cfe6f3;
+  --color-line-strong: #2e9fd8;
+}
+
+/* Teacher: screen light turned down; warm paper and a warm dark band. */
+[data-beat="teacher"] {
+  --color-surface: #f8f0e4;
+  --color-surface-raised: #fffaf2;
+  --color-surface-tint: #f3e3cc;
+  --color-surface-inverse: #231c16;
+  --color-fg-inverse: #f2e8da;
+  --color-accent: #3d6a80;
+  --color-accent-strong: #2c5063;
+  --color-accent-soft: #e9c38a;
+  --color-line: #eadcc6;
+  --color-line-strong: #c4a57a;
+}
+
+/* Calm: neutral and readable; the light is a quiet slate-blue. */
+[data-beat="calm"] {
+  --color-surface-tint: #edf0f1;
+  --color-accent: #2f5d74;
+  --color-accent-strong: #234658;
+  --color-accent-soft: #9dbccb;
+  --color-line-strong: #a3b5bf;
+}
+
+/* Payoff: the screen at full brightness — the most confident colour. */
+[data-beat="payoff"] {
+  --color-surface-tint: #d6edff;
+  --color-accent: #0067c2;
+  --color-accent-strong: #004e94;
+  --color-accent-soft: #4fb8ff;
+  --color-line: #c6e3fb;
+  --color-line-strong: #1f96f0;
+  --color-highlight: #ffd67a;
+}
+
+/* Investor: restrained; no beat colour — ink, paper, slate only. */
+[data-beat="investor"] {
+  --color-surface-tint: #efece6;
+  --color-accent: #3d4750;
+  --color-accent-strong: #2a3239;
+  --color-accent-soft: #a9b0b6;
+  --color-line-strong: #a8a39a;
+  --color-highlight: #e8e3d8;
+}

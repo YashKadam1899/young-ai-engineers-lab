@@ -1,0 +1,80 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import RobotsMeta from '../components/RobotsMeta.astro';
+import {
+  OG_IMAGE_ALT,
+  OG_IMAGE_PATH,
+  SITE_LOCALE,
+  SITE_SHORT_NAME,
+  absoluteUrl,
+  organizationSchema,
+} from '../seo';
+import '../styles/global.css';
+
+interface Props {
+  /** The full <title>, already including the brand suffix. ~50–60 chars. */
+  title: string;
+  /** Meta description and og/twitter description. ~140–160 chars. */
+  description: string;
+  /** Defaults to `title`; set it where the brand suffix reads badly in a share card. */
+  ogTitle?: string;
+  ogType?: 'website' | 'article';
+  /** Page-specific JSON-LD nodes. The organization node is added automatically. */
+  schema?: Record<string, unknown>[];
+  /** Story beat for the whole <main> (contract section 2). Omit on the homepage, whose sections carry their own. */
+  beat?: 'calm' | 'investor';
+}
+const { title, description, ogTitle = title, ogType = 'website', schema = [] } = Astro.props;
+
+// Canonical/og:url come from Astro.site (the one hostname setting, in
+// astro.config.mjs) plus Astro.url.pathname, which already carries the
+// configured `base`. Nothing here hardcodes a host or a base path.
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
+const ogImageUrl = absoluteUrl(Astro.site, OG_IMAGE_PATH);
+const faviconHref = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [organizationSchema(Astro.site), ...schema],
+};
+---
+<!doctype html>
+<html lang="en-IN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <RobotsMeta />
+    <link rel="icon" type="image/svg+xml" href={faviconHref} />
+
+    <meta property="og:title" content={ogTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content={SITE_SHORT_NAME} />
+    <meta property="og:locale" content={SITE_LOCALE} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={OG_IMAGE_ALT} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={ogTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content={OG_IMAGE_ALT} />
+
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body class="min-h-screen flex flex-col bg-surface text-fg antialiased">
+    <Header />
+    {/* Bottom breathing room sits inside main, so it takes the beat colour. A
+        margin on the footer exposed the body colour as a stray stripe. */}
+    <main class:list={["flex-1 bg-surface", Astro.props.beat && "pb-16"]} data-beat={Astro.props.beat}>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

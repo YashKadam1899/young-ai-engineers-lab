@@ -1,0 +1,138 @@
+/*
+ * Palette: daylight — "An Indian school lab by daylight."
+ *
+ * Rationale: every colour is lifted from the actual room. Headings wear the
+ * uniform navy; links and icons are green-board green; the dark bands are the
+ * green board itself with chalk-white text; surfaces are limewash ivory under
+ * cool tube-light white, with painted-wall pastels (mint, sky blue) for tinted
+ * panels. The single CTA is marigold/turmeric with navy text, the colour of a
+ * school-function garland: warm, festive and unmistakably Indian, yet sitting
+ * on a sober navy-and-green base so a paying parent reads "a proper school",
+ * not a toy. Along the scroll the room moves from morning sun (arrival), to a
+ * power-cut dimness (blank: grey-green, desaturated, the held breath), to the
+ * tube lights and monitors flickering on (awakening: cool white, screen teal),
+ * to a busy working lab (building), the teacher's warm corner (teacher), and
+ * full afternoon sun (payoff). Investor and calm beats drop the beat colour
+ * for a neutral, quiet version of the same room. The marigold CTA never
+ * changes.
+ *
+ * ui-ux-pro-max palettes drawn on: "LMS (Learning Management System)"
+ * (education teal-green primary + amber accent, dark text on amber), and
+ * "Kids Learning (ABC & Math)" (trust colour + play yellow). The indigo/violet
+ * of 1.0 is deliberately absent.
+ */
+
+:root {
+  --color-surface: #faf6ec;          /* limewash ivory wall */
+  --color-surface-raised: #fdfdfb;   /* tube-light cool white */
+  --color-surface-tint: #e3efe6;     /* painted-wall mint pastel */
+  --color-surface-inverse: #1d3a32;  /* green board */
+  --color-fg: #14213d;               /* uniform navy */
+  --color-fg-muted: #36445e;
+  --color-fg-subtle: #5a6478;
+  --color-fg-inverse: #eef1e8;       /* chalk white */
+  --color-accent: #2c6150;           /* green-board green */
+  --color-accent-strong: #1e4a3d;
+  --color-accent-soft: #9ecbb6;      /* green chalk on the board */
+  --color-line: #dbe4da;
+  --color-line-strong: #7ea493;
+  --color-cta: #f5a524;              /* marigold / turmeric */
+  --color-cta-hover: #e58f0c;
+  --color-cta-fg: #14213d;           /* navy on marigold */
+  --color-highlight: #fcd98c;        /* pale marigold */
+
+  /* Text on an accent fill (tier step dots, school-partnership button). Must
+     be set: the fallback is cta-fg (navy), which fails on green (2.5:1). */
+  --color-accent-fg: #ffffff;
+}
+
+/* Morning sun through the window grilles. */
+[data-beat="arrival"] {
+  --color-surface: #fdf4e0;
+  --color-surface-raised: #fffcf4;
+  --color-surface-tint: #fde8bd;
+  --color-line: #f1e0bb;
+}
+
+/* Power cut: the room goes grey-green and dim; the held breath. */
+[data-beat="blank"] {
+  --color-surface: #e2e6e3;
+  --color-surface-raised: #ecefed;
+  --color-surface-tint: #d5dbd8;
+  --color-fg: #1c2433;
+  --color-fg-muted: #384152;
+  --color-fg-subtle: #505a69;
+  --color-accent: #3b5750;
+  --color-accent-strong: #2a413b;
+  --color-line: #c9d0cc;
+  --color-line-strong: #8a9a93;
+  --color-highlight: #e6d7b0;
+}
+
+/* Tube lights flicker on; monitors glow. First real colour. */
+[data-beat="awakening"] {
+  --color-surface: #f4f8f7;
+  --color-surface-raised: #ffffff;
+  --color-surface-tint: #d9efe9;
+  --color-accent: #0f6e60;
+  --color-accent-strong: #0a5247;
+  --color-line: #d2e6e0;
+  --color-line-strong: #4fa393;
+}
+
+/* A busy working lab: sky-blue wall pastel, saturated green. */
+[data-beat="building"] {
+  --color-surface: #f7f5ec;
+  --color-surface-raised: #ffffff;
+  --color-surface-tint: #d8eaf5;
+  --color-accent: #146b4f;
+  --color-accent-strong: #0d5039;
+  --color-line: #d3e3e8;
+  --color-line-strong: #5b9bb5;
+}
+
+/* The teacher at the green board: warm, human, non-technical. */
+[data-beat="teacher"] {
+  --color-surface: #faf0e2;
+  --color-surface-raised: #fffaf2;
+  --color-surface-tint: #f6e0c8;
+  --color-surface-inverse: #213d34;
+  --color-fg-inverse: #f3efe2;
+  --color-accent: #7a4a14;           /* teak / notice-board wood */
+  --color-accent-strong: #5e380d;
+  --color-accent-soft: #f2c47a;
+  --color-line: #ecdcc6;
+}
+
+/* Neutral and readable. */
+[data-beat="calm"] {
+  --color-surface: #f9f8f4;
+  --color-surface-raised: #ffffff;
+  --color-surface-tint: #edf0eb;
+  --color-line: #e2e5df;
+  --color-line-strong: #9aa9a0;
+}
+
+/* Full afternoon sun: brightest, most confident. */
+[data-beat="payoff"] {
+  --color-surface: #fff3d4;
+  --color-surface-raised: #fffbef;
+  --color-surface-tint: #ffe29e;
+  --color-accent: #1e5e46;
+  --color-line: #f5dc9c;
+  --color-line-strong: #c99a3a;
+  --color-highlight: #ffd166;
+}
+
+/* Restrained: no beat colour; navy accent, neutral paper. */
+[data-beat="investor"] {
+  --color-surface: #fafaf8;
+  --color-surface-raised: #ffffff;
+  --color-surface-tint: #eff1f2;
+  --color-accent: #1f3a5f;
+  --color-accent-strong: #152a47;
+  --color-accent-soft: #a9bbd3;
+  --color-line: #e3e6e8;
+  --color-line-strong: #9aa4b0;
+  --color-highlight: #f3e2b8;
+}

@@ -1,0 +1,21 @@
+<!--
+  Source for public/og-image.png (1200x630 Open Graph / Twitter share card).
+  Interim asset: system Helvetica, not the brand fonts (Bricolage Grotesque /
+  Plus Jakarta Sans) — a designer should replace it. Regenerate the PNG with
+  the sharp copy Astro already installs:
+
+    node -e "require(\"sharp\")(\"src/assets/og-image.svg\").png().flatten({background:\"#fbf7ee\"}).toFile(\"public/og-image.png\")"
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#fbf7ee"/>
+  <circle cx="1150" cy="30" r="230" fill="#c7bcff" opacity="0.55"/>
+  <circle cx="40" cy="660" r="200" fill="#ffc0a8" opacity="0.5"/>
+  <g font-family="Helvetica, Arial, sans-serif">
+    <text x="80" y="118" font-size="34" font-weight="bold" fill="#100f24" letter-spacing="0.5">Young <tspan fill="#5533e0">AI</tspan> Engineers Lab</text>
+    <text x="80" y="268" font-size="58" font-weight="bold" fill="#100f24">Turning India&#8217;s 10&#8211;15 year-olds</text>
+    <text x="80" y="340" font-size="58" font-weight="bold" fill="#100f24">from AI consumers into AI developers</text>
+    <text x="80" y="420" font-size="30" fill="#423e6b">Live online · 12 sessions over 6 weeks · Ages 10–15</text>
+    <text x="80" y="512" font-size="26" font-weight="bold" fill="#5533e0" letter-spacing="1.2">LIVE ONLINE &#183; AGES 10&#8211;15 &#183; ENGLISH</text>
+  </g>
+  <rect x="0" y="606" width="1200" height="24" fill="#fb5f36"/>
+</svg>
