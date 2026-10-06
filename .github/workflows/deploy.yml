@@ -49,12 +49,12 @@ jobs:
     steps:
       # ---- Live site: main, whichever ref triggered a manual run ----
       - name: Check out main (live)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: main
           path: live
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -109,7 +109,7 @@ jobs:
         id: checkout_v1
         if: steps.probe.outputs.exists == 'true'
         continue-on-error: true
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ env.V1_BRANCH }}
           path: v1
@@ -149,7 +149,7 @@ jobs:
           echo "::warning title=/v1/ not published::$msg"
           echo "**Warning:** $msg" >> "$GITHUB_STEP_SUMMARY"
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: live/dist
 
@@ -162,4 +162,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
