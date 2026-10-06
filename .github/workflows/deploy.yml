@@ -1,13 +1,22 @@
 name: Deploy to GitHub Pages
 
 # Publishes the live site (branch `main`, website 2.0) at the root and the
-# frozen 1.0 (branch `website-1.0`) at /v1/, as ONE Pages artifact. See §13 of
-# the visual checklist in the private tutor repo.
+# frozen 1.0 (branch `website-1.0`) at /v1/, as ONE Pages artifact.
 #
 # The live site is the gate: if it fails to build or fails the SEO check
 # (scripts/seo-check.mjs), nothing deploys. Everything about /v1/ is marked
 # `continue-on-error: true`, so a missing or broken archive deploys the live
 # site alone, with a ::warning:: and a job-summary note.
+#
+# The probe for the 1.0 branch is the one /v1/ step that is NOT
+# continue-on-error, so it must never exit non-zero: "ref not found" and a failed
+# query (git ls-remote fails twice, e.g. network or auth) both deploy the live
+# site alone with a ::warning::, worded so the two cases can be told apart.
+# A Pages deploy replaces the whole site, so either way /v1/ is gone until the
+# next run that finds the branch; re-run the workflow after a failed query.
+#
+# The archive is checked with main's seo-check.mjs, not the copy on
+# website-1.0, so the gate that proves /v1/ is noindex is always main's.
 #
 # /v1/ is built with PUBLIC_PREVIEW=1: noindex on every page, canonicals
 # pointing at the matching root page. Its own robots.txt and sitemaps are
@@ -66,12 +75,35 @@ jobs:
         id: probe
         working-directory: live
         run: |
-          if git ls-remote --exit-code --heads origin "$V1_BRANCH" >/dev/null; then
-            echo "exists=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "exists=false" >> "$GITHUB_OUTPUT"
-            echo "No '$V1_BRANCH' branch on the remote; deploying the live site only." >> "$GITHUB_STEP_SUMMARY"
+          # --exit-code: 0 = branch found, 2 = no such ref, anything else = the
+          # query itself failed (network, auth). Only 2 means "missing".
+          probe() {
+            rc=0
+            git ls-remote --exit-code --heads origin "$V1_BRANCH" >/dev/null || rc=$?
+          }
+          probe
+          if [ "$rc" -ne 0 ] && [ "$rc" -ne 2 ]; then
+            echo "git ls-remote failed with exit $rc; retrying once in 15s." >&2
+            sleep 15
+            probe
           fi
+          case "$rc" in
+            0)
+              echo "exists=true" >> "$GITHUB_OUTPUT"
+              ;;
+            2)
+              echo "exists=false" >> "$GITHUB_OUTPUT"
+              msg="No '$V1_BRANCH' branch on the remote; deploying the live site alone, so /v1/ is not served by this deploy."
+              echo "::warning title=/v1/ not published::$msg"
+              echo "**Warning:** $msg" >> "$GITHUB_STEP_SUMMARY"
+              ;;
+            *)
+              echo "exists=false" >> "$GITHUB_OUTPUT"
+              msg="Could not check for '$V1_BRANCH' (git ls-remote exit $rc, twice); deploying the live site alone, so /v1/ is not served by this deploy. Re-run the workflow to restore it."
+              echo "::warning title=/v1/ not published (probe failed)::$msg"
+              echo "**Warning:** $msg" >> "$GITHUB_STEP_SUMMARY"
+              ;;
+          esac
 
       - name: Check out ${{ env.V1_BRANCH }} (archive)
         id: checkout_v1
@@ -92,7 +124,8 @@ jobs:
         run: |
           npm ci
           npx astro build --base "$V1_BASE"
-          node scripts/seo-check.mjs dist --archive
+          # main's checker, not the archive branch's own copy.
+          node ../live/scripts/seo-check.mjs dist --archive
           rm -f dist/robots.txt dist/sitemap-index.xml dist/sitemap-*.xml
 
       - name: Merge archive into the live dist/v1
