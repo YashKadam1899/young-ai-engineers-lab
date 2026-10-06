@@ -8,8 +8,8 @@ name: Deploy to GitHub Pages
 # `continue-on-error: true`, so a missing or broken archive deploys the live
 # site alone, with a ::warning:: and a job-summary note.
 #
-# The probe for the 1.0 branch is the one /v1/ step that is NOT
-# continue-on-error, so it must never exit non-zero: "ref not found" and a failed
+# The probe for the 1.0 branch and the final "archive skipped" warning are the
+# only /v1/ steps without continue-on-error, so neither may exit non-zero: "ref not found" and a failed
 # query (git ls-remote fails twice, e.g. network or auth) both deploy the live
 # site alone with a ::warning::, worded so the two cases can be told apart.
 # A Pages deploy replaces the whole site, so either way /v1/ is gone until the
