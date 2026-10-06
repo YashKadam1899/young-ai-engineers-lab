@@ -3,6 +3,16 @@
 // explainer, three main-program tiers and the dashed Expert-tier panel.
 // Owns the #how-it-works anchor, which the Course JSON-LD `url` and an FAQ
 // entry both link to.
+//
+// Scene 5, "Progression": a solid rail joins the three Stage 1 tiers and
+// stops with an end bar after Practitioner. Below it, after a visible gap, a
+// short dashed hop in navy-grey lands on the dashed Expert panel. The
+// break, the dashes and the colour change carry "invitation only, not
+// automatic"; the rail never runs on into Stage 2. Horizontal through the
+// step badges from md up, a vertical rail beside the cards below md. All of
+// it is decorative and skipped by screen readers: the copy already says
+// everything.
+// Motion is CSS only (scroll-driven, zero JS); see the style element.
 import { EMAILS, mailto } from '../emails';
 
 const tiers = [
@@ -37,29 +47,45 @@ const tiers = [
       <p class="text-xs font-semibold uppercase tracking-wider text-accent">Stage 1 · Main program</p>
       <p class="text-small text-fg-muted">12 live sessions over 6 weeks, in three tiers of four.</p>
     </div>
-    <ol class="mt-4 grid gap-grid md:grid-cols-3">
-      {tiers.map((item) => (
-        <li class="rounded-2xl border border-line bg-surface-raised p-6 shadow-sm transition-shadow hover:shadow-md">
-          <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-accent font-display font-bold text-accent-fg">{item.step}</span>
-          <h3 class="mt-4 font-display text-h3 font-semibold text-fg">{item.title}</h3>
-          <p class="text-xs font-semibold uppercase tracking-wider text-fg-subtle">{item.meta}</p>
-          <p class="mt-2 text-small text-fg-muted">{item.body}</p>
-        </li>
-      ))}
-    </ol>
 
-    <div class="mt-stack rounded-2xl border-2 border-dashed border-highlight bg-surface-warm p-6 sm:p-8">
-      <div class="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:gap-3">
-        <p class="text-xs font-semibold uppercase tracking-wider text-accent-warm-strong">Stage 2 · Expert tier</p>
-        <p class="text-small text-fg-muted">A separate 8-session stage, by invitation only.</p>
+    <div class="hiw-path mt-4">
+      <ol class="grid gap-grid md:grid-cols-3">
+        {tiers.map((item, i) => (
+          <li class="hiw-tier relative rounded-2xl border border-line bg-surface-raised p-6 shadow-sm transition-shadow hover:shadow-md">
+            <span class="hiw-badge relative inline-flex h-9 w-9 items-center justify-center rounded-full bg-accent font-display font-bold text-accent-fg">{item.step}</span>
+            <h3 class="mt-4 font-display text-h3 font-semibold text-fg">{item.title}</h3>
+            <p class="text-xs font-semibold uppercase tracking-wider text-fg-subtle">{item.meta}</p>
+            <p class="mt-2 text-small text-fg-muted">{item.body}</p>
+            <svg class="hiw-seg" aria-hidden="true" focusable="false">
+              <line class="hiw-seg-x" x1="0" y1="50%" x2="100%" y2="50%" pathLength="1" />
+              <line class="hiw-seg-y" x1="50%" y1="0" x2="50%" y2="100%" pathLength="1" />
+            </svg>
+            <span class="hiw-node" aria-hidden="true"></span>
+            {i === tiers.length - 1 && <span class="hiw-end" aria-hidden="true"></span>}
+          </li>
+        ))}
+      </ol>
+
+      <div class="hiw-hop" aria-hidden="true">
+        <svg class="hiw-hop-line" focusable="false">
+          <line x1="50%" y1="0" x2="50%" y2="100%" pathLength="10" />
+        </svg>
+        <span class="hiw-ring"></span>
       </div>
-      <h3 class="mt-3 font-display text-h3 font-bold text-fg">The capstone stage, earned by the students who go furthest</h3>
-      <p class="mt-2 max-w-prose text-small text-fg-muted">
-        After the main program, a select few students — the ones who show the strongest potential across the three tiers — are invited into eight further sessions built around one real capstone: a chatbot, an image classifier, or a bias audit of their own. It ends with a presentation at a parent-attended Demo Day and a published entry in their Student AI Portfolio.
-      </p>
-      <p class="mt-2 max-w-prose text-small font-medium text-fg-muted">
-        There is nothing to register for here. Every student starts with the 12-session main program, and invitations to the Expert tier are made from inside it — so this is an earned next step, not an automatic one. The main program stands complete on its own: every student who finishes it has built real work and learned to question it.
-      </p>
+
+      <div class="rounded-2xl border-2 border-dashed border-fg-subtle bg-surface-warm p-6 sm:p-8">
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:gap-3">
+          <p class="text-xs font-semibold uppercase tracking-wider text-accent-warm-strong">Stage 2 · Expert tier</p>
+          <p class="text-small text-fg-muted">A separate 8-session stage, by invitation only.</p>
+        </div>
+        <h3 class="mt-3 font-display text-h3 font-bold text-fg">The capstone stage, earned by the students who go furthest</h3>
+        <p class="mt-2 max-w-prose text-small text-fg-muted">
+          After the main program, a select few students — the ones who show the strongest potential across the three tiers — are invited into eight further sessions built around one real capstone: a chatbot, an image classifier, or a bias audit of their own. It ends with a presentation at a parent-attended Demo Day and a published entry in their Student AI Portfolio.
+        </p>
+        <p class="mt-2 max-w-prose text-small font-medium text-fg-muted">
+          There is nothing to register for here. Every student starts with the 12-session main program, and invitations to the Expert tier are made from inside it — so this is an earned next step, not an automatic one. The main program stands complete on its own: every student who finishes it has built real work and learned to question it.
+        </p>
+      </div>
     </div>
 
     <div class="mt-stack text-center">
@@ -73,3 +99,267 @@ const tiers = [
     </div>
   </div>
 </section>
+
+<style>
+  /*
+   * Scene 5 path. Static by default: with reduced motion, no JS, or no
+   * scroll-timeline support, the rail, end bar, hop and ring all show fully
+   * drawn. Only html[data-motion="ok"] plus @supports (animation-timeline)
+   * turns on the scroll-driven draw further down.
+   *
+   * Geometry. The step badge is h-9 inside p-6, so its centre sits 2.625rem
+   * from the card's padding edge on both axes. Cards have a 1px border and
+   * the Expert panel a 2px one, hence the odd 1px and 2px below.
+   */
+  .hiw-path {
+    --hiw-c: 2.625rem;        /* badge centre from a card's padding edge */
+    --hiw-stroke: 3px;
+    --hiw-mark: 0.875rem;     /* node and ring diameter, end-bar length */
+    --hiw-indent: 1.75rem;    /* phones: cards and panel sit right of the rail */
+    --hiw-rail: 0.625rem;     /* phones: rail centre from the wrapper's left edge */
+    --hiw-panel-pad: 1.5rem;  /* Expert panel padding: p-6, then sm:p-8 */
+    --hiw-hop: calc(var(--space-stack) + 1.5rem); /* room for the hop, Stage 1 to the panel */
+    padding-left: var(--hiw-indent);
+  }
+
+  .hiw-badge {
+    z-index: 2;
+  }
+
+  .hiw-seg,
+  .hiw-hop-line {
+    position: absolute;
+    overflow: visible;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: var(--hiw-stroke);
+  }
+
+  /* Stage 1: one solid rail in the beat's accent, joining the tiers. */
+  .hiw-seg {
+    z-index: 1;
+    color: var(--color-accent);
+    left: calc(var(--hiw-rail) - var(--hiw-indent) - 1px);
+    top: var(--hiw-c);
+    width: var(--hiw-mark);
+    /* From this card's node to the next card's node. */
+    height: calc(100% + var(--space-grid) + 2px);
+    translate: -50% 0;
+  }
+  /* The last segment stops at the bottom of Practitioner, at the end bar. */
+  .hiw-tier:last-child .hiw-seg {
+    height: calc(100% - var(--hiw-c) + 1px);
+  }
+
+  .hiw-node,
+  .hiw-end,
+  .hiw-ring {
+    position: absolute;
+    z-index: 2;
+    translate: -50% -50%;
+    border-radius: 9999px;
+  }
+
+  /* Phones only: a station on the rail, level with each step badge. */
+  .hiw-node {
+    left: calc(var(--hiw-rail) - var(--hiw-indent) - 1px);
+    top: var(--hiw-c);
+    width: var(--hiw-mark);
+    height: var(--hiw-mark);
+    border: var(--hiw-stroke) solid var(--color-accent);
+    background-color: var(--color-accent);
+  }
+
+  /* End of the line: Stage 1 is complete on its own. */
+  .hiw-end {
+    left: calc(var(--hiw-rail) - var(--hiw-indent) - 1px);
+    top: calc(100% + 1px);
+    width: var(--hiw-mark);
+    height: var(--hiw-stroke);
+    background-color: var(--color-accent);
+  }
+
+  /* Stage 2: a separate dashed hop, navy-grey like the panel's dashed border
+     and the ring, never joined to the rail. Marigold stays for buttons. */
+  .hiw-hop {
+    position: relative;
+    z-index: 1;
+    height: var(--hiw-hop);
+  }
+  .hiw-hop-line {
+    color: var(--color-fg-subtle);
+    stroke-dasharray: 1 1; /* with pathLength 10: five dashes, then a gap before the ring */
+    left: calc(var(--hiw-rail) - var(--hiw-indent));
+    top: 1.25rem;          /* the visible break after the end bar */
+    width: var(--hiw-mark);
+    /* Down to the ring, level with the panel's "Stage 2" eyebrow. */
+    height: calc(var(--hiw-hop) + 2px + var(--hiw-panel-pad) + 0.5rem - var(--hiw-mark) / 2 - 1.25rem);
+    translate: -50% 0;
+  }
+  .hiw-ring {
+    left: calc(var(--hiw-rail) - var(--hiw-indent));
+    top: calc(100% + 2px + var(--hiw-panel-pad) + 0.5rem);
+    width: var(--hiw-mark);
+    height: var(--hiw-mark);
+    border: var(--hiw-stroke) solid var(--color-fg-subtle);
+    background-color: var(--color-surface);
+  }
+
+  @media (width < 48rem) {
+    .hiw-seg-x {
+      display: none;
+    }
+  }
+
+  @media (min-width: 40rem) {
+    .hiw-path {
+      --hiw-panel-pad: 2rem;
+    }
+  }
+
+  /* md up: the three cards sit in a row, so the rail runs through the badges. */
+  @media (width >= 48rem) {
+    .hiw-path {
+      padding-left: 0;
+    }
+    .hiw-seg-y,
+    .hiw-node {
+      display: none;
+    }
+    .hiw-seg {
+      left: var(--hiw-c);
+      top: var(--hiw-c);
+      width: calc(100% + var(--space-grid) + 2px);
+      height: var(--hiw-mark);
+      translate: 0 -50%;
+    }
+    /* Past badge 3 to the card's inner right edge, where the end bar sits. */
+    .hiw-tier:last-child .hiw-seg {
+      width: calc(100% - var(--hiw-c) - 1.5rem);
+      height: var(--hiw-mark);
+    }
+    .hiw-end {
+      left: calc(100% - 1.5rem);
+      top: var(--hiw-c);
+      width: var(--hiw-stroke);
+      height: var(--hiw-mark);
+    }
+    /* The hop drops in line with the end bar, onto the panel's top border. */
+    .hiw-hop-line {
+      left: auto;
+      right: calc(1.5rem + 1px);
+      top: 0.875rem;
+      height: calc(var(--hiw-hop) + 1px - var(--hiw-mark) / 2 - 0.875rem);
+      translate: 50% 0;
+    }
+    .hiw-ring {
+      left: auto;
+      right: calc(1.5rem + 1px);
+      top: calc(100% + 1px);
+      translate: 50% -50%;
+    }
+  }
+
+  /*
+   * Motion. Scrubbed by scroll, so it reverses on the way back up. The order
+   * is always rail, end bar, a pause, then the hop.
+   *   Phones: each piece has its own view() timeline, narrowed with insets to
+   *   a thin band of the screen. The rail's tip rides a band at ~60% of the
+   *   height; the hop sits below the end bar and waits for a band higher up
+   *   (46-52%), so it comes a beat later on any screen height.
+   *   md up: the rail is level, so every piece shares one named timeline, the
+   *   wrapper's view progress, with ranges in vh. The segments draw left to
+   *   right as the row rises from ~80% to ~59% of the screen; the hop and
+   *   ring finish by the time the row is ~36% of the way down, near where
+   *   the #how-it-works anchor lands, so a reader arriving from a link sees
+   *   the whole picture.
+   * Print, a live switch to reduced motion, and anything else outside the
+   * guard below get the static drawn path.
+   * The rail draws continuously; the hop arrives in five discrete steps, one
+   * dash at a time, so even the motion says "not automatic".
+   *
+   * Longhands only, on purpose: the build minifier folds an `animation`
+   * shorthand plus `animation-timeline` into one shorthand, which browsers
+   * reject (the timeline is reset-only there), and nothing animates.
+   */
+  @supports (animation-timeline: view()) {
+    @media screen and (prefers-reduced-motion: no-preference) {
+      :global(html[data-motion="ok"]) :is(.hiw-seg, .hiw-node, .hiw-end, .hiw-hop-line, .hiw-ring) {
+        animation-duration: auto;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: view(y 58% 40%);
+      }
+      :global(html[data-motion="ok"]) .hiw-seg {
+        stroke-dasharray: 1 2;
+        animation-name: hiw-draw;
+      }
+      :global(html[data-motion="ok"]) .hiw-node {
+        animation-name: hiw-reach;
+      }
+      :global(html[data-motion="ok"]) .hiw-end {
+        animation-name: hiw-pop;
+      }
+      :global(html[data-motion="ok"]) .hiw-hop-line {
+        animation-name: hiw-hop;
+        animation-timing-function: steps(5, jump-start);
+        animation-timeline: view(y 46% 48%);
+      }
+      :global(html[data-motion="ok"]) .hiw-ring {
+        animation-name: hiw-pop;
+        animation-timeline: view(y 46% 48%);
+      }
+  
+      @media (width >= 48rem) {
+        :global(html[data-motion="ok"]) .hiw-path {
+          view-timeline-name: --hiw-row;
+          view-timeline-axis: y;
+        }
+        :global(html[data-motion="ok"]) :is(.hiw-seg, .hiw-end, .hiw-hop-line, .hiw-ring) {
+          animation-timeline: --hiw-row;
+        }
+        :global(html[data-motion="ok"]) .hiw-tier:nth-child(1) .hiw-seg {
+          animation-range-start: cover 20vh;
+          animation-range-end: cover 27vh;
+        }
+        :global(html[data-motion="ok"]) .hiw-tier:nth-child(2) .hiw-seg {
+          animation-range-start: cover 27vh;
+          animation-range-end: cover 34vh;
+        }
+        :global(html[data-motion="ok"]) .hiw-tier:nth-child(3) .hiw-seg {
+          animation-range-start: cover 34vh;
+          animation-range-end: cover 41vh;
+        }
+        :global(html[data-motion="ok"]) .hiw-end {
+          animation-range-start: cover 41vh;
+          animation-range-end: cover 45vh;
+        }
+        :global(html[data-motion="ok"]) .hiw-hop-line {
+          animation-range-start: cover 53vh;
+          animation-range-end: cover 61vh;
+        }
+        :global(html[data-motion="ok"]) .hiw-ring {
+          animation-range-start: cover 59vh;
+          animation-range-end: cover 64vh;
+        }
+      }
+    }
+  }
+
+  @keyframes hiw-draw {
+    from { stroke-dashoffset: 1; }
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes hiw-reach {
+    from { background-color: var(--color-surface); scale: 0.8; }
+    to { background-color: var(--color-accent); scale: 1; }
+  }
+  @keyframes hiw-pop {
+    from { opacity: 0; scale: 0.5; }
+    to { opacity: 1; scale: 1; }
+  }
+  @keyframes hiw-hop {
+    from { clip-path: inset(0 0 100% 0); }
+    to { clip-path: inset(0 0 0 0); }
+  }
+</style>

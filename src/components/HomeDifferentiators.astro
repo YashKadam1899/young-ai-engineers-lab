@@ -25,15 +25,18 @@ const differentiators = [
     <p class="mx-auto mt-3 max-w-prose text-center text-fg-muted">
       Plenty of short AI and coding programs are already on offer. Three things about ours are deliberately not the same.
     </p>
-    <div class="mt-stack grid gap-grid md:grid-cols-3">
+    <div class="mt-stack grid gap-grid md:grid-cols-3" data-reveal-stagger>
       {differentiators.map((d) => (
-        <div class="flex flex-col rounded-2xl border border-line bg-surface-raised p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:border-accent-soft hover:shadow-md">
+        <div class="flex flex-col rounded-2xl border border-line bg-surface-raised p-6 shadow-sm transition-[translate,box-shadow,border-color] hover:-translate-y-0.5 hover:border-accent-soft hover:shadow-md">
           <h3 class="font-display text-h3 font-semibold text-fg">{d.title}</h3>
           <p class="mt-4 text-xs font-semibold uppercase tracking-wider text-fg-subtle">Usually</p>
           <p class="mt-1 text-small text-fg-subtle">{d.usually}</p>
-          <div class="my-4 h-px bg-line"></div>
-          <p class="text-xs font-semibold uppercase tracking-wider text-accent">Here</p>
-          <p class="mt-1 text-small text-fg-muted">{d.ours}</p>
+          {/* Two beats after the card lands: the rule draws, then "Here" rises. */}
+          <div class="my-4 h-px bg-line" data-reveal-then="draw"></div>
+          <div data-reveal-then>
+            <p class="text-xs font-semibold uppercase tracking-wider text-accent">Here</p>
+            <p class="mt-1 text-small text-fg-muted">{d.ours}</p>
+          </div>
         </div>
       ))}
     </div>

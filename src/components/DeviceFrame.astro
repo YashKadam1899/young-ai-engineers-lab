@@ -1,0 +1,202 @@
+---
+// The lab screen's frame, shared by Scenes 2, 3, 4 and 7: a desktop monitor
+// with a navy bezel, a chin with the power light, a neck and a foot. Pure
+// decoration drawn in CSS; the scene's own screen content goes in the slot,
+// so every text on it exists once.
+//
+// Below 640 px wide (portrait phones), a frame with the phone prop becomes a
+// generic phone instead: a thin navy bezel, a camera pill and a home
+// indicator, no brand, notch or buttons. It is the student's own phone; the
+// prompt box, not the device, carries the story on from Scene 1. Landscape
+// phones and tablets keep the monitor.
+//
+// Props:
+//   screen       the monitor screen's shape: 'video' (16:9), 'wide' (16:10),
+//                or 'auto' (the content's own height)
+//   phone        the phone screen, under 640 px: 'ratio' (9:16, for content
+//                that fits) or 'fit' (the content's own height). Left unset,
+//                the frame stays a monitor at every width. The phone's width
+//                is the --device-phone-w custom property, set by the scene.
+//   class        on the root, for sizing from the parent, plus two looks:
+//                device-small (Scene 3's smaller chrome) and device-glow (a
+//                glow in the accent colour in place of the navy shadow), or
+//                device-ring (a faint edge, for a frame on a dark board)
+//   screenClass  on the screen: its fill, its layout and its text
+//
+// The screen always clips with overflow: clip. Any other value but visible
+// makes it a scroll container, and Scene 3's view timelines would bind to it
+// rather than to the page. No container-type on the screen either: inside a
+// shrink-to-fit parent it collapses the frame to zero width. 'fit' sets no
+// aspect ratio at all: WebKit cuts a clipped box with an aspect ratio to that
+// ratio's height even when its content is taller.
+//
+// State hooks stay in the owners' markup: Astro scopes a style to the
+// component that renders the element, so a hook moved in here loses its
+// owner's styles. The root is never aria-hidden; the owner decides what is
+// read out, and the chrome keeps itself out of the accessibility tree.
+interface Props {
+  screen?: 'video' | 'wide' | 'auto';
+  phone?: 'ratio' | 'fit';
+  class?: string;
+  screenClass?: string;
+}
+const { screen = 'auto', phone, class: className, screenClass } = Astro.props;
+---
+<div class:list={['device', className]} data-screen={screen} data-phone={phone}>
+  <div class="device-bezel">
+    {phone && <span aria-hidden="true" class="device-camera"></span>}
+    <div class:list={['device-screen', screenClass]}><slot /></div>
+    {phone && <span aria-hidden="true" class="device-home"></span>}
+    <span aria-hidden="true" class="device-chin"><span class="device-power"></span></span>
+  </div>
+  <span aria-hidden="true" class="device-neck"></span>
+  <span aria-hidden="true" class="device-foot"></span>
+</div>
+
+<style>
+  .device {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  .device-bezel {
+    position: relative;
+    width: 100%;
+    padding: 0.5rem 0.5rem 0;
+    border-radius: 1rem;
+    background: var(--color-fg);
+    box-shadow: 0 0.75rem 2rem -1rem color-mix(in oklab, var(--color-fg) 45%, transparent);
+  }
+  /* Concentric corners: the bezel's radius less its padding. */
+  .device-screen {
+    overflow: clip;
+    border-radius: 0.5rem;
+  }
+  .device[data-screen='video'] .device-screen {
+    aspect-ratio: 16 / 9;
+  }
+  .device[data-screen='wide'] .device-screen {
+    aspect-ratio: 16 / 10;
+  }
+  .device-chin {
+    display: flex;
+    height: 1.25rem;
+    align-items: center;
+    justify-content: center;
+  }
+  .device-power {
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 50%;
+    background: var(--color-accent-soft);
+  }
+  .device-neck {
+    width: 3rem;
+    height: 1.75rem;
+    background: color-mix(in oklab, var(--color-fg) 85%, var(--color-surface));
+  }
+  .device-foot {
+    width: 9rem;
+    height: 0.5rem;
+    border-radius: 0.5rem 0.5rem 0.25rem 0.25rem;
+    background: var(--color-fg);
+  }
+
+  .device-small .device-bezel {
+    padding: 0.375rem 0.375rem 0;
+    border-radius: 0.75rem;
+  }
+  .device-small .device-screen {
+    border-radius: 0.375rem;
+  }
+  .device-small .device-chin {
+    height: 0.875rem;
+  }
+  .device-small .device-power {
+    width: 0.25rem;
+    height: 0.25rem;
+  }
+  .device-small .device-neck {
+    width: 2rem;
+    height: 0.625rem;
+  }
+  .device-small .device-foot {
+    width: 6rem;
+    height: 0.375rem;
+  }
+
+  .device-glow .device-bezel {
+    box-shadow: 0 0.75rem 2rem -1rem color-mix(in oklab, var(--color-accent) 60%, transparent);
+  }
+  .device-ring .device-bezel {
+    box-shadow:
+      0 0 0 1px color-mix(in oklab, var(--color-fg-inverse) 15%, transparent),
+      0 0.75rem 2rem -1rem color-mix(in oklab, var(--color-fg) 45%, transparent);
+  }
+
+  /* The phone's camera and home indicator exist only on phone frames, and
+     show only under 640 px. */
+  .device-camera,
+  .device-home {
+    display: none;
+  }
+
+  /* Phone mode. These come after the monitor rules and outweigh the
+     device-small ones, so Scene 3's phones get the same chrome as the rest. */
+  @media (width < 40rem) {
+    .device[data-phone] {
+      max-width: var(--device-phone-w, 20rem);
+      margin-inline: auto;
+    }
+    .device[data-phone] .device-bezel {
+      padding: 0.375rem;
+      border-radius: 2rem;
+    }
+    /* Status bar and home bar room inside the screen, so the camera and the
+       home indicator sit over the screen's own fill, as on a real phone. */
+    .device[data-phone] .device-screen {
+      padding-top: 1.75rem;
+      padding-bottom: 0.875rem;
+      border-radius: 1.625rem;
+    }
+    .device[data-phone='ratio'] .device-screen {
+      aspect-ratio: 9 / 16;
+    }
+    .device[data-phone='fit'] .device-screen {
+      aspect-ratio: auto;
+    }
+    .device[data-phone] .device-camera {
+      display: block;
+      position: absolute;
+      z-index: 1;
+      top: 0.725rem;
+      left: 0;
+      right: 0;
+      width: 4.25rem;
+      height: 1.05rem;
+      margin-inline: auto;
+      border-radius: 9999px;
+      background: var(--color-fg);
+    }
+    .device[data-phone] .device-home {
+      display: block;
+      position: absolute;
+      z-index: 1;
+      bottom: 0.6875rem;
+      left: 0;
+      right: 0;
+      width: 33%;
+      height: 4px;
+      margin-inline: auto;
+      border-radius: 9999px;
+      background: color-mix(in oklab, var(--color-fg) 25%, transparent);
+    }
+    .device[data-phone] .device-chin,
+    .device[data-phone] .device-neck,
+    .device[data-phone] .device-foot {
+      display: none;
+    }
+  }
+</style>

@@ -25,6 +25,5 @@ Pages, or any static host.
 
 ## Design spec
 
-See `../docs/superpowers/specs/2026-09-27-website-design.md` for the full
-content/design rationale (including what's deliberately excluded from the
-For Investors page, and why).
+The design rationale (including what's deliberately excluded from the For
+Investors page, and why) is kept with the site's source, not in this copy.

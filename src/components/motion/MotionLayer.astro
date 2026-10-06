@@ -1,0 +1,108 @@
+---
+// The motion layer: shared motion tokens plus the reveal-on-enter primitive.
+// BaseLayout includes it once, so every page has it. It is not a wrapper:
+// components opt in with data attributes and need no script of their own.
+//
+// THE CONTRACT, for every component and scene
+// - The one-line check at the top of <head> sets html[data-motion="ok"] only
+//   when scripts run and the reader has not asked for reduced motion.
+// - Content must be fully readable with scripts off, under
+//   prefers-reduced-motion: reduce, and in print. A "waiting to enter" state
+//   may exist only under html[data-motion="ok"]. Never put opacity: 0 on
+//   content in unconditional CSS.
+// - Scene motion of your own: gate it under html[data-motion="ok"] in CSS, or
+//   check document.documentElement.dataset.motion === 'ok' in a script, and
+//   take easing and timing from the --motion-* tokens in motion.css.
+//
+// THE PRIMITIVE (markup only)
+//   data-reveal              this element rises and fades in as it enters
+//   data-reveal="fade"       fades only, no movement
+//   data-reveal-stagger      on a list or card row: each child enters on its
+//                            own, and children entering together play 60ms
+//                            apart in page order (capped, so long lists
+//                            still finish fast)
+//   data-reveal-stagger="fade"   the same, fade only
+//   data-reveal-then         inside a revealing element: a second beat that
+//                            follows it (several play in DOM order)
+//   data-reveal-then="draw"  a second beat that wipes in left to right, for
+//                            rules and underlines
+// Tune per section or element by overriding a token, e.g.
+//   style="--motion-reveal-distance: 8px"
+//
+// Rules of use
+// - Reveals play once. Anything already scrolled past at load just shows.
+// - Do not nest reveal targets, and do not put data-reveal on an element that
+//   runs its own CSS animation (wrap it): the reveal owns the animation
+//   property. CSS transitions on the element are fine; the waiting state is
+//   held by an animation, so releasing it never starts one of them.
+// - Failsafe: if this script never runs (blocked, or a browser too old for
+//   module scripts), the waiting state ends by itself after 3s.
+// - Checking a page: a full-page capture that never scrolls shows targets
+//   below the fold still waiting (blank). Scroll through first, or emulate
+//   prefers-reduced-motion: reduce to see the settled page.
+//
+// The tokens and the reveal CSS live in motion.css beside this file.
+import './motion.css';
+---
+<script>
+  const root = document.documentElement;
+  const TARGETS = '[data-reveal], [data-reveal-stagger] > *';
+  // A batch staggers at most this many steps, so a long list still lands fast.
+  const MAX_STEP = 5;
+
+  // Only elements the CSS is actually holding get animated. Anything else
+  // (the failsafe already fired, or the media query does not apply) is
+  // already showing, and is marked done so it can never flash out again.
+  const isHeld = (el: Element) =>
+    !el.getAnimations || el.getAnimations().some((a) => (a as CSSAnimation).animationName === 'motion-hold');
+
+  const reveal = (el: HTMLElement, step: number) => {
+    el.style.setProperty('--reveal-index', String(Math.min(step, MAX_STEP)));
+    el.querySelectorAll<HTMLElement>('[data-reveal-then]').forEach((part, i) => {
+      part.style.setProperty('--reveal-step', String(i + 1));
+    });
+    el.dataset.revealed = 'in';
+  };
+
+  if (root.dataset.motion === 'ok') {
+    const targets = Array.from(document.querySelectorAll<HTMLElement>(TARGETS));
+
+    if (!('IntersectionObserver' in window)) {
+      targets.forEach((el) => (el.dataset.revealed = 'skip'));
+    } else if (targets.length) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          const entering: HTMLElement[] = [];
+          for (const entry of entries) {
+            const el = entry.target as HTMLElement;
+            if (entry.isIntersecting) {
+              entering.push(el);
+            } else if (entry.boundingClientRect.bottom <= 0) {
+              // Already above the viewport (reload mid-page, or a #hash link).
+              el.dataset.revealed = 'skip';
+              io.unobserve(el);
+            }
+          }
+          entering.sort((a, b) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
+          // Children of one stagger parent that enter together share a count.
+          const counts = new Map<Element, number>();
+          for (const el of entering) {
+            const parent = el.parentElement;
+            const group = parent && parent.hasAttribute('data-reveal-stagger') ? parent : el;
+            const step = counts.get(group) ?? 0;
+            counts.set(group, step + 1);
+            reveal(el, step);
+            io.unobserve(el);
+          }
+        },
+        { rootMargin: '0px 0px -10% 0px' },
+      );
+
+      for (const el of targets) {
+        if (isHeld(el)) io.observe(el);
+        else el.dataset.revealed = 'skip';
+      }
+      root.dataset.revealReady = '';
+    }
+  }
+</script>

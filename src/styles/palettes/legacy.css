@@ -1,5 +1,6 @@
 /*
- * Palette: legacy — the Website 1.0 indigo / coral / cream, reproduced exactly.
+ * Palette: legacy — the Website 1.0 indigo / coral / cream, reproduced exactly
+ * apart from the focus ring (see global.css).
  *
  * Rationale: the zero-visual-change baseline for the 2.0 token migration.
  * Every value below is the 1.0 primitive the semantic token replaced (named in
@@ -10,7 +11,7 @@
  */
 
 :root {
-  /* Core tokens (contract section 1) */
+  /* Core tokens: every palette sets all of these */
   --color-surface: #fbf7ee;         /* cream-100 */
   --color-surface-raised: #fffdf8;  /* cream-50 */
   --color-surface-tint: #f1efff;    /* indigo-50 */
@@ -29,7 +30,7 @@
   --color-cta-fg: #ffffff;          /* white */
   --color-highlight: #ffc0a8;       /* coral-200 */
 
-  /* Optional tokens (contract section 1b): each falls back to a core token
+  /* Optional tokens: each falls back to a core token
      when a palette omits it, so these are needed only for exact 1.0 parity. */
   --color-fg-secondary: #211f3d;       /* ink-800 */
   --color-accent-fg: #ffffff;          /* white */

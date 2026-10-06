@@ -1,0 +1,307 @@
+---
+// Scene 3, "Something happens": one small lab screen (a DeviceFrame, as in
+// Scenes 2, 4 and 7) beside each curriculum pillar. Under 640 px it is a
+// phone at 9:16, its content at the top, rising out of the bottom edge of its
+// card: the card clips the lower part of the phone (see HomePillars.astro).
+// Each screen plays a different event, scrubbed by scroll position:
+//
+//   sort      Foundations             apps get stamped "follows rules" or "learns from examples"
+//   steps     Computational Thinking  a big task breaks into numbered steps along a drawn line
+//   classify  Hands-On Creation       a photo is scanned, confidence bars fill, a label lands
+//   factcheck Ethics & Evaluation     an AI answer arrives, the wrong word is marked and flagged
+//
+// Zero JavaScript. CSS scroll-driven animations (a view timeline on the
+// screen's wrapper, .s3-monitor) map scroll position straight onto each
+// keyframe, so scrolling back up reverses exactly and a fast jump lands on
+// the right frame: there is no playhead to strand. The markup is the final
+// state, so reduced motion, JS off, or a browser without scroll timelines
+// all get the finished screen.
+//
+// Purely illustrative, and screen readers skip it: the pillar text beside it
+// carries the content. No ancestor of .s3-monitor may become a scroll
+// container (any overflow value except visible or clip does that), or it
+// becomes the timeline's scroller and the events stop tracking the page.
+// Clip on the card is intended: it crops the phone without making a
+// scroller, so the timeline stays bound to the page.
+import DeviceFrame from './DeviceFrame.astro';
+
+interface Props {
+  kind: 'sort' | 'steps' | 'classify' | 'factcheck';
+}
+const { kind } = Astro.props;
+
+const titles = {
+  sort: 'AI or not?',
+  steps: 'Break it down',
+  classify: 'My fruit sorter',
+  factcheck: 'Fact check',
+} as const;
+
+// Scroll window for one element, as percentages of the screen's "cover"
+// range (of .s3-monitor, the frame's wrapper): 0% is its top edge touching
+// the bottom of the viewport, 50% is it centred. Every event finishes by
+// about 45%, so a reader who stops to read the row sees the finished screen,
+// never a half-state. On a phone the wrapper keeps the whole phone's height;
+// only the card's clip hides the lower part, so the windows are unchanged.
+const t = (a: number, b: number) => `--s3-a:${a}%;--s3-b:${b}%`;
+
+const apps = [
+  { name: 'Calculator', icon: 'calc', ai: false, at: t(22, 28) },
+  { name: 'Photo search', icon: 'photo', ai: true, at: t(29, 35) },
+  { name: 'Alarm clock', icon: 'alarm', ai: false, at: t(36, 42) },
+];
+
+const steps = [
+  { text: "Count who's coming", dot: t(22, 26), label: t(23, 28) },
+  { text: 'Pick a day and a place', dot: t(29, 33), label: t(30, 35) },
+  { text: 'Share out the jobs', dot: t(36, 40), label: t(37, 42) },
+];
+
+const guesses = [
+  { label: 'Mango', width: '88%', top: true, at: t(33, 39) },
+  { label: 'Guava', width: '9%', top: false, at: t(34, 40) },
+  { label: 'Banana', width: '3%', top: false, at: t(35, 41) },
+];
+---
+{/* .s3-monitor carries the view timeline, so it stays in this component's
+    markup, around the frame. */}
+<div class="s3-monitor mx-auto w-full max-w-sm md:max-w-none" aria-hidden="true">
+  <DeviceFrame screen="wide" phone="ratio" class="device-small device-glow [--device-phone-w:15rem]" screenClass="flex flex-col bg-surface-raised text-xs text-fg">
+    <div class="flex items-center gap-2 bg-surface-tint px-3 py-1.5 font-semibold text-accent-strong">
+      <span class="size-1.5 rounded-full bg-accent"></span>
+      {titles[kind]}
+    </div>
+
+    <div class="flex flex-1 flex-col justify-center gap-2 p-3 max-sm:justify-start">
+      {kind === 'sort' && (
+        <ul class="flex flex-col gap-1">
+          {apps.map((app) => (
+            <li class="relative flex items-center gap-2 rounded-md px-2 py-1.5">
+              {app.ai && <span class="s3-anim s3-glow absolute inset-0 rounded-md bg-surface-tint" style={app.at}></span>}
+              <svg class="relative size-4 shrink-0 text-fg-muted" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                {app.icon === 'calc' && (
+                  <>
+                    <rect x="3.5" y="1.5" width="9" height="13" rx="1.5" />
+                    <path d="M5.5 4.5h5M5.5 8h.01M8 8h.01M10.5 8h.01M5.5 11h.01M8 11h.01M10.5 11h.01" />
+                  </>
+                )}
+                {app.icon === 'photo' && (
+                  <>
+                    <rect x="1.5" y="2.5" width="13" height="11" rx="1.5" />
+                    <circle cx="5.5" cy="6" r="1.25" />
+                    <path d="M2 12l4-4 3 3 2-2 3.5 3.5" />
+                  </>
+                )}
+                {app.icon === 'alarm' && (
+                  <>
+                    <circle cx="8" cy="9" r="5" />
+                    <path d="M8 6.5V9l1.75 1.25M2.5 3.5l2-1.5M13.5 3.5l-2-1.5" />
+                  </>
+                )}
+              </svg>
+              <span class="relative font-semibold">{app.name}</span>
+              <span
+                class:list={[
+                  's3-anim s3-stamp relative ml-auto shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold',
+                  app.ai ? 'bg-accent text-accent-fg' : 'border border-line-strong text-fg-muted',
+                ]}
+                style={app.at}
+              >
+                {app.ai ? 'Learns from examples' : 'Follows rules'}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {kind === 'steps' && (
+        <>
+          <p class="self-start rounded-md bg-surface-tint px-2.5 py-1 font-semibold text-accent-strong">Plan the class picnic</p>
+          <div class="relative">
+            <span class="s3-anim s3-draw absolute top-2 bottom-2 left-[7px] w-0.5 rounded-full bg-line-strong" style={t(22, 40)}></span>
+            <ol class="relative flex flex-col gap-1.5">
+            {steps.map((step, i) => (
+              <li class="flex items-center gap-2.5">
+                <span class="s3-anim s3-pop relative flex size-4 shrink-0 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-fg" style={step.dot}>
+                  {i + 1}
+                </span>
+                <span class="s3-anim s3-slide" style={step.label}>{step.text}</span>
+              </li>
+            ))}
+            </ol>
+          </div>
+        </>
+      )}
+
+      {kind === 'classify' && (
+        <>
+          <div class="flex items-center gap-3">
+            <div class="relative size-20 shrink-0 overflow-clip rounded-md bg-surface-tint">
+              <svg class="absolute inset-0 m-auto size-14" viewBox="0 0 64 64">
+                <path class="s3-mango" d="M20 22c6-10 24-12 30-2 6 10 2 26-10 32-12 6-26 0-28-12-1-8 3-13 8-18z" />
+                <ellipse class="fill-surface-raised" opacity="0.45" cx="25" cy="31" rx="4.5" ry="8" transform="rotate(-25 25 31)" />
+                <path class="stroke-fg-muted" d="M33 15c0-4 2-7 5-9" fill="none" stroke-width="2.5" stroke-linecap="round" />
+                <path class="fill-accent" d="M36 10c6-6 16-6 20-1-6 5-14 5-20 1z" />
+              </svg>
+              <span class="absolute top-1 left-1 size-2 border-t-2 border-l-2 border-accent"></span>
+              <span class="absolute top-1 right-1 size-2 border-t-2 border-r-2 border-accent"></span>
+              <span class="absolute bottom-1 left-1 size-2 border-b-2 border-l-2 border-accent"></span>
+              <span class="absolute right-1 bottom-1 size-2 border-r-2 border-b-2 border-accent"></span>
+              <span class="s3-anim s3-scan s3-scanner absolute inset-0" style={t(20, 34)}></span>
+            </div>
+            <ul class="flex min-w-0 flex-1 flex-col gap-1.5">
+              {guesses.map((g) => (
+                <li>
+                  <span class:list={['font-semibold', g.top ? 'text-fg' : 'text-fg-muted']}>{g.label}</span>
+                  <span class="mt-0.5 flex h-1.5 overflow-clip rounded-full bg-surface-tint">
+                    <span class:list={['s3-anim s3-fill rounded-full', g.top ? 'bg-accent' : 'bg-line-strong']} style={`width:${g.width};${g.at}`}></span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <p class="s3-anim s3-pop flex items-center gap-1 self-start rounded-full bg-accent py-0.5 pr-2.5 pl-1.5 font-semibold text-accent-fg" style={t(41, 45)}>
+            <svg class="size-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-6.5" /></svg>
+            It's a mango
+          </p>
+        </>
+      )}
+
+      {kind === 'factcheck' && (
+        <>
+          <p class="ml-auto max-w-[85%] rounded-lg rounded-br-sm bg-surface-tint px-2.5 py-1.5 font-semibold">Which planet is closest to the Sun?</p>
+          <div class="s3-anim s3-rise flex max-w-[92%] items-start gap-1.5" style={t(21, 27)}>
+            <span class="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-fg text-[9px] font-bold text-fg-inverse">AI</span>
+            <p class="rounded-lg rounded-tl-sm border border-line px-2.5 py-1.5">
+              <span class="relative">
+                <span class="s3-anim s3-mark absolute -inset-x-0.5 inset-y-0 rounded-sm bg-highlight" style={t(30, 35)}></span>
+                <span class="relative font-semibold">Venus</span>
+              </span>{' '}is the closest planet to the Sun.
+            </p>
+          </div>
+          <p class="s3-anim s3-flag ml-6.5 flex items-center gap-1 self-start rounded-md bg-highlight px-2 py-1 font-semibold" style={t(37, 43)}>
+            <svg class="size-3.5 shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="8" cy="8" r="6.25" /><path d="M8 4.75v3.75M8 11h.01" /></svg>
+            Made up! It's Mercury.
+          </p>
+        </>
+      )}
+    </div>
+  </DeviceFrame>
+</div>
+
+<style>
+  /* The frame's glow (device-glow) is the awakening beat's screen colour. */
+
+  /* Phones: the card (HomePillars.astro) clips its bottom edge, and the
+     wrapper's negative margin lets the phone run 8rem past it, so only the
+     top of the phone shows, rising out of the card. The margin sits on the
+     wrapper, an item of the card's layout, and not on the frame inside:
+     there it would make the wrapper shorter, and the timeline with it.
+     Without clip support the whole phone shows instead. The stamps get a
+     little smaller so "Learns from examples" clears the edge of a 15rem
+     phone. */
+  @media (width < 40rem) {
+    @supports (overflow: clip) {
+      .s3-monitor {
+        margin-bottom: -8rem;
+      }
+    }
+    .s3-stamp {
+      padding-inline: 0.375rem;
+      font-size: 10px;
+    }
+  }
+  /* The mango: a green-gold, ripening fruit. Mixed in oklch so the hue runs
+     from marigold through yellow-green, not through grey; marigold itself
+     stays for buttons only. */
+  .s3-mango {
+    fill: color-mix(in oklch, var(--color-cta) 75%, var(--color-accent));
+  }
+  .s3-scanner {
+    /* Static and final state: no scanner. It only exists mid-scan. */
+    opacity: 0;
+    background: linear-gradient(
+      to bottom,
+      transparent 40%,
+      color-mix(in oklab, var(--color-accent) 22%, transparent) calc(100% - 2px),
+      var(--color-accent) calc(100% - 2px)
+    );
+  }
+
+  /*
+   * Scroll-linked motion. Three gates: the reader hasn't asked for reduced
+   * motion (checked again here in case it changes after load), the browser
+   * has scroll timelines, and the shared motion contract has set
+   * html[data-motion="ok"]. Fail any of them and the markup's final state
+   * shows, unanimated. Only transform and opacity animate.
+   */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      :global(html[data-motion="ok"]) .s3-monitor {
+        view-timeline-name: --s3;
+      }
+      :global(html[data-motion="ok"]) .s3-anim {
+        animation-fill-mode: both;
+        animation-timing-function: linear;
+        animation-timeline: --s3;
+        animation-range: cover var(--s3-a) cover var(--s3-b);
+      }
+      :global(html[data-motion="ok"]) .s3-stamp { animation-name: s3-stamp; }
+      :global(html[data-motion="ok"]) .s3-glow { animation-name: s3-fade; }
+      :global(html[data-motion="ok"]) .s3-draw { animation-name: s3-draw; transform-origin: top; }
+      :global(html[data-motion="ok"]) .s3-pop { animation-name: s3-pop; }
+      :global(html[data-motion="ok"]) .s3-slide { animation-name: s3-slide; }
+      :global(html[data-motion="ok"]) .s3-scan { animation-name: s3-scan; }
+      :global(html[data-motion="ok"]) .s3-fill { animation-name: s3-fill; transform-origin: left; }
+      :global(html[data-motion="ok"]) .s3-rise { animation-name: s3-rise; }
+      :global(html[data-motion="ok"]) .s3-mark { animation-name: s3-fill; transform-origin: left; }
+      :global(html[data-motion="ok"]) .s3-flag { animation-name: s3-flag; }
+    }
+  }
+
+  /* A rubber stamp: lands big and tilted, overshoots, settles. */
+  @keyframes s3-stamp {
+    0% { opacity: 0; transform: scale(1.6) rotate(-12deg); }
+    55% { opacity: 1; transform: scale(0.94) rotate(2deg); }
+    100% { opacity: 1; transform: none; }
+  }
+  @keyframes s3-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes s3-draw {
+    from { transform: scaleY(0); }
+    to { transform: none; }
+  }
+  @keyframes s3-pop {
+    0% { opacity: 0; transform: scale(0.6); }
+    65% { opacity: 1; transform: scale(1.12); }
+    100% { opacity: 1; transform: none; }
+  }
+  @keyframes s3-slide {
+    from { opacity: 0; transform: translateX(-0.75rem); }
+    to { opacity: 1; transform: none; }
+  }
+  /* The scan line sweeps top to bottom, then switches off. */
+  @keyframes s3-scan {
+    0% { opacity: 0; transform: translateY(-100%); }
+    12% { opacity: 1; }
+    85% { opacity: 1; transform: none; }
+    100% { opacity: 0; transform: none; }
+  }
+  @keyframes s3-fill {
+    from { transform: scaleX(0); }
+    to { transform: none; }
+  }
+  @keyframes s3-rise {
+    from { opacity: 0; transform: translateY(0.5rem) scale(0.97); }
+    to { opacity: 1; transform: none; }
+  }
+  /* The flag lands with a small wobble: caught you. */
+  @keyframes s3-flag {
+    0% { opacity: 0; transform: scale(0.85) rotate(-4deg); }
+    50% { opacity: 1; transform: scale(1.06) rotate(2deg); }
+    75% { transform: scale(1) rotate(-1deg); }
+    100% { opacity: 1; transform: none; }
+  }
+</style>

@@ -1,0 +1,284 @@
+---
+// The lab screen, close up, showing an AI prompt box. Scene 2, "the blank
+// screen": the student tries a vague school question or two, deletes each
+// one, and settles on the resting prompt. It is never sent and never
+// answered; answering is the job of Scenes 3 and 4.
+//
+// Decorative only: the whole screen is kept out of the accessibility tree
+// and out of page translation, with no live region. The heading, copy and stat cards carry the meaning.
+// Drawn with plain elements and styles, no images; the frame around the
+// screen is DeviceFrame's, the same one Scenes 3, 4 and 7 use. Under 640 px
+// it is a phone at a set 9:16, with a small app bar at the top and the
+// field pinned to the bottom, as in a chat app; from 640 px up, a monitor
+// with the field centred.
+//
+// Field contract (the phone screens rely on it):
+//   [data-prompt-cycle]        the root; holds the tries as JSON
+//   [data-prompt-field]        the box the script watches
+//   [data-prompt-typed]        the only node whose text the script writes;
+//                              holds the resting prompt in the markup, and
+//                              again as its value for print
+//   [data-prompt-placeholder]  shown only while the typed text is empty
+//   [data-prompt-ghost]        unseen copies of the resting prompt, every try
+//                              and the hint, stacked in one cell with the
+//                              typed text so the box always keeps the height
+//                              of the tallest; never selectable
+//   [data-prompt-running]      set on the root by the script during a run;
+//                              the hint stays away under it, so the hint
+//                              must stay inside the root
+// One per page: the script drives the first root only. The field never
+// cuts text off: a string that does not fit on one line wraps onto a
+// second, and the copies reserve that second line before any run, so
+// typing and deleting never change the box's height. It is one line when
+// every string fits and two only when one does not. At the default text
+// size every string fits on one line at 320, 360 and 390 px wide; a larger
+// browser text size may take two. The build guard below cannot measure
+// that, so check the fit by eye after changing a string.
+// The script never reads frame classes or sizes.
+//
+// Motion contract: the markup is the final frame. With scripts off, under
+// reduced motion and in print, the resting prompt shows with a solid caret
+// and no hint; print styles back that up where the print event never
+// fires. Under html[data-motion="ok"], a run of at most 5 s plays each time
+// the field comes fully into view, then the screen is still. A field
+// already in view at load plays its first run on the reader's first scroll.
+// The caret never blinks.
+import DeviceFrame from './DeviceFrame.astro';
+
+interface Props {
+  /** The question the box rests on: in the markup, and where every run ends. */
+  rest: string;
+  /** Questions typed and deleted before the rest, in turn; two at least.
+      Plain ASCII text, 23 characters at most: typing splits strings by code
+      unit. */
+  tries: string[];
+  /** Faint hint text shown while nothing is typed. */
+  placeholder?: string;
+  /** Sizing and placement from the parent; the frame keeps its own shape. */
+  class?: string;
+}
+const { rest, tries, placeholder = 'Type a question…', class: className } = Astro.props;
+// Build-time guards. Every string stays short and plain, so the field needs
+// two lines at most; this checks length, not the pixel fit.
+if (tries.length < 2) throw new Error('PromptScreen: give at least two tries.');
+for (const s of [rest, ...tries]) {
+  if (!/^[\x20-\x7e]{1,23}$/.test(s)) throw new Error(`PromptScreen: "${s}" must be 1 to 23 plain ASCII characters.`);
+}
+// Each run must end within 5 s of its start. This mirrors the script's
+// timing below: change one, change both.
+const runMs = (from: string, queue: string[]) => {
+  let t = 340; // lead
+  let shown = from;
+  for (const s of queue) {
+    if (shown) t += 8 * (shown.length - 1) + 280; // delete, then the empty pause
+    for (let i = 0; i < s.length; i++) t += i ? (s[i - 1] == ' ' ? 92 : 32) : 0; // type
+    t += 600; // hold
+    shown = s;
+  }
+  return t - 600; // the last step lands as the rest completes
+};
+const runs = [runMs('', [tries[0], tries[1], rest]), ...tries.map((s) => runMs(rest, [s, rest]))];
+if (Math.max(...runs) > 5000) throw new Error(`PromptScreen: a run lasts ${Math.max(...runs)} ms; keep each under 5,000.`);
+---
+<div data-prompt-cycle={JSON.stringify(tries)} aria-hidden="true" translate="no" class={className}>
+  <DeviceFrame screen="video" phone="ratio" class="[--device-phone-w:17rem]" screenClass="flex flex-col bg-surface-raised px-[7%] pb-[2%] max-sm:px-0">
+    {/* Phones only: the helper app's bar, styled like Scene 3's title bars. */}
+    <div class="flex items-center gap-2 bg-surface-tint px-3 py-1.5 text-xs font-semibold text-accent-strong sm:hidden">
+      <span class="size-1.5 rounded-full bg-accent"></span>
+      AI helper
+    </div>
+    {/* The field's place: centred on the monitor; on a phone, at the bottom
+        of an empty conversation, which also leaves room for a second line
+        at a larger text size. */}
+    <div class="flex flex-1 items-center justify-center max-sm:items-end max-sm:px-2.5 max-sm:pb-1">
+      {/* Below sm (the phone) the field text is text-small and the field a
+          little tighter, so at the default text size every string fits on one
+          line at 320 px. */}
+      <div data-prompt-field class="flex w-full max-w-md items-center gap-2 rounded-xl border border-line-strong bg-surface-raised py-1.5 pr-1.5 pl-3 shadow-sm sm:gap-3 sm:py-2 sm:pr-2 sm:pl-5">
+        {/* Every child shares one cell: first the live line (typed text,
+            then the hint), then the unseen copies that set its height. */}
+        <span class="grid min-w-0 flex-1 grid-cols-1 text-left text-small text-fg wrap-break-word *:col-start-1 *:row-start-1 sm:text-body">
+          <span><span data-prompt-typed={rest}>{rest}</span><span data-prompt-placeholder class="text-fg-subtle/75">{placeholder}</span></span>
+          {[rest, ...tries, placeholder].map((s) => <span data-prompt-ghost class="invisible select-none"><span>{s}</span></span>)}
+        </span>
+        <span class="grid size-8 shrink-0 place-items-center rounded-full bg-surface-tint text-fg-subtle/70">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="M12 19V5M5 12l7-7 7 7" /></svg>
+        </span>
+      </div>
+    </div>
+  </DeviceFrame>
+</div>
+
+<style>
+  /* The caret: a solid bar drawn as the typed text's end border, so typing
+     moves no other box. An empty span still draws it, and on two lines it
+     sits at the end of the second. Each copy's text gets the same unseen
+     end border, so it wraps exactly where the typed text would: the border
+     must sit on a span that holds the text, or Chrome lets it overhang the
+     line instead of wrapping. */
+  [data-prompt-typed],
+  [data-prompt-ghost] > span {
+    border-inline-end: 2px solid currentColor;
+    padding-inline-end: 2px;
+  }
+
+  /* Typed text replaces the hint, as in a real input. During a run the hint
+     stays away too, so it never flashes between tries. */
+  [data-prompt-typed]:not(:empty) ~ [data-prompt-placeholder],
+  [data-prompt-running] [data-prompt-placeholder] {
+    display: none;
+  }
+
+  /* Print shows the resting prompt even if the script emptied the box and
+     no print event fired. */
+  @media print {
+    [data-prompt-typed]:empty::before {
+      content: attr(data-prompt-typed);
+    }
+    [data-prompt-placeholder] {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  // Types a try or two into the box, then rests. Runs only under the shared
+  // motion flag. Two observers watch the box. One watches the viewport. Its
+  // first report gives the state at load: a box off screen is emptied so
+  // the hint shows, and a box in view is left at rest until the reader's
+  // first scroll. Every time the box leaves, a run is cancelled, snapping to
+  // the rest unseen, and the next run is armed. The other watches the
+  // viewport below the sticky header and above its bottom 20%: an armed run
+  // starts once the box is fully inside, and uses up the arming, so small
+  // scrolls on screen never restart it. The first scroll arms a box left at
+  // rest at load as if it had just arrived, so if it is still fully inside,
+  // it plays one run there and then. Both decide from their reports, not at
+  // script time: WebKit can run this before the page's styles apply, and a
+  // page opened part way down may not be at its final scroll yet. The first
+  // scroll counts only from two frames after load, so a reload's restored
+  // scroll is not taken for the reader's. A run is timed from its first
+  // frame, so one left in a background tab is over on return. Nothing is
+  // counted. The build guard in the frontmatter mirrors these timings.
+  const root = document.querySelector<HTMLElement>('[data-prompt-cycle]');
+  if (root && document.documentElement.dataset.motion === 'ok' && 'IntersectionObserver' in self) {
+    const field = root.querySelector('[data-prompt-field]')!;
+    const out = root.querySelector('[data-prompt-typed]')!;
+    const rest = out.textContent!;
+    const tries: string[] = JSON.parse(root.dataset.promptCycle!);
+    let armed: boolean | undefined; // unset until the first viewport report
+    let next = 0; // the next try, taken from the pool in turn
+    let raf = 0; // the active run's pending frame; 0 when none is active
+    const reduce = matchMedia('(prefers-reduced-motion:reduce)');
+
+    const write = (s: string) => {
+      if (out.textContent !== s) out.textContent = s;
+    };
+    // Does nothing unless a run is active, so it never refills a box that
+    // was just emptied.
+    const stop = () => {
+      if (!raf) return;
+      cancelAnimationFrame(raf);
+      raf = 0;
+      write(rest);
+      delete root.dataset.promptRunning;
+    };
+
+    const play = () => {
+      // An empty box gets two tries, a box at rest one; then the rest.
+      const queue = out.textContent ? [] : [tries[next++ % tries.length]];
+      queue.push(tries[next++ % tries.length], rest);
+      // Steps of [text, ms after the first frame]; wait is the pause before
+      // the next step.
+      const steps: [string, number][] = [];
+      let shown = out.textContent!;
+      let t = 0;
+      let wait = 340; // lead before the first change
+      for (const s of queue) {
+        // Delete 8 ms a character, then 280 ms on the empty box.
+        for (let i = shown.length - 1; i >= 0; i--) {
+          steps.push([shown.slice(0, i), (t += wait)]);
+          wait = i ? 8 : 280;
+        }
+        // Type 32 ms a character, 92 after a space.
+        for (let i = 0; i < s.length; ) {
+          steps.push([s.slice(0, ++i), (t += wait)]);
+          wait = s[i - 1] == ' ' ? 92 : 32;
+        }
+        wait = 600; // hold the finished question
+        shown = s;
+      }
+      let k = 0;
+      let start = 0;
+      const frame = (now: number) => {
+        start ||= now;
+        while (steps[k]?.[1] <= now - start) k++;
+        if (k) write(steps[k - 1][0]);
+        if (steps[k]) raf = requestAnimationFrame(frame);
+        else stop();
+      };
+      root.dataset.promptRunning = '';
+      raf = requestAnimationFrame(frame);
+    };
+
+    // The reader's first scroll, for a box in view since load. It arms the
+    // box, then observes it afresh: a fresh observation always reports, even
+    // when no threshold was crossed, so the run watcher judges where the box
+    // is after the scroll. Still fully inside, it plays a replay (the rest
+    // is already shown); moved off, it waits for its next entry.
+    const first = () => {
+      if (scrollY == y) return;
+      removeEventListener('scroll', first);
+      armed = true;
+      runs.unobserve(field);
+      runs.observe(field);
+    };
+    // Not added once a run has played: the box left and came back before
+    // this point, so the usual rule has already taken over. A scroll event
+    // that finds the page where it was when the listener was added is the
+    // browser's own, late (a busy Chrome can deliver its restored scroll
+    // after this), so it is passed over and the listener kept.
+    let y = 0;
+    const listen = () => {
+      y = scrollY;
+      next || addEventListener('scroll', first, { passive: true });
+    };
+    // One report can hold an exit and a return; the exit still counts.
+    new IntersectionObserver((entries) => {
+      if (entries.some((e) => !e.isIntersecting)) {
+        armed ?? write('');
+        stop();
+        armed = true;
+        // Gone from view without a scroll (a resize, say): the usual rule
+        // takes over, so the first scroll must not play a run as well.
+        removeEventListener('scroll', first);
+      } else if (armed === undefined) {
+        armed = false;
+        // Listen only from two frames after load: Chrome's scroll
+        // restoration on a reload can land after this report, and it is
+        // not the reader's scroll.
+        const wait = () => requestAnimationFrame(() => requestAnimationFrame(listen));
+        document.readyState == 'complete' ? wait() : addEventListener('load', wait);
+      }
+    }).observe(field);
+    // Test 0.99, not 1: WebKit and Gecko can report 0.9999.
+    const runs = new IntersectionObserver(
+      (entries) => {
+        if (armed && entries.pop()!.intersectionRatio >= 0.99) {
+          armed = false;
+          if (reduce.matches) write(rest);
+          else play();
+        }
+      },
+      // The top margin clears the sticky header, 61 to 89 px tall.
+      { rootMargin: '-90px 0px -20%', threshold: [0, 0.99] },
+    );
+    runs.observe(field);
+    // Print shows the static frame: a run is cut to the rest, and the print
+    // styles fill an empty box. An empty box stays empty after printing, so
+    // the hint and the first run are kept.
+    addEventListener('beforeprint', stop);
+    // Turning on reduced motion cuts a run to the rest too. A run starts only
+    // without it, so any change seen during a run is that switch.
+    reduce.onchange = stop;
+  }
+</script>

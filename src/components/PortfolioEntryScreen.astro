@@ -1,0 +1,161 @@
+---
+// Scene 7's artifact: the lab screen again (a DeviceFrame, as in Scenes 2 to
+// 4; a phone under 640 px), now showing finished work, a small revision
+// chatbot framed as a Student AI Portfolio entry. It pays off Scene 2's
+// near-empty prompt box: same frame, same prompt box at the bottom, but the
+// screen is full and the box's hint is the student's own.
+//
+// Labelled "Example entry" on screen. The content is the kind of project the
+// main program builds (a narrowly scoped helper that refuses off-topic
+// questions), with no student name, number, date or claim attached to it.
+//
+// The frame and its stand are drawn by DeviceFrame; the reveal stays here, on
+// the figure this component renders. The phone takes its content's height
+// ('fit'), so nothing is cut off; at 320 and 360 it is taller than the
+// viewport, which is fine, as nothing on it follows the scroll.
+//
+// Motion is one reveal, run by the script at the end of this file, which sets
+// data-reveal on the figure: pending (below the fold) then done.
+import DeviceFrame from './DeviceFrame.astro';
+
+const messages = [
+  { from: 'student', text: 'Why does a steel ship float when a steel nail sinks?' },
+  { from: 'bot', text: "It's the shape. A ship's hollow hull pushes aside lots of water, and that water pushes back up hard enough to hold it. A nail pushes aside very little, so it sinks." },
+  { from: 'student', text: 'Who will win the next cricket match?' },
+  { from: 'bot', text: "I can't know that, and it isn't Class 8 Science. Ask me about force, light or sound instead!" },
+];
+---
+<figure data-artifact class="artifact relative mx-auto w-full max-w-md lg:max-w-none">
+  {/* Light from the screen falling on the board around it. */}
+  <div aria-hidden="true" class="pointer-events-none absolute inset-x-6 top-10 bottom-16 rounded-full bg-highlight/25 blur-3xl"></div>
+
+  <DeviceFrame phone="fit" class="device-ring [--device-phone-w:20rem]" screenClass="bg-surface-raised text-left text-fg">
+    <div class="flex items-center justify-between gap-3 border-b border-line px-4 py-2.5 sm:px-5">
+      <p class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-fg-subtle">
+        <span aria-hidden="true" class="h-2 w-2 shrink-0 rounded-full bg-accent"></span>
+        Student AI Portfolio
+      </p>
+      <p class="shrink-0 rounded-full bg-surface-tint px-2.5 py-0.5 text-xs font-semibold text-fg">Example entry</p>
+    </div>
+
+    <div class="px-4 pt-4 sm:px-5">
+      <p class="font-display text-h3 font-bold text-fg">Class 8 Science Revision Bot</p>
+      <p class="mt-1 text-small text-fg-muted">Answers revision questions from Class 8 Science, and politely says no to anything else.</p>
+      <ul class="mt-3 flex flex-wrap gap-1.5 text-xs font-semibold text-accent-strong" aria-label="About this project">
+        <li class="rounded-full border border-line-strong px-2.5 py-0.5">Chatbot</li>
+        <li class="rounded-full border border-line-strong px-2.5 py-0.5">Built without code</li>
+        <li class="rounded-full border border-line-strong px-2.5 py-0.5">Tested on off-topic questions</li>
+      </ul>
+    </div>
+
+    <ol class="mt-4 flex flex-col gap-2.5 px-4 sm:px-5" aria-label="Example conversation">
+      {messages.map((m) => (
+        m.from === 'student' ? (
+          <li class="artifact-msg max-w-[85%] self-end rounded-2xl rounded-br-md bg-accent px-3.5 py-2 text-small text-accent-fg">
+            <span class="sr-only">Student: </span>{m.text}
+          </li>
+        ) : (
+          <li class="artifact-msg max-w-[88%] self-start rounded-2xl rounded-bl-md border border-line bg-surface px-3.5 py-2 text-small text-fg">
+            <span class="sr-only">Revision Bot: </span>{m.text}
+          </li>
+        )
+      ))}
+    </ol>
+
+    {/* The prompt box from Scene 2, now ready for the next question. Its hint
+        wraps onto a second line on a narrow phone rather than being cut. */}
+    <div aria-hidden="true" class="m-4 flex items-center gap-2 rounded-xl border border-line-strong bg-surface-raised py-2 pr-2 pl-3.5 sm:m-5">
+      <span class="artifact-caret h-5 w-0.5 shrink-0 rounded-full bg-fg"></span>
+      <span class="min-w-0 text-small text-fg-subtle">Ask a Class 8 Science question…</span>
+      <span class="ml-auto grid h-8 w-8 shrink-0 place-items-center rounded-full bg-accent text-accent-fg">
+        <svg viewBox="0 0 20 20" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M10 16V4M4.5 9.5 10 4l5.5 5.5" /></svg>
+      </span>
+    </div>
+  </DeviceFrame>
+
+  <figcaption class="sr-only">
+    An example Student AI Portfolio entry: a revision chatbot of the kind students build, answering a science question and politely turning down an off-topic one.
+  </figcaption>
+</figure>
+
+<style>
+  /* One confident reveal: the screen rises and settles with the conversation
+     already on it, and the four messages follow a beat behind, close
+     together. The before-state needs both the layout's motion flag and the
+     section script's pending mark, so reduced motion or JS off shows the
+     final screen at once. */
+  .artifact {
+    --artifact-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  :global(html[data-motion='ok']) .artifact[data-reveal='pending'] {
+    opacity: 0;
+    transform: translateY(28px) scale(0.97);
+  }
+
+  :global(html[data-motion='ok']) .artifact[data-reveal='pending'] .artifact-msg {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  .artifact[data-reveal='done'] {
+    transition:
+      opacity 800ms var(--artifact-ease),
+      transform 800ms var(--artifact-ease);
+  }
+
+  .artifact[data-reveal='done'] .artifact-msg {
+    transition:
+      opacity 500ms var(--artifact-ease),
+      transform 500ms var(--artifact-ease);
+  }
+
+  .artifact[data-reveal='done'] .artifact-msg:nth-child(1) { transition-delay: 200ms; }
+  .artifact[data-reveal='done'] .artifact-msg:nth-child(2) { transition-delay: 260ms; }
+  .artifact[data-reveal='done'] .artifact-msg:nth-child(3) { transition-delay: 320ms; }
+  .artifact[data-reveal='done'] .artifact-msg:nth-child(4) { transition-delay: 380ms; }
+
+  /* The cursor blinks four times (about 4.2 s, inside WCAG's 5 s) once the screen lands, then
+     rests solid: ready, not restless, next to the buttons. */
+  @keyframes artifact-caret {
+    50% { opacity: 0; }
+  }
+
+  :global(html[data-motion='ok']) .artifact[data-reveal='done'] .artifact-caret {
+    animation: artifact-caret 1.06s step-end 900ms 4;
+  }
+
+  /* Print shows the final screen too, even if it never scrolled into view. */
+  @media print, (prefers-reduced-motion: reduce) {
+    .artifact,
+    .artifact .artifact-msg,
+    .artifact .artifact-caret {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+</style>
+
+<script>
+  // Mark the screen as still to come only if it starts below the fold, so a
+  // screen already in view at load never blinks out and back in.
+  if (document.documentElement.dataset.motion === 'ok' && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          (entry.target as HTMLElement).dataset.reveal = 'done';
+          io.unobserve(entry.target);
+        }
+      },
+      { rootMargin: '0px 0px -12% 0px' },
+    );
+    for (const screen of document.querySelectorAll<HTMLElement>('[data-artifact]')) {
+      if (screen.getBoundingClientRect().top < window.innerHeight) continue;
+      screen.dataset.reveal = 'pending';
+      io.observe(screen);
+    }
+  }
+</script>

@@ -1,0 +1,266 @@
+---
+// Homepage scene 4 (between the pillars and "How it works"): a real
+// Practitioner-tier prompt is typed into the lab screen (a DeviceFrame, as in
+// Scenes 2, 3 and 7; a phone under 640 px, as tall as its content), then the
+// answer streams back. Prompt and answer are plain text in the HTML from the
+// start; the script only hides the not-yet-typed part with a CSS highlight,
+// so a screen reader, copy-paste and find-in-page always see the whole text.
+// Reduced motion, JS off or no highlight support: the finished state, as is.
+import DeviceFrame from './DeviceFrame.astro';
+
+const prompt =
+  'You’re a geologist. Explain to a Class 8 student why Barren Island, India’s only active volcano, sometimes erupts. 3 bullet points, each under 20 words. Use one everyday comparison, like a soda bottle.';
+
+const reply = [
+  'Barren Island sits where one tectonic plate slides under another. Deep below, rock melts into magma.',
+  'Magma holds gas under pressure, like the fizz trapped in a shaken soda bottle.',
+  'When the pressure gets too strong, magma bursts out. Then the volcano rests until pressure builds again.',
+];
+
+// The four-part checklist the lesson teaches, mapped onto the prompt above.
+const checklist = [
+  { term: 'Task', detail: 'Explain why it erupts' },
+  { term: 'Context', detail: 'A geologist, talking to a Class 8 student' },
+  { term: 'Format', detail: '3 bullet points, under 20 words each' },
+  { term: 'Constraints', detail: 'One everyday comparison' },
+];
+---
+<section data-beat="building" class="bg-surface" aria-labelledby="codegen-title">
+  <div class="max-w-content mx-auto px-gutter py-section lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center lg:gap-x-16">
+    <div class="text-center lg:col-start-1 lg:row-start-1 lg:self-end lg:text-left">
+      <h2 id="codegen-title" class="font-display text-h2 font-bold text-fg">The AI didn’t get smarter. The instructions got better.</h2>
+      <p class="mx-auto mt-3 max-w-prose text-fg-muted lg:mx-0">
+        In the Practitioner tier, students find out why “Tell me about volcanoes” gets a vague answer, and learn a four-part checklist for rebuilding prompts like it. The prompt here is modelled on the improved one the tier’s first lesson opens with, shown with the kind of answer it gets back.
+      </p>
+    </div>
+
+    <div class="mx-auto mt-stack w-full max-w-2xl lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mt-0">
+      {/* data-codegen and its play states stay on an element this component
+          renders, so the scoped styles below still reach them. */}
+      <div data-codegen>
+        <DeviceFrame phone="fit" class="[--device-phone-w:20rem]" screenClass="bg-surface-raised">
+          <div class="p-3 sm:p-5">
+            <div class="cg-promptbox rounded-xl border border-line-strong bg-surface-raised p-3 sm:p-4">
+              <p class="text-xs font-semibold uppercase tracking-wider text-fg-subtle">Prompt</p>
+              <div class="cg-field mt-1.5 text-small text-fg">
+                <span class="cg-placeholder" aria-hidden="true">Type a question…</span>
+                <p data-cg-prompt>{prompt}</p>
+                <span class="cg-caret" aria-hidden="true"></span>
+              </div>
+              <div class="mt-2 flex justify-end" aria-hidden="true">
+                <span class="cg-send flex h-8 w-8 items-center justify-center rounded-full bg-accent text-accent-fg">
+                  <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13V3M3.5 7.5 8 3l4.5 4.5" /></svg>
+                </span>
+              </div>
+            </div>
+            <div class="cg-reply mt-3 rounded-xl bg-surface-tint p-3 sm:mt-4 sm:p-4">
+              <p class="text-xs font-semibold uppercase tracking-wider text-accent">Response</p>
+              <ul class="mt-1.5 space-y-1.5 text-small text-fg-muted">
+                {reply.map((line) => <li>{line}</li>)}
+              </ul>
+            </div>
+          </div>
+        </DeviceFrame>
+      </div>
+    </div>
+
+    <dl class="mx-auto mt-stack grid max-w-2xl grid-cols-2 gap-x-4 gap-y-3 text-left text-small sm:gap-x-6 lg:col-start-1 lg:row-start-2 lg:mx-0 lg:mt-8 lg:self-start">
+      {checklist.map((c) => (
+        <div class="border-l-2 border-line-strong pl-3">
+          <dt class="text-xs font-semibold uppercase tracking-wider text-accent">{c.term}</dt>
+          <dd class="mt-0.5 text-fg-muted">{c.detail}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<style>
+  /* The frame (bezel, chin, neck and foot) is DeviceFrame's; the screen's
+     content and every play state below are this component's. */
+  .cg-field {
+    position: relative;
+  }
+  .cg-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: var(--color-fg-subtle);
+    opacity: 0;
+    pointer-events: none;
+  }
+  /* Centred on a line by margin-top; the script moves it by transform. */
+  .cg-caret {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 1.2em;
+    margin-top: -0.6em;
+    border-radius: 1px;
+    background: var(--color-accent);
+    opacity: 0;
+    transform: translate(0, 0.5lh);
+  }
+
+  .cg-reply li {
+    position: relative;
+    padding-left: 1.125rem;
+  }
+  .cg-reply li::before {
+    content: '';
+    position: absolute;
+    left: 0.125rem;
+    top: calc(0.5lh - 0.25rem);
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--color-accent);
+    transition: opacity 160ms cubic-bezier(0.23, 1, 0.32, 1), transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  /* Not-yet-typed text: still in the DOM, painted transparent. */
+  :global(::highlight(cg-untyped)) {
+    color: transparent;
+  }
+
+  /* Play states, set by the script only under the shared motion flag.
+     armed: waiting below the fold. typing: prompt going in. reply: answer
+     streaming. No attribute = the finished state. */
+  :global(html[data-motion='ok']) [data-cg='armed'] .cg-placeholder {
+    opacity: 0.75;
+  }
+  :global(html[data-motion='ok']) :is([data-cg='armed'], [data-cg='typing']) .cg-caret {
+    opacity: 1;
+  }
+  .cg-promptbox {
+    transition: border-color 150ms ease;
+  }
+  :global(html[data-motion='ok']) [data-cg='typing'] .cg-promptbox {
+    border-color: var(--color-accent);
+  }
+  .cg-reply {
+    transition: opacity 260ms cubic-bezier(0.23, 1, 0.32, 1), transform 260ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  :global(html[data-motion='ok']) :is([data-cg='armed'], [data-cg='typing']) .cg-reply {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.98);
+  }
+  :global(html[data-motion='ok']) [data-cg] .cg-reply li:not([data-on])::before {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  :global(html[data-motion='ok']) [data-cg='reply'] .cg-send {
+    animation: cg-press 280ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  @keyframes cg-press {
+    35% { transform: scale(0.85); }
+  }
+
+  /* Print: the finished state, with no transition still running. */
+  @media print {
+    .cg-reply,
+    .cg-reply li::before {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+    .cg-caret,
+    .cg-placeholder {
+      opacity: 0 !important;
+    }
+  }
+</style>
+
+<script>
+  // Hand-rolled typewriter, no dependency. Runs once, when the screen
+  // scrolls into view. Skipped (finished state stays) under reduced motion,
+  // without highlight support, or if the screen is already in view.
+  const root = document.querySelector<HTMLElement>('[data-codegen]');
+  if (root && document.documentElement.dataset.motion === 'ok' && 'highlights' in CSS && root.getBoundingClientRect().top > innerHeight) {
+    const field = root.querySelector<HTMLElement>('.cg-field')!;
+    const caret = root.querySelector<HTMLElement>('.cg-caret')!;
+    const items = [...root.querySelectorAll<HTMLElement>('.cg-reply li')];
+    const nodes = [root.querySelector('[data-cg-prompt]')!, ...items].map((el) => el.firstChild as Text);
+    const untyped = new Highlight();
+    CSS.highlights.set('cg-untyped', untyped);
+
+    // Hide node n from offset o onwards, and every node after it.
+    const hideFrom = (n: number, o: number) => {
+      untyped.clear();
+      nodes.forEach((node, j) => {
+        if (j < n) return;
+        const r = new Range();
+        r.setStart(node, j === n ? o : 0);
+        r.setEnd(node, node.length);
+        untyped.add(r);
+      });
+    };
+    const moveCaret = (o: number) => {
+      const r = new Range();
+      r.setStart(nodes[0], 0);
+      r.setEnd(nodes[0], o);
+      const lines = r.getClientRects();
+      const last = lines[lines.length - 1];
+      const box = field.getBoundingClientRect();
+      if (last) caret.style.transform = `translate(${last.right - box.left}px, ${(last.top + last.bottom) / 2 - box.top}px)`;
+    };
+
+    // Schedule [node, offset, ms]: the prompt a character at a time with a
+    // beat after punctuation, then the answer a word at a time.
+    const steps: [number, number, number][] = [];
+    let t = 180;
+    const text = nodes[0].data;
+    for (let i = 1; i <= text.length; i++) {
+      t += 6 + (text[i - 2] === '.' ? 70 : text[i - 2] === ',' ? 30 : 0);
+      steps.push([0, i, t]);
+    }
+    const sendAt = (t += 220);
+    t += 120;
+    nodes.slice(1).forEach((node, j) => {
+      t += j ? 80 : 0;
+      for (const m of node.data.matchAll(/\S+/g)) steps.push([j + 1, m.index + m[0].length, (t += 20)]);
+    });
+
+    let k = 0;
+    let start = 0;
+    const frame = (now: number) => {
+      if (!('cg' in root.dataset)) return;
+      start ||= now;
+      const elapsed = now - start;
+      while (k < steps.length && steps[k][2] <= elapsed) k++;
+      if (k) {
+        const [n, o] = steps[k - 1];
+        hideFrom(n, o);
+        if (n === 0) moveCaret(o);
+        items.forEach((li, j) => j < n && (li.dataset.on = ''));
+      }
+      const state = !k ? 'armed' : elapsed < sendAt ? 'typing' : 'reply';
+      if (root.dataset.cg !== state) root.dataset.cg = state;
+      if (k < steps.length) return requestAnimationFrame(frame);
+      CSS.highlights.delete('cg-untyped');
+      delete root.dataset.cg;
+    };
+
+    // Printing, or changing the reduced-motion setting, jumps to the finished
+    // state; clearing the highlight here is what shows the untyped text in print.
+    const stop = () => {
+      CSS.highlights.delete('cg-untyped');
+      delete root.dataset.cg;
+    };
+    addEventListener('beforeprint', stop);
+    matchMedia('(prefers-reduced-motion:reduce)').onchange = stop;
+
+    root.dataset.cg = 'armed';
+    hideFrom(0, 0);
+    new IntersectionObserver(
+      (entries, io) => {
+        if (!entries[0].isIntersecting) return;
+        io.disconnect();
+        requestAnimationFrame(frame);
+      },
+      { rootMargin: '0px 0px -30% 0px' },
+    ).observe(root);
+  }
+</script>

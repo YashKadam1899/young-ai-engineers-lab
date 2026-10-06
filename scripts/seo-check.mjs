@@ -12,7 +12,7 @@
  *
  * Exits 1 on any failure. Warnings print but do not fail. A clean run covers
  * the mechanical checks only; wording, claims and share-card artwork still
- * need a human read (see the SEO review steps in §13 of the visual checklist).
+ * need a human read before a push.
  */
 import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
@@ -26,13 +26,13 @@ const warnings = [];
 const fail = (page, msg) => errors.push(`${page}: ${msg}`);
 const warn = (page, msg) => warnings.push(`${page}: ${msg}`);
 
-// Claims found false or unsourced (docs/NEXT-STEPS.md, "Facts that must not
-// regress" and P0.2). Whole words, case-insensitive, matched against page text.
+// Claims found false or unsourced, which must not come back. Whole words,
+// case-insensitive, matched against page text.
 const BANNED = [
   [/250\s?M\+/i, 'unsourced 250M+ figure'],
   [/(<|&lt;)\s?5\s?%/i, 'unsourced <5% figure'],
   [/₹\s?5,000/i, 'unsourced ₹5,000–₹15,000 pricing'],
-  [/\bmandator(y|ily)\b/i, '"mandatory" (Code 417 is optional)'],
+  [/\bmandat(e|ed|es|ing|ory|orily)\b/i, '"mandate"/"mandatory" (Code 417 is optional)'],
   [/\bAntler\b/i, 'Antler reference'],
   [/\bBhashini\b/i, 'Bhashini claim (teaching is English-only)'],
 ];

@@ -2,6 +2,7 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import RobotsMeta from '../components/RobotsMeta.astro';
+import MotionLayer from '../components/motion/MotionLayer.astro';
 import {
   OG_IMAGE_ALT,
   OG_IMAGE_PATH,
@@ -22,7 +23,7 @@ interface Props {
   ogType?: 'website' | 'article';
   /** Page-specific JSON-LD nodes. The organization node is added automatically. */
   schema?: Record<string, unknown>[];
-  /** Story beat for the whole <main> (contract section 2). Omit on the homepage, whose sections carry their own. */
+  /** Story beat for the whole <main> (see the [data-beat] blocks in the palette files). Omit on the homepage, whose sections carry their own. */
   beat?: 'calm' | 'investor';
 }
 const { title, description, ogTitle = title, ogType = 'website', schema = [] } = Astro.props;
@@ -43,6 +44,7 @@ const jsonLd = {
 <html lang="en-IN">
   <head>
     <meta charset="UTF-8" />
+    <script is:inline>if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.dataset.motion='ok'</script>
     <meta name="viewport" content="width=device-width" />
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -76,5 +78,6 @@ const jsonLd = {
       <slot />
     </main>
     <Footer />
+    <MotionLayer />
   </body>
 </html>

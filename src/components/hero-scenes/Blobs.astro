@@ -1,0 +1,21 @@
+---
+// Scene 1 version "blobs": the original 2.0 hero art. Two soft colour glows
+// behind centred copy, no motion. The fallback: point HomeHero's HeroScene
+// import here to undo any other version.
+//
+// Contract for every version in this folder:
+// - Render the default slot (HomeHero's h1 and CTAs) exactly once, unchanged.
+//   Everything else inside the hero section is the version's own.
+// - Art is decorative: aria-hidden, nothing focusable, palette tokens only.
+// - Motion follows the motion layer's contract (components/motion/): gated
+//   on html[data-motion="ok"], and the markup without motion is the final
+//   frame, so reduced motion, scripts off and print all get the finished
+//   scene.
+// - Anything worth tuning (timing, counts, colours, placement) sits in one
+//   settings const at the top of the frontmatter.
+---
+<div aria-hidden="true" class="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-glow-cool/50 blur-3xl"></div>
+<div aria-hidden="true" class="pointer-events-none absolute -top-10 right-0 h-80 w-80 rounded-full bg-highlight/40 blur-3xl"></div>
+<div class="relative max-w-content mx-auto px-gutter py-hero text-center">
+  <slot />
+</div>

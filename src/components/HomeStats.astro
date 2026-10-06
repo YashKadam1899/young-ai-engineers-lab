@@ -1,9 +1,24 @@
 ---
 // Homepage section 2 of 9: the problem statement and two stat cards. Only
-// figures with a primary source belong here (see docs/NEXT-STEPS.md P0.2).
+// figures with a primary source belong here; an unsourced figure is left out.
+//
+// Scene 2, "the blank screen": the lab screen, close up, with a prompt box
+// (under 640 px, the student's own phone). The student is at the screen and
+// nobody has taught them what to type. The box tries a vague school
+// question or two, deletes each, and rests on "Tell me about volcanoes",
+// never sent and never answered; Scene 4 rebuilds that question. Decorative
+// only; the heading, copy and stat cards carry the meaning.
+import PromptScreen from './PromptScreen.astro';
 
 // Same base-joining rule as the header: hrefs are relative to Astro's `base`.
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// The box's tries, typed in turn, and the question it rests on. Plain
+// everyday school questions in plain ASCII, 23 characters at most, two
+// tries at least; PromptScreen fails the build otherwise, or if a run would
+// pass 5 s. Good, structured prompts are Scene 4's payoff.
+const rest = 'Tell me about volcanoes';
+const tries = ['Explain photosynthesis', 'Help with fractions', 'Explain the monsoon', 'Ideas for Annual Day', 'Who was Ashoka', 'Facts about the Ganga'];
 
 const stats = [
   { value: '3–8', label: "the classes where CBSE now builds Computational Thinking & AI into regular subjects from session 2026-27 — every student, not an opt-in choice" },
@@ -16,13 +31,22 @@ const stats = [
     <p class="mx-auto mt-4 max-w-prose text-center text-fg-muted">
       From session 2026-27, CBSE has introduced Computational Thinking &amp; AI as an integrated part of the curriculum for Classes 3 to 8 — built into subjects every student already takes rather than offered as a choice. Other boards are moving in the same direction. Ages 10 to 15 spans roughly Classes 5 to 10, which puts this program right on that cohort.
     </p>
-    <div class="mx-auto mt-stack grid max-w-3xl gap-grid sm:grid-cols-2">
-      {stats.map((s) => (
-        <div class="rounded-2xl border border-line bg-surface-raised p-6 text-center shadow-sm transition-shadow hover:shadow-md">
-          <div class="font-display text-h1 font-bold text-accent">{s.value}</div>
-          <p class="mt-2 text-small text-fg-muted">{s.label}</p>
-        </div>
-      ))}
+    {/* Phones and tablets: the screen, then both cards beneath it. From lg up
+        the screen sits to the left of the two cards, stacked, so the section
+        stays near its content's own height: no scroll pinning, no long hold. */}
+    <div class="mx-auto mt-stack grid max-w-5xl gap-grid lg:grid-cols-[3fr_2fr] lg:items-center">
+      {/* min-w-0: however large the default font, the screen keeps to a
+          narrow phone's column; the prompt wraps onto a second line instead
+          of widening the column and the stat cards with it. */}
+      <PromptScreen rest={rest} tries={tries} class="mx-auto w-full min-w-0 max-w-lg lg:max-w-none" />
+      <div class="mx-auto grid w-full max-w-3xl gap-grid sm:grid-cols-2 lg:grid-cols-1">
+        {stats.map((s) => (
+          <div class="rounded-2xl border border-line bg-surface-raised p-6 text-center shadow-sm transition-shadow hover:shadow-md">
+            <div class="font-display text-h1 font-bold text-accent">{s.value}</div>
+            <p class="mt-2 text-small text-fg-muted">{s.label}</p>
+          </div>
+        ))}
+      </div>
     </div>
     <p class="mt-6 text-center text-small">
       <a href={`${base}/about/`} class="font-semibold text-accent underline decoration-link-underline decoration-2 underline-offset-4 transition-colors hover:text-accent-strong">

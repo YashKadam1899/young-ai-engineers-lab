@@ -1,14 +1,18 @@
 ---
 // Homepage section 1 of 9: hero — the single <h1> plus the two primary CTAs.
+//
+// Scene 1 slot. The copy lives here; the art and the arrangement around it
+// come from one version in ./hero-scenes/. To switch versions, change the
+// HeroScene import below: that one line is the whole switch. Blobs is the
+// original 2.0 hero, kept so any other version can be undone in one line.
+import HeroScene from './hero-scenes/LabArrival.astro';
 import { EMAILS, mailto } from '../emails';
 
 // Same base-joining rule as the header: hrefs are relative to Astro's `base`.
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 <section data-beat="arrival" class="relative overflow-hidden bg-surface">
-  <div aria-hidden="true" class="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-glow-cool/50 blur-3xl"></div>
-  <div aria-hidden="true" class="pointer-events-none absolute -top-10 right-0 h-80 w-80 rounded-full bg-highlight/40 blur-3xl"></div>
-  <div class="relative max-w-content mx-auto px-gutter py-hero text-center">
+  <HeroScene>
     <h1 class="font-display text-hero text-balance font-bold tracking-tight text-fg">
       Turning India's <span class="whitespace-nowrap">10–15 year-olds</span> from AI consumers into AI developers
     </h1>
@@ -16,5 +20,5 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <a href={mailto(EMAILS.learn, 'Winter Batch signup')} class="rounded-full bg-cta px-6 py-3.5 text-cta-fg font-semibold shadow-lg shadow-cta/25 transition-all hover:-translate-y-0.5 hover:bg-cta-hover hover:shadow-xl hover:shadow-cta/30">Sign Up for the Winter Batch</a>
       <a href={`${base}/for-investors/`} class="rounded-full border-2 border-line-medium bg-surface-raised px-6 py-3.5 text-fg-secondary font-semibold transition-all hover:-translate-y-0.5 hover:border-line-strong hover:bg-surface-tint">See the Investor Overview</a>
     </div>
-  </div>
+  </HeroScene>
 </section>

@@ -1,0 +1,80 @@
+/*
+ * Motion tokens and the reveal-on-enter primitive. Usage and the contract are
+ * documented in MotionLayer.astro, next to the script that drives this.
+ *
+ * Kept in a .css file on purpose: Tailwind does not scan CSS files for class
+ * names, so property names here cannot leak stray utilities into the build.
+ */
+
+:root {
+  /* Curves from the vendored animation skills; do not hand-roll others. */
+  --motion-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --motion-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  /* A marketing reveal, so longer than the 300ms UI budget: the strong curve
+     lands most of the movement in the first ~150ms; the rest is settle. */
+  --motion-reveal-duration: 450ms;
+  --motion-reveal-distance: 16px;
+  --motion-reveal-stagger: 60ms;
+  --motion-reveal-then: 150ms;
+}
+
+/* Screen only, so printing never drops content that had not yet entered. */
+@media screen and (prefers-reduced-motion: no-preference) {
+  /* Waiting to enter. Held by an animation rather than a plain opacity: 0, so
+     releasing it never starts a CSS transition the element carries for hover.
+     The 3s delay is the failsafe: if the script never runs, the hold simply
+     ends and the content shows. */
+  html[data-motion="ok"] :is([data-reveal], [data-reveal-stagger] > *):not([data-revealed]) {
+    animation: motion-hold 1ms 3s backwards;
+  }
+
+  /* The script is running: hold until it reveals the element. */
+  html[data-motion="ok"][data-reveal-ready] :is([data-reveal], [data-reveal-stagger] > *):not([data-revealed]) {
+    animation-play-state: paused;
+  }
+
+  html[data-motion="ok"] [data-revealed="in"] {
+    animation: motion-rise var(--motion-reveal-duration) var(--motion-ease-out) backwards;
+    animation-delay: calc(var(--reveal-index, 0) * var(--motion-reveal-stagger));
+  }
+
+  html[data-motion="ok"] :is([data-reveal="fade"], [data-reveal-stagger="fade"] > *)[data-revealed="in"] {
+    animation-name: motion-fade;
+  }
+
+  /* Second beats follow their revealing ancestor (index inherited from it). */
+  html[data-motion="ok"] [data-revealed="in"] [data-reveal-then] {
+    animation: motion-rise-half var(--motion-reveal-duration) var(--motion-ease-out) backwards;
+    animation-delay: calc(
+      var(--reveal-index, 0) * var(--motion-reveal-stagger) + var(--reveal-step, 1) * var(--motion-reveal-then)
+    );
+  }
+
+  html[data-motion="ok"] [data-revealed="in"] [data-reveal-then="draw"] {
+    animation-name: motion-draw;
+    animation-timing-function: var(--motion-ease-in-out);
+  }
+}
+
+@keyframes motion-hold {
+  from, to { opacity: 0; }
+}
+
+@keyframes motion-rise {
+  from { opacity: 0; transform: translateY(var(--motion-reveal-distance)); }
+}
+
+@keyframes motion-rise-half {
+  from { opacity: 0; transform: translateY(calc(var(--motion-reveal-distance) / 2)); }
+}
+
+@keyframes motion-fade {
+  from { opacity: 0; }
+}
+
+/* Both ends spelled out: clip-path cannot interpolate from inset() to the
+   implicit none, and would jump half way instead of wiping. */
+@keyframes motion-draw {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0); }
+}

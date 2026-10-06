@@ -152,7 +152,7 @@ export function faqPageSchema(faqs: ReadonlyArray<{ q: string; a: string }>) {
 /**
  * Archive builds: a frozen older version served beside the live site, e.g. 1.0
  * at /v1/. Set PUBLIC_PREVIEW=1 at build time; see src/components/RobotsMeta.astro
- * and §13 of the visual checklist. (Named for its first use, the 2.0 preview.)
+ * and scripts/seo-check.mjs --archive. (Named for its first use, the 2.0 preview.)
  */
 export const isPreviewBuild = import.meta.env.PUBLIC_PREVIEW === '1';
 

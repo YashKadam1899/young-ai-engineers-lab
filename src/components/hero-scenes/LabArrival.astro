@@ -1,0 +1,960 @@
+---
+// Scene 1 version "lab arrival": the students arrive, then the lab wakes up.
+// A row of lab desks under the centred copy, one shared monitor per desk,
+// seen from the back of the room. Students in uniform walk in from both sides
+// in single file, a school bag on each back. The last in each file peels off
+// at the outermost chair and the two leaders meet at the middle desk. Each
+// sits as they reach their chair and the bag goes onto the chair back. Once
+// everyone is seated, the screens switch on desk by desk, like an old TV, to
+// Scene 2's near-empty prompt box. Then the outermost student on each side
+// puts a hand up, and keeps it up. Plays once, about 3s.
+//
+// The drawing comes from an earlier "lab wakes up" prototype (desks,
+// monitors, chairs, back-view students), with standing and walking poses
+// added in the same style. The walk, the step bob, sitting with planted legs
+// and the bag drop come from a "students arrive" prototype; the raised hand
+// from a "chalk line" one. The monitors are Scene 2's machine scaled down
+// (PromptScreen.astro), in the look Scenes 2-7 share: a navy frame and a
+// rounded prompt box.
+//
+// Pure SVG and CSS, no script. The markup is the finished scene: everyone
+// seated, screens lit, hands up. The motion only runs under
+// html[data-motion="ok"] with no reduced-motion preference, so reduced
+// motion, scripts off and print all show that final frame. Follows the
+// contract in Blobs.astro.
+
+const settings = {
+  // TIMING, in ms. One beat at a time: arrival, a pause, screens, hands.
+  // The scene ends at
+  //   seated  = rightGroupDelay + walkMs + max(sitMs, bagDelay + bagMs)
+  //             (the right file's leader sits last; sitMs alone if that seat has no bag)
+  //   prompts = seated + pause + (screen ranks - 1) * screenStagger + promptDelay + promptMs
+  //   end     = (prompts + handDelay + (raised hands - 1) * handStagger + handMs) * pace
+  // Keep it between 2500 and 3100. With these values: wide 1470 + 150 + 340
+  // + 460 + 80 + 70 + 380 = 2950 (3 screen ranks); phones 1470 + 150 + 170
+  // + 460 + 80 + 70 + 380 = 2780 (2 ranks).
+  timing: {
+    pace: 1,             // multiplies every value below: 1.1 = 10% slower, 0.9 = faster
+    walkMs: 1050,        // the longest walk (a file leader, to the middle desk); everyone walks at this pace
+    stepMs: 210,         // one step; each walk is a whole number of steps, near this
+    rightGroupDelay: 100, // the right file sets off this much after the left, so the sides don't mirror
+    sitMs: 260,          // a student lowering into the chair
+    bagDelay: 40,        // after a student starts sitting, the bag comes off the back
+    bagMs: 280,          // bag onto the chair back, with one small swing
+    pause: 150,          // everyone seated, nothing moves
+    screenStagger: 170,  // between one screen switching on and the next
+    screenMs: 240,       // a screen opening from a bright line to the full picture
+    promptDelay: 200,    // after its screen starts, the prompt box appears
+    promptMs: 260,
+    handDelay: 80,       // after the last prompt box is in, the first hand goes up
+    handStagger: 70,     // between one raised hand and the next
+    handMs: 380,         // a hand going up, a small overshoot, and settling
+  },
+
+  // THE WALK. Distances are drawing units (one desk is 280 wide).
+  walk: {
+    fileSpacing: 95,     // gap between students in a file, centre to centre (about 1.7 shoulder widths)
+    strideDeg: 15,       // how far each leg swings from the hip on wide screens; phones walk a
+                         // shorter row in the same time, so their legs swing less in proportion
+    armSwingDeg: 12,     // how far the arms swing, against the legs
+    bobDip: 3,           // how far the body dips at each step
+    variety: 1,          // 0 = every student walks alike; 1 = slight differences in pace, stride and spacing
+  },
+
+  // HOW MANY. Wide screens show `desks`; phones (under 640px) show the first
+  // `phoneDesks`. Each desk keeps its size, so fewer desks make a shorter row.
+  desks: 3,
+  phoneDesks: 2,
+  seatsPerDesk: 2,       // 2 = two students sharing one machine; 1 = one each, centred on the monitor
+
+  // WHO ARRIVES, per screen size. A file from the left takes the seats from
+  // the left (its leader the innermost), a file from the right the seats from
+  // the right. If more arrive than there are seats, both files shrink in
+  // proportion (3 + 3 on 4 seats gives 2 + 2); seats left over in the middle
+  // stay empty.
+  arrival: {
+    wide: { fromLeft: 3, fromRight: 3 },
+    phone: { fromLeft: 2, fromRight: 2 },
+  },
+
+  // Order the screens switch on: 'left-to-right', 'centre-out' or 'together'.
+  screenOrder: 'left-to-right' as 'left-to-right' | 'centre-out' | 'together',
+
+  // Who puts a hand up at the end, and keeps it up. 'outermost' = the
+  // leftmost and rightmost students; or a list of seat numbers counted from
+  // the left on each screen size (e.g. [1, 6]; numbers past the row are
+  // ignored); or [] for nobody. The hand is the one away from the monitor.
+  handsUp: 'outermost' as 'outermost' | number[],
+
+  // WHO SITS WHERE, cycled seat by seat across the row. figure: 'plaits'
+  // (two plaits with ribbons, pinafore) or 'short' (short hair, shirt and
+  // trousers). bag: a colour key from `colours.bags`, or null for no bag.
+  // skin: a tone from `colours.skins`; keep neighbours' tones well apart,
+  // and each bag clear of its own student's skin.
+  seats: [
+    { figure: 'plaits', bag: 0, skin: 2 },  // golden tan
+    { figure: 'short', bag: 1, skin: 5 },   // deep brown
+    { figure: 'short', bag: 2, skin: 3 },   // medium
+    { figure: 'plaits', bag: 0, skin: 0 },  // light wheatish
+    { figure: 'plaits', bag: 1, skin: 4 },  // brown
+    { figure: 'short', bag: 0, skin: 1 },   // wheatish
+  ],
+
+  // SIZES, relative to the desk. 1 = the drawing's base size.
+  studentScale: 1.35,    // students and their chairs (nearer to us than the desk)
+  monitorScale: 0.85,    // the monitor on each desk
+  // The prompt box's corners, as a share of its height. 0.26 is Scene 2's
+  // rounded-xl field (12px corners on a 46px box), the look Scenes 2-7
+  // share; 0.5 makes it a pill.
+  promptCorner: 0.26,
+
+  // COLOURS, as palette token names (the part after --color-). Core tokens
+  // only. The hero sits in the "arrival" beat, so these resolve to that
+  // beat's morning values.
+  colours: {
+    // The monitor look Scenes 2-7 share: a navy frame (green would vanish on
+    // Scene 7's green board). It also colours the foot, the computer and the
+    // screen while off, so each machine reads as one dark object.
+    bezel: 'fg',                // monitor frame, foot, computer, and the screen while off
+    neckTint: { with: 'surface', percent: 15 }, // the neck: the bezel mixed with this token, as in Scenes 2-7; percent 0 = the plain bezel
+    screen: 'surface-raised',   // lit screen
+    powerLight: 'accent-soft',  // power light on the chin and the computer
+    prompt: 'line-strong',      // prompt box outline and hint line
+    send: 'surface-tint',       // send button on the prompt box, as in Scene 2
+    sendArrow: 'fg-subtle',     // the arrow on it
+    deskTop: 'highlight',       // desk top, laminate
+    deskEdge: 'line-strong',    // desk front edge
+    frame: 'fg-subtle',         // desk legs, chair legs, keyboard
+    chair: 'line-strong',       // chair backrest and posts
+    chairSeat: 'line-strong',   // chair seat edge
+    hair: 'fg',
+    hairKeyline: 'surface',     // a thin line round the hair, so a navy head in front of a navy monitor stays apart from it; the page colour, so it shows nowhere else
+    shirt: 'surface-raised',    // uniform shirt
+    collar: 'line',             // shirt collar (short-haired students)
+    pinafore: 'accent',         // pinafore, straps and skirt (students with plaits)
+    ribbon: 'cta',              // plait ribbons
+    trousers: 'fg-muted',       // uniform trousers (short-haired students)
+    socks: 'surface-raised',
+    shoes: 'fg',
+    // Skin, one tone per seat (see `seats`), lightest to deepest: warm and
+    // stylised, light wheatish to deep brown. Each is `base` mixed in lab
+    // with `deepen`% of fg, then `lighten`% of surface. Only a tone between
+    // about L* 45.5 and 58.5 clears 3:1 on both the navy monitors (below
+    // 45.3 it fails) and the cream page (above 59 it fails; the lit screens
+    // are lighter still). The desk top and the floor are darker than the
+    // page, so a tone at the light end of that band fails on them. Every
+    // other tone gets a thin keyline round the skin: 'dark' is skinKeyline,
+    // which shows on the page, the lit screens, the desk and the floor and
+    // fades into the navy; 'light' is hairKeyline, which shows only on the
+    // navy. Contrast, measured, against navy / lit / page (k: the keyline):
+    //   light wheatish L* 75.0  8.10 / 5.20k / 4.87k
+    //   wheatish       L* 65.7  6.08 / 5.20k / 4.87k
+    //   golden tan     L* 58.4  4.77 / 3.27 / 3.06 (keyline for the desk, 3.92)
+    //   medium         L* 49.7  3.53 / 4.42 / 4.14
+    //   brown          L* 41.9  14.6k / 5.87 / 5.50
+    //   deep brown     L* 37.1  14.6k / 7.02 / 6.58
+    skins: [
+      { base: 'cta', deepen: 28, lighten: 46, keyline: 'dark' },      // light wheatish
+      { base: 'cta', deepen: 30, lighten: 25, keyline: 'dark' },      // wheatish
+      { base: 'cta-hover', deepen: 28, lighten: 15, keyline: 'dark' }, // golden tan
+      { base: 'cta-hover', deepen: 36, lighten: 5 },                  // medium
+      { base: 'cta-hover', deepen: 46, keyline: 'light' },            // brown
+      { base: 'cta-hover', deepen: 55, keyline: 'light' },            // deep brown
+    ] as { base: string; deepen?: number; lighten?: number; keyline?: 'dark' | 'light' }[],
+    skinKeyline: { base: 'cta-hover', deepen: 40 }, // the 'dark' keyline, mixed the same way
+    floor: 'surface-tint',      // the floor under the row
+    shadow: 'line-strong',      // soft shadows under desks and chairs
+    bags: ['cta-hover', 'accent-strong', 'fg-muted'],
+  },
+
+  // PLACEMENT. The art is a band under the CTAs on every screen size. It
+  // keeps room above the monitors for standing students and raised hands.
+  wide: {
+    deskWidth: '18rem',  // one desk on wide screens; the row is this times `desks`
+    align: 'center',     // 'start' (left), 'center' or 'end' (right) within the copy column
+    nudge: '0rem',       // extra sideways shift, e.g. '-4rem' moves it left
+    gap: '2.25rem',      // space between the CTAs and the band (the top of the band is standing-head room)
+  },
+  phone: {
+    deskWidth: '11.5rem', // one desk on phones; shrinks to fit the screen
+    gap: '1.5rem',
+  },
+  // Students walk in through a soft fade at each end of the row, this share
+  // of a desk wide. On phones the fade sits mostly past the screen edge.
+  walkIn: 0.25,
+};
+
+// ---- Derived values: nothing to tune below this line. ----
+type Look = 'plaits' | 'short';
+const t = settings.timing;
+const w = settings.walk;
+const c = settings.colours;
+const ms = (v: number) => `${Math.round(v * t.pace)}ms`;
+const n2 = (v: number) => +v.toFixed(2);
+const tok = (name: string) => `var(--color-${name})`;
+
+// Drawing units. One desk is 280 wide; the floor line under the chairs is at
+// y 190, chair seats at 152. Students and chairs are scaled about the floor.
+const UNIT = 280;
+const FLOOR = 190;
+const S = settings.studentScale;
+const M = settings.monitorScale;
+const LIFT = 36;         // a standing student's body sits this much higher than a seated one
+const SHOULDER = { x: 19, y: 113 };
+const HIP = { x: 6.5, y: 121 }; // where a leg swings from (the standing hip)
+const FOOT = 66.4;       // the shoe, this far below the hip
+const BAG_ON_BACK = { x: -23.5, y: -55 }; // a carried bag, relative to its place on the chair
+const ELBOW = 12;        // the elbow, this far below the shoulder
+const REACH = 110;       // a seated forearm turns this far, forward to the keyboard; any
+                         // further and its hand shows at the nape, beside the neck
+// A raised arm takes over from the walking arm as the hand goes up. It
+// starts hanging straight down: 180 less the tilt of its sleeve along the arm,
+// so its sleeve sits exactly where the walking arm's did. The rest of the
+// arm stays out of sight until it is out level from the shoulder (ARM_SHOWS,
+// a share of handMs), so the hand first shows at shoulder height; any sooner
+// and it flashes under the seat or beside the bag. Its sleeve and elbow show
+// from the start, where the walking arm's were, so the handover has no gap.
+const SLEEVE_TILT = 12;
+const RAISE_FROM = 180 - SLEEVE_TILT;
+const ARM_SHOWS = 0.15;
+const RAISED_ELBOW = {
+  x: n2(ELBOW * Math.sin((RAISE_FROM * Math.PI) / 180)),
+  y: n2(ELBOW * Math.cos((RAISE_FROM * Math.PI) / 180)),
+};
+// Seat centres on a desk. A single seat sits square to the monitor, and the
+// computer under the desk moves aside for its chair.
+// Short hair, cut above the collar so the back of the neck shows.
+const SHORT_HAIR = 'M-12.8 95A12.8 12.8 0 0 1 12.8 95Q12.8 101 9 103Q0 104.2-9 103Q-12.8 101-12.8 95Z';
+const SEAT_X = settings.seatsPerDesk === 2 ? [70, 210] : [140];
+const TOWER_X = settings.seatsPerDesk === 2 ? 150 : 196;
+const ENTRY_PAD = 48;    // a walker starts this far past the fade, so it starts out of view
+// Standing head top (seated 82.5), scaled about the floor, with a little room.
+const TOP = Math.floor(FLOOR - (FLOOR - (82.5 - LIFT)) * S - 4);
+const BOTTOM = 196;
+const H = BOTTOM - TOP;
+const ZONE = Math.round(UNIT * settings.walkIn);
+
+// A small seeded number in [-1, 1], so every build draws the same walk.
+const jitter = (seed: number) => {
+  const x = Math.sin(seed * 127.1 + 311.7) * 43758.5453;
+  return (x - Math.floor(x)) * 2 - 1;
+};
+
+// A skin tone (or the dark keyline): a token deepened with fg, then lightened with surface.
+const mixTone = (m: { base: string; deepen?: number; lighten?: number }) => {
+  let e = tok(m.base);
+  if (m.deepen) e = `color-mix(in lab,${e},${tok('fg')} ${m.deepen}%)`;
+  if (m.lighten) e = `color-mix(in lab,${e},${tok('surface')} ${m.lighten}%)`;
+  return e;
+};
+
+function buildRow(deskCount: number, arrival: { fromLeft: number; fromRight: number }, salt: number, refSpeed?: number) {
+  const W = deskCount * UNIT;
+  const seats = Array.from({ length: deskCount }, (_, d) =>
+    SEAT_X.map((sx, k) => {
+      const x = d * UNIT + sx;
+      const look = settings.seats[(d * SEAT_X.length + k) % settings.seats.length];
+      const tone = c.skins[(look.skin ?? 0) % c.skins.length];
+      return {
+        x,
+        n: d * SEAT_X.length + k + 1,
+        // Away from the monitor: the hand that goes up, and the chair corner the bag hangs on.
+        outer: SEAT_X.length === 2 ? (k === 0 ? -1 : 1) : x < W / 2 ? -1 : 1,
+        look: (look.figure === 'plaits' ? 'plaits' : 'short') as Look,
+        bag: look.bag === null ? null : tok(c.bags[look.bag % c.bags.length]),
+        // The plain base token is for browsers without color-mix().
+        skin: [
+          `--la-skin-plain:${tok(tone.base)}`,
+          `--la-skin:${mixTone(tone)}`,
+          tone.keyline && `--la-line:${tone.keyline === 'dark' ? mixTone(c.skinKeyline) : tok(c.hairKeyline)}`,
+        ].filter(Boolean).join(';'),
+        line: !!tone.keyline,
+      };
+    }),
+  ).flat();
+
+  // More arrivals than seats: both files shrink in proportion.
+  const total = seats.length;
+  const [askL, askR] = [arrival.fromLeft, arrival.fromRight].map((n) => Math.max(0, Math.round(n)));
+  const fit = Math.min(1, total / Math.max(1, askL + askR));
+  const nLeft = Math.round(askL * fit);
+  const nRight = Math.min(total - nLeft, Math.round(askR * fit));
+  const entryL = -ZONE - ENTRY_PAD;
+  const entryR = W + ZONE + ENTRY_PAD;
+
+  // Files, leader first. A leader takes the innermost seat of its side, so
+  // everyone behind stops before reaching anyone already seated.
+  const files = [
+    Array.from({ length: nLeft }, (_, k) => ({ seat: seats[nLeft - 1 - k], k, from: entryL, delay: 0 })),
+    Array.from({ length: nRight }, (_, k) => ({ seat: seats[total - nRight + k], k, from: entryR, delay: t.rightGroupDelay })),
+  ];
+  const longest = Math.max(1, ...files.flat().map((s) => Math.abs(s.seat.x - s.from)));
+  const speed = longest / t.walkMs; // drawing units per ms, the same for everyone
+  // A slower row (phones) covers less floor per step, so its legs swing less in
+  // proportion; at the wide row's swing the planted foot would slide back.
+  const swing = refSpeed ? speed / refSpeed : 1;
+
+  // Hands up: seat numbers, then only those with a student in them.
+  const occupied = new Set(files.flat().map((s) => s.seat.n));
+  const wanted = settings.handsUp === 'outermost' ? [Math.min(...occupied), Math.max(...occupied)] : settings.handsUp;
+  const raisers = [...new Set(wanted)].filter((n) => occupied.has(n)).sort((a, b) => a - b);
+
+  let seatedAt = 0;
+  const students = files.flatMap((file, side) => {
+    let at = file.length ? file[0].delay : 0;
+    return file.map((s, k) => {
+      const i = salt + side * 10 + k;
+      if (k > 0) at += ((w.fileSpacing * (1 + 0.06 * w.variety * jitter(i * 4 + 1))) / speed);
+      const dist = Math.abs(s.seat.x - s.from);
+      const walk = dist / speed;
+      const steps = Math.max(2, Math.round(walk / (t.stepMs * (1 + 0.07 * w.variety * jitter(i * 4 + 2)))));
+      const stride = w.strideDeg * swing * (1 + 0.1 * w.variety * jitter(i * 4 + 3));
+      const dip = w.bobDip * (1 + 0.2 * w.variety * jitter(i * 4 + 4));
+      // The last half step: the legs come together while the body covers just
+      // what the planted foot travels, both on one ease that starts at the
+      // walking pace, so that foot stays put as the student stops.
+      const half = walk / steps / 2;
+      const plant = S * FOOT * Math.sin((stride * Math.PI) / 180);
+      const slope = ((dist - plant) / (walk - half)) * (half / plant);
+      const sitAt = at + walk;
+      const hasBag = s.seat.bag !== null;
+      seatedAt = Math.max(seatedAt, sitAt + Math.max(t.sitMs, hasBag ? t.bagDelay + t.bagMs : 0));
+      return {
+        ...s.seat,
+        sitAt,
+        stride,
+        raise: raisers.includes(s.seat.n),
+        vars: [
+          `--la-dx:${n2(s.from - s.seat.x)}px`,
+          `--la-rem:${n2(Math.sign(s.from - s.seat.x) * plant)}px`,
+          `--la-d:${ms(at)}`,
+          `--la-step:${ms(walk / steps)}`,
+          `--la-steps:${steps}`,
+          `--la-cycle:${ms((2 * walk) / steps)}`,
+          // All but the last half step, which then ends on the stride's far side.
+          `--la-cycles:${(steps - 0.5) / 2}`,
+          `--la-end:${steps % 2 ? 1 : -1}`,
+          `--la-ease:cubic-bezier(0.3,${n2(0.3 * slope)},0.6,1)`,
+          `--la-dip:${n2(dip)}px`,
+          `--la-sit-at:${ms(sitAt)}`,
+          `--la-bag-at:${ms(sitAt + t.bagDelay)}`,
+        ].join(';'),
+      };
+    });
+  });
+
+  // Screens, once everyone is seated and the bags have landed.
+  const screensAt = seatedAt + t.pause;
+  const mid = (deskCount - 1) / 2;
+  const rank = (d: number) =>
+    settings.screenOrder === 'together' ? 0 : settings.screenOrder === 'centre-out' ? Math.floor(Math.abs(d - mid)) : d;
+  const maxRank = Math.max(0, ...Array.from({ length: deskCount }, (_, d) => rank(d)));
+  const promptsDone = screensAt + maxRank * t.screenStagger + t.promptDelay + t.promptMs;
+  const handsAt = promptsDone + t.handDelay;
+  const end = raisers.length ? handsAt + (raisers.length - 1) * t.handStagger + t.handMs : promptsDone;
+
+  return {
+    viewBox: `${-ZONE} ${TOP} ${W + 2 * ZONE} ${H}`,
+    desks: Array.from({ length: deskCount }, (_, d) => ({
+      x: d * UNIT,
+      style: `--la-scr:${ms(screensAt + rank(d) * t.screenStagger)}`,
+    })),
+    seats,
+    students: students.map((s) => ({
+      ...s,
+      handVars: s.raise
+        ? `--la-hand-at:${ms(handsAt + raisers.indexOf(s.n) * t.handStagger)};--la-raise-from:${s.outer * RAISE_FROM}deg;--la-over:${s.outer * -9}deg;--la-back:${s.outer * 3}deg`
+        : '',
+    })),
+    style: [
+      // The svg is wider than the row by the fade zone at each end.
+      `--la-over-w:${n2((100 * (W + 2 * ZONE)) / W)}%`,
+      `--la-over-x:${n2((-100 * ZONE) / W)}%`,
+      `--la-fade:${n2((100 * ZONE) / (W + 2 * ZONE))}%`,
+    ].join(';'),
+    endMs: Math.round(end * t.pace),
+    speed,
+  };
+}
+
+const phoneCount = Math.max(1, Math.min(settings.phoneDesks, settings.desks));
+const wideRow = buildRow(settings.desks, settings.arrival.wide, 0);
+const rows = [
+  { key: 'wide', ...wideRow },
+  { key: 'phone', ...buildRow(phoneCount, settings.arrival.phone, 100, wideRow.speed) },
+];
+const seatAt = (x: number) => `translate(${x} ${FLOOR}) scale(${S}) translate(0 ${-FLOOR})`;
+
+const neck = c.neckTint.percent > 0 ? `color-mix(in oklab, ${tok(c.bezel)}, ${tok(c.neckTint.with)} ${c.neckTint.percent}%)` : tok(c.bezel);
+// Side margins of the band for each alignment: [left, right].
+const alignments = { start: ['0', 'auto'], center: ['auto', 'auto'], end: ['auto', '0'] } as const;
+const align = alignments[settings.wide.align as keyof typeof alignments] ?? alignments.center;
+const rootStyle = [
+  `--la-bezel:${tok(c.bezel)}`,
+  `--la-neck:${neck}`,
+  `--la-screen:${tok(c.screen)}`,
+  `--la-power:${tok(c.powerLight)}`,
+  `--la-prompt:${tok(c.prompt)}`,
+  `--la-send:${tok(c.send)}`,
+  `--la-send-arrow:${tok(c.sendArrow)}`,
+  `--la-desk-top:${tok(c.deskTop)}`,
+  `--la-desk-edge:${tok(c.deskEdge)}`,
+  `--la-frame:${tok(c.frame)}`,
+  `--la-chair:${tok(c.chair)}`,
+  `--la-chair-seat:${tok(c.chairSeat)}`,
+  `--la-collar:${tok(c.collar)}`,
+  `--la-shadow:${tok(c.shadow)}`,
+  `--la-hair:${tok(c.hair)}`,
+  `--la-keyline:${tok(c.hairKeyline)}`,
+  `--la-shirt:${tok(c.shirt)}`,
+  `--la-pinafore:${tok(c.pinafore)}`,
+  `--la-ribbon:${tok(c.ribbon)}`,
+  `--la-trousers:${tok(c.trousers)}`,
+  `--la-socks:${tok(c.socks)}`,
+  `--la-shoes:${tok(c.shoes)}`,
+  `--la-floor:${tok(c.floor)}`,
+  `--la-lift:${-LIFT}px`,
+  `--la-bag-x:${BAG_ON_BACK.x}px`,
+  // The bag group rides the body's sit, so its offset is from the seated back.
+  `--la-bag-y:${BAG_ON_BACK.y + LIFT}px`,
+  `--la-sit-ms:${ms(t.sitMs)}`,
+  `--la-bag-ms:${ms(t.bagMs)}`,
+  `--la-screen-ms:${ms(t.screenMs)}`,
+  `--la-prompt-at:${ms(t.promptDelay)}`,
+  `--la-prompt-ms:${ms(t.promptMs)}`,
+  `--la-hand-ms:${ms(t.handMs)}`,
+  `--la-arm-shows:${ARM_SHOWS}`,
+  `--la-floor-top:${n2((100 * (166 - TOP)) / H)}%`,
+  `--la-width:calc(${settings.wide.deskWidth} * ${settings.desks})`,
+  `--la-ml:${align[0]}`,
+  `--la-mr:${align[1]}`,
+  `--la-nudge:${settings.wide.nudge}`,
+  `--la-gap:${settings.wide.gap}`,
+  `--la-width-sm:calc(${settings.phone.deskWidth} * ${phoneCount})`,
+  `--la-gap-sm:${settings.phone.gap}`,
+].join(';');
+---
+<div class="relative max-w-content mx-auto px-gutter py-hero text-center">
+  <slot />
+  <div class="la-place" style={rootStyle}>
+    <div data-hero-art aria-hidden="true" class="la-band">
+      {/* The floor the desks stand on, fading out at both ends of the row. */}
+      <div class="la-floor-plane"></div>
+      {rows.map((row) => (
+        <svg viewBox={row.viewBox} class:list={['la-row', `la-${row.key}`]} style={row.style} data-end-ms={row.endMs} focusable="false">
+          {/* Floor shadows under the desks and chairs. */}
+          {row.desks.map((desk) => <ellipse class="la-shadow" cx={desk.x + 140} cy="176" rx="132" ry="2" />)}
+          {row.seats.map((seat) => <ellipse class="la-shadow" cx={seat.x} cy={FLOOR} rx={n2(28 * S)} ry={n2(2.4 * S)} />)}
+
+          {/* Desks and monitors, further back: their feet meet the floor higher up. */}
+          {row.desks.map((desk) => (
+            <g transform={`translate(${desk.x} 0)`} style={desk.style}>
+              <rect class="la-frame" x="14" y="122" width="5" height="54" rx="1" />
+              <rect class="la-frame" x="261" y="122" width="5" height="54" rx="1" />
+              <rect class="la-bezel" x={TOWER_X} y="124" width="21" height="52" rx="2.5" />
+              <circle class="la-power la-led" cx={TOWER_X + 10.5} cy="130" r="1.4" />
+              <path class="la-desk-top" d="M20 104H260L272 118H8Z" />
+              <rect class="la-desk-edge" x="8" y="118" width="264" height="5" rx="1" />
+              <path class="la-frame" d="M117 111.5H163L165.5 116H114.5Z" />
+              <ellipse class="la-frame" cx="177" cy="114" rx="3.4" ry="2.1" />
+              {/* Monitor: Scene 2's machine, scaled about its foot on the desk. */}
+              <g transform={`translate(140 109) scale(${M}) translate(-140 -109)`}>
+                <rect class="la-bezel" x="74" y="12" width="132" height="84" rx="7" />
+                <rect class="la-neck" x="134" y="95" width="12" height="10" />
+                <path class="la-bezel" d="M118 109V107.5Q118 105 120.5 105H159.5Q162 105 162 107.5V109Z" />
+                <circle class="la-power la-dot" cx="140" cy="90.5" r="1.7" />
+                <g class="la-screen">
+                  <rect class="la-screen-fill" x="79" y="17" width="122" height="68" rx="2" />
+                  <g class="la-prompt">
+                    <rect class="la-prompt-box" x="89" y="44" width="102" height="13" rx={n2(13 * settings.promptCorner)} />
+                    <rect class="la-prompt-caret" x="95.5" y="47.5" width="1" height="6" rx="0.5" />
+                    <rect class="la-prompt-hint" x="99" y="49.5" width="42" height="2" rx="1" />
+                    <circle class="la-prompt-send" cx="184.5" cy="50.5" r="4" />
+                    <path class="la-prompt-arrow" d="M184.5 52.6V48.4M182.7 50.2L184.5 48.4L186.3 50.2" />
+                  </g>
+                </g>
+              </g>
+            </g>
+          ))}
+
+          {/* Students, seen from behind. They walk in the gap between the desks
+              and the chairs, so their legs pass behind the empty chair backs. */}
+          {row.students.map((st) => (
+            <g transform={`translate(${st.x} ${FLOOR})`} style={st.skin}>
+              <g class="la-walk" style={st.vars}>
+                <g transform={`scale(${S}) translate(0 ${-FLOOR})`}>
+                  <g class="la-bob">
+                    {/* Legs stay planted while the body lowers: standing, they reach up
+                        to the hip; seated, their tops are behind the body and the chair,
+                        and the shins and shoes show under the seat. Never faded. */}
+                    {[-1, 1].map((s) => (
+                      <g transform={`translate(${s * HIP.x} ${HIP.y})`}>
+                        <g class="la-leg" style={`--la-stride:${n2(s * st.stride)}deg`}>
+                          {st.look === 'plaits' ? (
+                            <>
+                              {st.line && <rect class="la-skin-k" x="-3" y="-9" width="6" height="60" rx="3" />}
+                              <rect class="la-skin" x="-3" y="-9" width="6" height="62" rx="3" />
+                              <rect class="la-socks" x="-3.3" y="51" width="6.6" height="14" rx="2" />
+                            </>
+                          ) : (
+                            <rect class="la-trousers" x="-4.4" y="-9" width="8.8" height="74" rx="3.5" />
+                          )}
+                          <ellipse class="la-shoes" cx={s * 0.9} cy={FOOT} rx="5.6" ry="2.9" />
+                        </g>
+                      </g>
+                    ))}
+                    <g class="la-sit">
+                      {/* Arms, behind the back. Walking, they hang and swing; seated, the
+                          forearms reach forward to the keyboard, out of sight. A hand that
+                          goes up at the end walks and sits like the others, then hands over
+                          to a raised arm that swings out and up. */}
+                      {[-1, 1].map((s) => {
+                        const up = st.raise && s === st.outer;
+                        const swing = (
+                          <g class="la-swing" style={`--la-stride:${n2(-s * w.armSwingDeg)}deg`}>
+                            <g transform={`translate(0 ${ELBOW}) rotate(${s * REACH})`}>
+                              <g class="la-reach" style={`--la-reach:${-s * REACH}deg`}>
+                                {st.line && <path class="la-limb-k" d="M0 0V28" />}
+                                <path class="la-limb" d="M0 0V28" />
+                              </g>
+                            </g>
+                            <rect class="la-shirt" x="-4.6" y="-4" width="9.2" height="16.5" rx="4.6" />
+                          </g>
+                        );
+                        // The raised arm starts at the centre of its sleeve's rounded end,
+                        // so the end of its keyline stays under the sleeve.
+                        const arm = `M${s * 0.12} -0.6L${s * 4.5} -22L${s * 5.5} -43`;
+                        const thumb = `rotate(${s * -25} ${s * 2.1} -42)`;
+                        return (
+                          <g transform={`translate(${s * SHOULDER.x} ${SHOULDER.y})`} style={up ? st.handVars : undefined}>
+                            {up ? (
+                              <>
+                                <g class="la-handoff">{swing}</g>
+                                <g class="la-raise">
+                                  {st.line && <circle class="la-skin-k" cx={s * RAISED_ELBOW.x} cy={RAISED_ELBOW.y} r="3.2" />}
+                                  <circle class="la-skin" cx={s * RAISED_ELBOW.x} cy={RAISED_ELBOW.y} r="3.2" />
+                                  <g class="la-raise-arm">
+                                    {st.line && (
+                                      <>
+                                        <path class="la-limb-k" d={arm} />
+                                        <ellipse class="la-skin-k" cx={s * 5.7} cy="-46" rx="3.8" ry="4.8" />
+                                        <ellipse class="la-skin-k" cx={s * 2.1} cy="-42" rx="1.6" ry="2.7" transform={thumb} />
+                                      </>
+                                    )}
+                                    <path class="la-limb" d={arm} />
+                                    <ellipse class="la-skin" cx={s * 5.7} cy="-46" rx="3.8" ry="4.8" />
+                                    <ellipse class="la-skin" cx={s * 2.1} cy="-42" rx="1.6" ry="2.7" transform={thumb} />
+                                  </g>
+                                  {/* The walking arm's sleeve, turned up along the arm. */}
+                                  <rect class="la-shirt" x="-4.6" y="-12.5" width="9.2" height="16.5" rx="4.6" transform={`rotate(${s * SLEEVE_TILT})`} />
+                                </g>
+                              </>
+                            ) : (
+                              swing
+                            )}
+                          </g>
+                        );
+                      })}
+                      {/* The hair's keyline: the same shapes, outlined, under the body, so it
+                          only shows where the hair crosses something behind the student. */}
+                      {st.look === 'plaits' ? (
+                        <>
+                          <g class="la-keyline">
+                            <circle cx="0" cy="95" r="12.5" />
+                            <path d="M-11.6 98Q-15.6 110-15.6 124.5H-11.2Q-11 111-6.6 101.5Z" />
+                            <path d="M11.6 98Q15.6 110 15.6 124.5H11.2Q11 111 6.6 101.5Z" />
+                          </g>
+                          <path class="la-shirt" d="M-20 158V119C-20 111.5-15 107.5-8 107H8C15 107.5 20 111.5 20 119V158Z" />
+                          {/* Pinafore: two straps over the shoulders, the back panel, the skirt. */}
+                          <rect class="la-pinafore" x="-7.6" y="107.2" width="3.4" height="22" />
+                          <rect class="la-pinafore" x="4.2" y="107.2" width="3.4" height="22" />
+                          <path class="la-pinafore" d="M-16.5 158V130Q-16.5 127.5-14 127.5H14Q16.5 127.5 16.5 130V158Z" />
+                          {/* The skirt: tucked behind the chair seat when seated, let down when standing. */}
+                          <path class="la-pinafore la-skirt" d="M-16.5 150H16.5L18 157.5Q18.2 158.8 16.9 158.8H-16.9Q-18.2 158.8-18 157.5Z" />
+                          <circle class="la-hair" cx="0" cy="95" r="12.5" />
+                          {/* Two plaits down the back, a ribbon at each end. */}
+                          <path class="la-hair" d="M-11.6 98Q-15.6 110-15.6 124.5H-11.2Q-11 111-6.6 101.5Z" />
+                          <path class="la-hair" d="M11.6 98Q15.6 110 15.6 124.5H11.2Q11 111 6.6 101.5Z" />
+                          <path class="la-hair" d="M-15 126L-13.4 130.6L-11.8 126ZM15 126L13.4 130.6L11.8 126Z" />
+                          <path class="la-ribbon" d="M-13.4 125.4L-17.6 122.8V128ZM-13.4 125.4L-9.2 122.8V128ZM13.4 125.4L9.2 122.8V128ZM13.4 125.4L17.6 122.8V128Z" />
+                        </>
+                      ) : (
+                        <>
+                          <path class="la-keyline" d={SHORT_HAIR} />
+                          {/* The back of the neck, between the hairline and the collar. */}
+                          {st.line && <rect class="la-skin-k" x="-5.5" y="99" width="11" height="10" rx="2" />}
+                          <rect class="la-skin" x="-5.5" y="99" width="11" height="10" rx="2" />
+                          <path class="la-shirt" d="M-21 158V119.5C-21 111.5-15.5 107.5-8 107H8C15.5 107.5 21 111.5 21 119.5V158Z" />
+                          <path class="la-collar" d="M-7.5 106.5Q0 110.5 7.5 106.5V110Q0 113.5-7.5 110Z" />
+                          <path class="la-hair" d={SHORT_HAIR} />
+                        </>
+                      )}
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </g>
+          ))}
+
+          {/* School chairs, nearer than the students: legs, seat, posts, backrest. */}
+          {row.seats.map((seat) => (
+            <g transform={seatAt(seat.x)}>
+              <rect class="la-frame" x="-22" y="157" width="3.2" height="33" rx="1" />
+              <rect class="la-frame" x="18.8" y="157" width="3.2" height="33" rx="1" />
+              <rect class="la-chair-seat" x="-25" y="152" width="50" height="6" rx="2" />
+              <rect class="la-chair" x="-21" y="134" width="3.4" height="19" rx="1" />
+              <rect class="la-chair" x="17.6" y="134" width="3.4" height="19" rx="1" />
+              <rect class="la-chair" x="-23" y="131" width="46" height="12" rx="4" />
+            </g>
+          ))}
+
+          {/* Bags, nearest: on each back on the way in (above the chair backs, so
+              they never cross one). The bag rides the back down as the student
+              sits, then comes off onto the chair's outer corner. */}
+          {row.students.filter((st) => st.bag).map((st) => (
+            <g transform={`translate(${st.x} ${FLOOR})`}>
+              <g class="la-walk" style={st.vars}>
+                <g transform={`scale(${S}) translate(0 ${-FLOOR})`}>
+                  <g class="la-bob">
+                    <g class="la-sit">
+                      <g transform={st.outer < 0 ? 'scale(-1 1)' : undefined}>
+                        <g class="la-bag" style={`--la-bag:${st.bag}`}>
+                          <path class="la-bag-strap" d="M17.4 139V133Q17.4 129.6 20.6 129.6Q23.8 129.6 23.8 133V139H21.6V133Q21.6 131.8 20.6 131.8Q19.6 131.8 19.6 133V139Z" />
+                          <rect class="la-bag-body" x="15" y="137" width="17" height="20" rx="4.5" />
+                          <path class="la-bag-flap" d="M15 144.5V141.5Q15 137 19.5 137H27.5Q32 137 32 141.5V144.5Z" />
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </g>
+          ))}
+        </svg>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Placement: a band under the CTAs; it reserves its own space (standing
+     students and raised hands included), so nothing moves. */
+  .la-place {
+    margin-top: var(--la-gap);
+  }
+  .la-band {
+    position: relative;
+    width: 100%;
+    margin-left: var(--la-ml);
+    margin-right: var(--la-mr);
+    max-width: var(--la-width);
+    translate: var(--la-nudge) 0;
+    pointer-events: none;
+    user-select: none;
+  }
+  /* Floor: from just above the line where the desk feet stand (y 176). */
+  .la-floor-plane {
+    position: absolute;
+    inset: var(--la-floor-top) 0 0;
+    background: linear-gradient(to right, transparent, var(--la-floor) 12%, var(--la-floor) 88%, transparent);
+    mask-image: linear-gradient(to bottom, var(--la-floor) 55%, transparent);
+  }
+  /* The row: wider than the band by the walk-in strip at each end, which
+     fades out, so students walk in out of the page rather than at an edge. */
+  .la-row {
+    position: relative;
+    width: var(--la-over-w);
+    max-width: none;
+    height: auto;
+    margin-left: var(--la-over-x);
+    overflow: visible;
+    -webkit-mask-image: linear-gradient(to right, transparent, var(--la-hair) var(--la-fade), var(--la-hair) calc(100% - var(--la-fade)), transparent);
+    mask-image: linear-gradient(to right, transparent, var(--la-hair) var(--la-fade), var(--la-hair) calc(100% - var(--la-fade)), transparent);
+  }
+  @media (width >= 40rem) {
+    .la-phone {
+      display: none;
+    }
+  }
+  @media (width < 40rem) {
+    .la-place {
+      margin-top: var(--la-gap-sm);
+    }
+    .la-band {
+      max-width: var(--la-width-sm);
+      margin-left: auto;
+      margin-right: auto;
+      translate: none;
+    }
+    .la-wide {
+      display: none;
+    }
+  }
+
+  /* Fills: every colour is a palette token chosen in the settings. */
+  .la-shadow { fill: var(--la-shadow); opacity: 0.22; }
+  .la-collar { fill: var(--la-collar); }
+  .la-chair-seat { fill: var(--la-chair-seat); }
+  .la-prompt-caret { fill: var(--la-hair); }
+  .la-bezel { fill: var(--la-bezel); }
+  .la-neck { fill: var(--la-bezel); }
+  .la-power { fill: var(--la-power); }
+  .la-frame { fill: var(--la-frame); }
+  .la-desk-top { fill: var(--la-desk-top); }
+  .la-desk-edge { fill: var(--la-desk-edge); }
+  .la-screen-fill { fill: var(--la-screen); }
+  .la-prompt-box { fill: var(--la-screen); stroke: var(--la-prompt); stroke-width: 1; }
+  .la-prompt-hint { fill: var(--la-prompt); opacity: 0.55; }
+  .la-prompt-send { fill: var(--la-send); }
+  .la-prompt-arrow { fill: none; stroke: var(--la-send-arrow); stroke-width: 1; stroke-linecap: round; stroke-linejoin: round; opacity: 0.7; }
+  .la-chair { fill: var(--la-chair); }
+  .la-hair { fill: var(--la-hair); }
+  .la-keyline { fill: var(--la-keyline); stroke: var(--la-keyline); stroke-width: 2.6; stroke-linejoin: round; }
+  .la-shirt { fill: var(--la-shirt); }
+  .la-pinafore { fill: var(--la-pinafore); }
+  .la-ribbon { fill: var(--la-ribbon); }
+  .la-trousers { fill: var(--la-trousers); }
+  .la-socks { fill: var(--la-socks); }
+  .la-shoes { fill: var(--la-shoes); }
+  .la-skin { fill: var(--la-skin-plain); }
+  .la-limb { fill: none; stroke: var(--la-skin-plain); stroke-width: 6.4; stroke-linecap: round; stroke-linejoin: round; }
+  /* A skin keyline: the same shapes a little larger, under the skin. */
+  .la-skin-k { fill: var(--la-line); stroke: var(--la-line); stroke-width: 2.2; }
+  .la-limb-k { fill: none; stroke: var(--la-line); stroke-width: 8.6; stroke-linecap: round; stroke-linejoin: round; }
+  /* The walking arm of a student who puts a hand up: the raised arm is the finished pose. */
+  .la-handoff { opacity: 0; }
+  @supports (color: color-mix(in lab, currentColor, currentColor)) {
+    .la-neck { fill: var(--la-neck); }
+    .la-skin { fill: var(--la-skin); }
+    .la-limb { stroke: var(--la-skin); }
+  }
+  .la-bag-body,
+  .la-bag-strap { fill: var(--la-bag); }
+  .la-bag-flap { fill: var(--la-hair); opacity: 0.2; }
+
+  /* Transform origins. Pivots (hips, shoulders, elbows) are the local origin
+     of each moving group, set by its parent's translate; the rest turn about
+     their own box. */
+  .la-screen,
+  .la-prompt,
+  .la-bag {
+    transform-box: fill-box;
+  }
+  .la-leg,
+  .la-swing,
+  .la-reach,
+  .la-raise {
+    transform-box: view-box;
+    transform-origin: 0 0;
+  }
+  .la-bag { transform-origin: 30% 0%; }
+  .la-skirt { transform-box: fill-box; transform-origin: 50% 0%; }
+  .la-screen { transform-origin: 50% 50%; }
+  .la-prompt { transform-origin: 50% 50%; }
+
+  /*
+   * Motion, once, on load. Longhands only: the minifier has corrupted
+   * shorthand animation declarations before. Fill mode both holds each start
+   * state through its delay and the end state afterwards; every end state is
+   * the un-animated markup. Times and distances come in as custom properties
+   * set in the markup from the settings.
+   */
+  @media (prefers-reduced-motion: no-preference) {
+    /* Across the floor at a steady pace, then the last half step: the body
+       slows to a stop over just the planted foot's travel, on the same ease
+       as the legs, so that foot does not slide. */
+    :global(html[data-motion='ok']) .la-walk {
+      animation-name: la-walk, la-walk-end;
+      animation-duration: calc(var(--la-cycle) * var(--la-cycles)), calc(var(--la-cycle) / 4);
+      animation-delay: var(--la-d), calc(var(--la-d) + var(--la-cycle) * var(--la-cycles));
+      animation-timing-function: linear, var(--la-ease);
+      animation-fill-mode: both, forwards;
+    }
+    /* A small dip at each step, as the feet spread. */
+    :global(html[data-motion='ok']) .la-bob {
+      animation-name: la-bob;
+      animation-duration: var(--la-step);
+      animation-delay: var(--la-d);
+      animation-iteration-count: var(--la-steps);
+      animation-timing-function: ease-in-out;
+      animation-fill-mode: both;
+    }
+    /* Legs and arms swing from the hip and shoulder, two steps a cycle, to
+       the last stride; then they come together and stop straight, with the
+       body. */
+    :global(html[data-motion='ok']) .la-leg,
+    :global(html[data-motion='ok']) .la-swing {
+      animation-name: la-stride, la-stride-end;
+      animation-duration: var(--la-cycle), calc(var(--la-cycle) / 4);
+      animation-delay: var(--la-d), calc(var(--la-d) + var(--la-cycle) * var(--la-cycles));
+      animation-iteration-count: var(--la-cycles), 1;
+      animation-timing-function: linear, var(--la-ease);
+      animation-fill-mode: both, forwards;
+    }
+    /* The body lowers into the chair; the legs stay planted. */
+    :global(html[data-motion='ok']) .la-sit {
+      animation-name: la-sit;
+      animation-duration: var(--la-sit-ms);
+      animation-delay: var(--la-sit-at);
+      animation-timing-function: var(--motion-ease-in-out);
+      animation-fill-mode: both;
+    }
+    /* The skirt, let down while standing, tucks under as the student sits. */
+    :global(html[data-motion='ok']) .la-skirt {
+      animation-name: la-skirt;
+      animation-duration: var(--la-sit-ms);
+      animation-delay: var(--la-sit-at);
+      animation-timing-function: var(--motion-ease-in-out);
+      animation-fill-mode: both;
+    }
+    /* Forearms reach forward to the keyboard as the student sits. */
+    :global(html[data-motion='ok']) .la-reach {
+      animation-name: la-reach;
+      animation-duration: var(--la-sit-ms);
+      animation-delay: var(--la-sit-at);
+      animation-timing-function: var(--motion-ease-in-out);
+      animation-fill-mode: both;
+    }
+    :global(html[data-motion='ok']) .la-bag {
+      animation-name: la-bag;
+      animation-duration: var(--la-bag-ms);
+      animation-delay: var(--la-bag-at);
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+    }
+    :global(html[data-motion='ok']) .la-screen {
+      animation-name: la-switch-on;
+      animation-duration: var(--la-screen-ms);
+      animation-delay: var(--la-scr);
+      animation-timing-function: var(--motion-ease-out);
+      animation-fill-mode: both;
+    }
+    :global(html[data-motion='ok']) .la-dot,
+    :global(html[data-motion='ok']) .la-led {
+      animation-name: la-power-on;
+      animation-duration: 120ms;
+      animation-delay: calc(var(--la-scr) - 60ms);
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+    }
+    :global(html[data-motion='ok']) .la-prompt {
+      animation-name: la-prompt-in;
+      animation-duration: var(--la-prompt-ms);
+      animation-delay: calc(var(--la-scr) + var(--la-prompt-at));
+      animation-timing-function: var(--motion-ease-out);
+      animation-fill-mode: both;
+    }
+    /* The hand going up: the walking arm shows until the raise starts, the
+       raised arm from then on, its sleeve and elbow at once and the rest of
+       the arm once it is out level from the shoulder. */
+    :global(html[data-motion='ok']) .la-handoff {
+      animation-name: la-on;
+      animation-duration: var(--la-hand-at);
+      animation-timing-function: linear;
+    }
+    :global(html[data-motion='ok']) .la-raise {
+      animation-name: la-raise, la-off;
+      animation-duration: var(--la-hand-ms), var(--la-hand-at);
+      animation-delay: var(--la-hand-at), 0ms;
+      animation-timing-function: linear;
+      animation-fill-mode: both, none;
+    }
+    :global(html[data-motion='ok']) .la-raise-arm {
+      animation-name: la-off;
+      animation-duration: calc(var(--la-hand-at) + var(--la-hand-ms) * var(--la-arm-shows));
+      animation-timing-function: linear;
+    }
+  }
+
+  @keyframes la-walk {
+    from { transform: translateX(var(--la-dx)); }
+    to { transform: translateX(var(--la-rem)); }
+  }
+
+  @keyframes la-walk-end {
+    from { transform: translateX(var(--la-rem)); }
+    to { transform: none; }
+  }
+
+  @keyframes la-bob {
+    from { transform: none; }
+    50% { transform: translateY(var(--la-dip)); }
+    to { transform: none; }
+  }
+
+  /* A sine-like swing: out, across, back to straight. */
+  @keyframes la-stride {
+    from { transform: none; animation-timing-function: cubic-bezier(0.33, 0.66, 0.66, 1); }
+    25% { transform: rotate(var(--la-stride)); animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1); }
+    75% { transform: rotate(calc(var(--la-stride) * -1)); animation-timing-function: cubic-bezier(0.33, 0, 0.66, 0.34); }
+    to { transform: none; }
+  }
+
+  /* The last half step, from the far side of the stride to straight. */
+  @keyframes la-stride-end {
+    from { transform: rotate(calc(var(--la-stride) * var(--la-end))); }
+    to { transform: none; }
+  }
+
+  @keyframes la-sit {
+    from { transform: translateY(var(--la-lift)); }
+    78% { transform: translateY(1.5px); }
+    to { transform: none; }
+  }
+
+  @keyframes la-skirt {
+    from { transform: scaleY(2.1); }
+    to { transform: none; }
+  }
+
+  @keyframes la-reach {
+    from { transform: rotate(var(--la-reach)); }
+    to { transform: none; }
+  }
+
+  /* The bag comes off the back, swings out to the chair's corner and hooks
+     on. Its parent lowers with the body, so it only ever moves down from the
+     back, never hangs above it. */
+  @keyframes la-bag {
+    from { transform: translate(var(--la-bag-x), var(--la-bag-y)); animation-timing-function: cubic-bezier(0.3, 0, 0.5, 1); }
+    35% { transform: translate(calc(var(--la-bag-x) * 0.2), calc(var(--la-bag-y) * 0.6)) rotate(-6deg); animation-timing-function: cubic-bezier(0.5, 0, 0.75, 0.5); }
+    70% { transform: translateY(1.5px) rotate(7deg); animation-timing-function: ease-in-out; }
+    88% { transform: rotate(-2deg); animation-timing-function: ease-in-out; }
+    to { transform: none; }
+  }
+
+  /* The screen switches on: a bright line across the middle opens to the
+     full picture, so it never passes through a dim half-lit grey. */
+  @keyframes la-switch-on {
+    from { opacity: 0; transform: scale(0.4, 0.03); }
+    6% { opacity: 1; }
+    40% { transform: scale(1, 0.03); }
+    to { opacity: 1; transform: none; }
+  }
+
+  @keyframes la-power-on {
+    from { opacity: 0.15; }
+    to { opacity: 1; }
+  }
+
+  @keyframes la-prompt-in {
+    from { opacity: 0; transform: translateY(3px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  @keyframes la-on {
+    from, to { opacity: 1; }
+  }
+
+  @keyframes la-off {
+    from, to { opacity: 0; }
+  }
+
+  /* A hand goes up from the side, past straight up a touch, and settles. */
+  @keyframes la-raise {
+    from { transform: rotate(var(--la-raise-from)); animation-timing-function: cubic-bezier(0.3, 0.5, 0.4, 1); }
+    62% { transform: rotate(var(--la-over)); animation-timing-function: ease-in-out; }
+    84% { transform: rotate(var(--la-back)); animation-timing-function: ease-in-out; }
+    to { transform: none; }
+  }
+</style>

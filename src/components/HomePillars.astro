@@ -1,20 +1,34 @@
 ---
 // Homepage section 3 of 9: the four curriculum modules / pillars.
+//
+// Scene 3, "Something happens": each module is a row with its text first and
+// a small lab screen beside it (below it on narrow screens). Under 640 px the
+// screen is a phone rising out of the card's bottom edge: the card clips it
+// (s3-card below). The screen responds as the reader scrolls, a different
+// event per module; see PillarScreen.astro. Rows stack at every width so
+// each module gets its own stretch of scroll, rather than four screens
+// firing at once in one row.
+// The text carries the content on its own; the screens only illustrate it.
+import PillarScreen from './PillarScreen.astro';
+
 const pillars = [
-  { title: 'Foundations', body: "What AI actually is — and isn't — and how machine learning is different from simple rule-following. Explained through apps you already use: UPI payments, weather forecasts and photo search." },
-  { title: 'Computational Thinking', body: "Breaking a big problem into small steps, spotting patterns, and ignoring what doesn't matter — the same thinking that helps with exams and with solving everyday problems." },
-  { title: 'Hands-On Creation', body: "Writing prompts that get AI to do what you want, building an app that recognizes images, and creating an AI helper with no coding required." },
-  { title: 'Ethics & Evaluation', body: "Testing AI for unfair bias, learning to catch AI when it makes things up, spotting deepfakes, and seeing what real AI careers look like." },
-];
+  { title: 'Foundations', screen: 'sort', body: "What AI actually is — and isn't — and how machine learning is different from simple rule-following. Explained through apps you already use: UPI payments, weather forecasts and photo search." },
+  { title: 'Computational Thinking', screen: 'steps', body: "Breaking a big problem into small steps, spotting patterns, and ignoring what doesn't matter — the same thinking that helps with exams and with solving everyday problems." },
+  { title: 'Hands-On Creation', screen: 'classify', body: "Writing prompts that get AI to do what you want, building an app that recognizes images, and creating an AI helper with no coding required." },
+  { title: 'Ethics & Evaluation', screen: 'factcheck', body: "Testing AI for unfair bias, learning to catch AI when it makes things up, spotting deepfakes, and seeing what real AI careers look like." },
+] as const;
 ---
 <section data-beat="awakening" class="bg-surface">
   <div class="max-w-content mx-auto px-gutter py-section">
     <h2 class="font-display text-h2 font-bold text-fg text-center">Four modules, one goal: build with AI, not just talk about it</h2>
-    <div class="mt-stack grid gap-grid sm:grid-cols-2 lg:grid-cols-4">
+    <div class="mt-stack flex flex-col gap-grid">
       {pillars.map((p) => (
-        <div class="rounded-2xl bg-surface-inverse text-white p-6 border-t-4 border-line-strong shadow-md transition-transform hover:-translate-y-1">
-          <h3 class="font-display text-h3 font-semibold">{p.title}</h3>
-          <p class="mt-2 text-small text-fg-inverse/80">{p.body}</p>
+        <div class="s3-card grid items-center gap-5 rounded-2xl border border-line border-t-4 border-t-line-strong bg-surface-raised p-5 shadow-sm transition-shadow hover:shadow-md sm:p-7 md:grid-cols-[minmax(0,1fr)_18rem] md:gap-8 lg:grid-cols-[minmax(0,1fr)_23rem] lg:gap-12 lg:px-10">
+          <div class="max-w-prose">
+            <h3 class="font-display text-h3 font-semibold text-fg">{p.title}</h3>
+            <p class="mt-2 text-small text-fg-muted lg:text-body">{p.body}</p>
+          </div>
+          <PillarScreen kind={p.screen} />
         </div>
       ))}
     </div>
@@ -23,3 +37,18 @@ const pillars = [
     </p>
   </div>
 </section>
+
+<style>
+  /* Phones: the card crops its phone at the bottom edge, with no padding
+     under it. Clip only: any other cropping value makes the card a scroll
+     container, which would capture the screen's view timeline. The negative
+     margin that lets the phone reach past the edge is PillarScreen's. */
+  @media (width < 40rem) {
+    @supports (overflow: clip) {
+      .s3-card {
+        overflow: clip;
+        padding-bottom: 0;
+      }
+    }
+  }
+</style>

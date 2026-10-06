@@ -7,8 +7,8 @@
 /*
  * The active palette. Swapping the site's colours is this one line: point it
  * at another file in ./palettes/. Each palette supplies the semantic colour
- * tokens below, plus optional [data-beat] overrides.
- * Contract: docs/superpowers/specs/2026-09-29-website-2.0-token-contract.md
+ * tokens below, plus optional [data-beat] overrides. A palette must set
+ * every core token; the optional ones fall back to a core token.
  */
 @import "./palettes/daylight.css";
 
@@ -75,7 +75,7 @@
 }
 
 /*
- * Fluid scale (contract section 4). Defined once, here; components use only
+ * Fluid scale. Defined once, here; components use only
  * the named utilities (text-hero, py-section, max-w-content ...), never an
  * ad-hoc clamp(). Values interpolate between a 390px phone and a ~1920px
  * desktop and stop growing past that, so 2560px gets a wider, roomier page
@@ -145,11 +145,26 @@ summary::-webkit-details-marker {
   display: none;
 }
 
-/* Subtle focus ring that works on both light and dark sections. */
+/*
+ * Keyboard focus ring. Two optional tokens, each resolved at the focused
+ * element so beat overrides apply:
+ *   --color-focus          on light bands; falls back to fg (navy in daylight)
+ *   --color-focus-inverse  inside bg-surface-inverse bands; falls back to
+ *                          fg-inverse (chalk white in daylight)
+ * The 2px offset leaves a gap of band colour between the ring and the
+ * element's own fill, so the ring is always read against the band. Both must
+ * reach 3:1 against every band they sit on (WCAG 1.4.11).
+ */
 a:focus-visible,
 button:focus-visible,
 summary:focus-visible {
-  outline: 2px solid var(--color-accent-warm, var(--color-cta));
+  outline: 2px solid var(--color-focus, var(--color-fg));
   outline-offset: 2px;
   border-radius: 4px;
+}
+
+.bg-surface-inverse a:focus-visible,
+.bg-surface-inverse button:focus-visible,
+.bg-surface-inverse summary:focus-visible {
+  outline-color: var(--color-focus-inverse, var(--color-fg-inverse));
 }
