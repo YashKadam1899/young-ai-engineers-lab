@@ -12,10 +12,8 @@ export default defineConfig({
   // youngaiengineerslab.com (DNS A records) and the old github.io address both
   // redirect to it, which GitHub Pages does itself. SINGLE POINT OF CHANGE for the deployed origin:
   // canonicals, og:url, the sitemap and robots.txt are all derived from `site`
-  // (and `base`, which is now the default '/'), and no template hardcodes
-  // either. The deploy workflow and the pre-push hook read `site` from here to
-  // build the /v1/ archive against the same origin. Host lowercased
-  // deliberately, so canonical URLs match byte for byte.
+  // (and `base`, which is the default '/'), and no template hardcodes either.
+  // Host lowercased deliberately, so canonical URLs match byte for byte.
   site: 'https://www.youngaiengineerslab.com',
   integrations: [sitemap()],
   vite: {
