@@ -18,7 +18,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         <div class="text-center lg:text-left">
           <h2 class="font-display text-h2 font-bold">Sign up for the Winter Batch</h2>
           <p class="mx-auto mt-4 max-w-prose text-fg-inverse/80 lg:mx-0">
-            The founding batch of the Winter Lab is open right now — the 12-session main program, run over 6 weeks. Your child is already using AI — this is where they learn to build with it. Send one email and we will reply with the dates, the fees and exactly what your child will build.
+            The founding batch of the Winter Lab is open right now — the 12-session main program, taught live online over 6 weeks, so a student can join from any city. Your child is already using AI — this is where they learn to build with it. Send one email and we will reply with the dates, the fees and exactly what your child will build.
           </p>
           <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row sm:flex-wrap sm:whitespace-nowrap lg:justify-start">
             <a
@@ -35,7 +35,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
             </a>
           </div>
           <p class="mt-6 text-small text-fg-inverse/60">
-            Schools, CSR and state partners: <a href={mailto(EMAILS.partner, 'School or CSR partnership enquiry')} class="font-semibold text-accent-inverse underline underline-offset-4 hover:text-white">{EMAILS.partner}</a>
+            Schools and sponsors: partnerships are planned after the founding cohort; email <a href={mailto(EMAILS.partner, 'School or sponsor interest')} class="font-semibold wrap-anywhere text-accent-inverse underline underline-offset-4 hover:text-white">{EMAILS.partner}</a> to hear when they open.
           </p>
         </div>
         <PortfolioEntryScreen />

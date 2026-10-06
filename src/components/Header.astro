@@ -8,9 +8,12 @@
 import { NAV_LINKS as links } from '../nav';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+// Current page, trailing-slash-normalised so dev (/about) and build (/about/) agree.
+const here = Astro.url.pathname.replace(/\/?$/, '/');
+const current = (href: string) => (here === `${base}/${href}` ? 'page' : undefined);
 ---
 <header class="sticky top-0 z-20 border-b border-line bg-surface/90 backdrop-blur-sm">
-  <nav class="max-w-content mx-auto flex items-center justify-between px-gutter py-4">
+  <nav aria-label="Main" class="max-w-content mx-auto flex items-center justify-between px-gutter py-4">
     <a href={`${base}/`} class="font-display font-bold text-lg tracking-tight text-fg">
       Young <span class="text-accent">AI</span> Engineers Lab
     </a>
@@ -20,6 +23,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         <li>
           <a
             href={`${base}/${link.href}`}
+            aria-current={current(link.href)}
             class="relative pb-1 transition-colors hover:text-accent after:absolute after:left-0 after:-bottom-0.5 after:h-0.5 after:w-0 after:bg-cta after:transition-all after:duration-200 hover:after:w-full"
           >{link.label}</a>
         </li>
@@ -27,7 +31,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     </ul>
 
     <details class="sm:hidden relative">
-      <summary class="list-none cursor-pointer p-2 -mr-2 rounded-md transition-colors hover:bg-surface-tint" aria-label="Open menu">
+      <summary class="list-none cursor-pointer p-2.5 -my-0.5 -mr-2.5 rounded-md transition-colors hover:bg-surface-tint" aria-label="Open menu">
         <!-- Decorative: the <summary> carries the accessible name via aria-label. -->
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-fg-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
@@ -35,9 +39,18 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </summary>
       <ul class="absolute right-0 mt-2 w-48 rounded-xl border border-line bg-surface-raised shadow-xl py-2 text-small font-medium text-fg z-10">
         {links.map((link) => (
-          <li><a href={`${base}/${link.href}`} class="block px-4 py-2.5 transition-colors hover:bg-surface-tint hover:text-accent">{link.label}</a></li>
+          <li><a href={`${base}/${link.href}`} aria-current={current(link.href)} class="block px-4 py-2.5 transition-colors hover:bg-surface-tint hover:text-accent">{link.label}</a></li>
         ))}
       </ul>
     </details>
   </nav>
 </header>
+
+<script>
+  // Menu dismissal and state-aware name. Without JS the <details> still toggles.
+  const d = document.querySelector('header details') as HTMLDetailsElement;
+  const s = d.firstElementChild as HTMLElement;
+  d.ontoggle = () => (s.ariaLabel = d.open ? 'Close menu' : 'Open menu');
+  addEventListener('click', (e) => d.open && !d.contains(e.target as Node) && (d.open = false));
+  addEventListener('keydown', (e) => e.key == 'Escape' && d.open && ((d.open = false), s.focus()));
+</script>

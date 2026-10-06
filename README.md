@@ -1,29 +1,33 @@
 # website
 
-Marketing site for The Young AI Engineers Lab. Astro + Tailwind, static
-output, no backend.
+Marketing site for The Young AI Engineers Lab, a live online AI programme for
+10–15 year-olds. Astro + Tailwind, static output, no backend.
 
 ## Develop
 
     npm install
     npm run dev
 
-## Build
+The dev server runs at http://localhost:4321/.
+
+## Build and check
 
     npm run build
+    npm run seo:check
 
-Output goes to `dist/`. Hosting is not yet decided — this build is static
-and host-agnostic, so it deploys unchanged to Vercel, Netlify, Cloudflare
-Pages, or any static host.
+The build writes static files to `dist/`. `seo:check` reads `dist/` and fails on
+missing or over-long titles and descriptions, broken canonicals, a sitemap that
+does not match the built pages, and claims the site must not make. It has to
+pass before a push.
 
-## Known placeholders to replace before launch
+## Deploy
 
-- `hello@youngaiengineerslab.com` (used across Contact Us and For
-  Investors) is a placeholder — not yet a real, monitored inbox.
-- Our Team page shows role titles only (Founder & CEO / Co-Founder & Head
-  of Curriculum) — no real names or headshots yet; add them when available.
+The output is static and host-agnostic. The site's address is set once, as
+`site` in `astro.config.mjs`; canonicals, the sitemap and `robots.txt` all
+derive from it. In the public repository a GitHub Actions workflow builds the
+site and publishes it to GitHub Pages.
 
-## Design spec
+## Contact addresses
 
-The design rationale (including what's deliberately excluded from the For
-Investors page, and why) is kept with the site's source, not in this copy.
+The addresses on the site are defined once, in `src/emails.ts`. The mailto
+links, the visible text and the structured data all follow that file.

@@ -9,6 +9,7 @@ import {
   SITE_LOCALE,
   SITE_SHORT_NAME,
   absoluteUrl,
+  canonicalUrl as pageCanonicalUrl,
   organizationSchema,
 } from '../seo';
 import '../styles/global.css';
@@ -31,9 +32,14 @@ const { title, description, ogTitle = title, ogType = 'website', schema = [] } =
 // Canonical/og:url come from Astro.site (the one hostname setting, in
 // astro.config.mjs) plus Astro.url.pathname, which already carries the
 // configured `base`. Nothing here hardcodes a host or a base path.
-const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
+// Same helper RobotsMeta uses for <link rel="canonical">, so og:url always
+// equals the canonical: in an archive build (PUBLIC_PREVIEW=1) both point at
+// the matching live page, not at the archive page itself.
+const canonicalUrl = pageCanonicalUrl(Astro.site, Astro.url);
 const ogImageUrl = absoluteUrl(Astro.site, OG_IMAGE_PATH);
-const faviconHref = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`;
+const faviconBase = import.meta.env.BASE_URL.replace(/\/$/, '');
+const faviconSvgHref = `${faviconBase}/favicon.svg`;
+const faviconIcoHref = `${faviconBase}/favicon.ico`;
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -49,7 +55,8 @@ const jsonLd = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <RobotsMeta />
-    <link rel="icon" type="image/svg+xml" href={faviconHref} />
+    <link rel="icon" href={faviconIcoHref} sizes="48x48" />
+    <link rel="icon" type="image/svg+xml" href={faviconSvgHref} sizes="any" />
 
     <meta property="og:title" content={ogTitle} />
     <meta property="og:description" content={description} />
@@ -71,10 +78,11 @@ const jsonLd = {
     <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
   </head>
   <body class="min-h-screen flex flex-col bg-surface text-fg antialiased">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:border focus:border-line focus:bg-surface-raised focus:px-4 focus:py-2 focus:text-small focus:font-semibold focus:text-fg focus:shadow-xl">Skip to main content</a>
     <Header />
     {/* Bottom breathing room sits inside main, so it takes the beat colour. A
         margin on the footer exposed the body colour as a stray stripe. */}
-    <main class:list={["flex-1 bg-surface", Astro.props.beat && "pb-16"]} data-beat={Astro.props.beat}>
+    <main id="main" tabindex="-1" class:list={["flex-1 bg-surface outline-none", Astro.props.beat && "pb-16"]} data-beat={Astro.props.beat}>
       <slot />
     </main>
     <Footer />

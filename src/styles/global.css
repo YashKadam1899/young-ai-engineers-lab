@@ -120,8 +120,21 @@
   --container-wide: clamp(64rem, 8rem + 80vw, 90rem);      /* up to 1440px */
 }
 
+/* Smooth anchor scrolling only for visitors who have not asked for less
+   motion; everyone else jumps. The scroll padding is in rem, like the
+   pinned header it clears (61 px wide screens, 73 px phones at normal text
+   size; both scale with text size), so anchored headings and focused
+   elements are never left under it, with a little air to spare. The header
+   grows to about 5.6rem where the brand wraps to two lines (narrow phones,
+   large text), so 6.5rem clears that too. */
 html {
-  scroll-behavior: smooth;
+  scroll-padding-top: 6.5rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
@@ -160,7 +173,6 @@ button:focus-visible,
 summary:focus-visible {
   outline: 2px solid var(--color-focus, var(--color-fg));
   outline-offset: 2px;
-  border-radius: 4px;
 }
 
 .bg-surface-inverse a:focus-visible,

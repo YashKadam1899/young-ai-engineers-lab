@@ -21,6 +21,10 @@ export const faqs = [
     a: "Students aged 10 to 15 — roughly Grades 5 to 10, across CBSE, ICSE and state boards. The three tiers of the main program scale with age, so a 10-year-old and a 15-year-old meet the same ideas at different depths rather than sitting through the same material. It's the range where AI tools are already part of daily life, and where schools are starting to teach AI inside regular subjects.",
   },
   {
+    q: 'Where and how does it run?',
+    a: 'Live and online only, with the instructor teaching every live session. The main program is 12 sessions over 6 weeks, taught in English, and a student can join from any city. There is no recorded video course. Device, schedule and platform details are shared when you enquire.',
+  },
+  {
     q: 'Does my child need to know how to code?',
     a: 'No prior coding required. We start from what AI is and what it is not, and the building happens through prompts, image classifiers and no-code tools. Curiosity matters more here than any head start in programming.',
   },
@@ -35,7 +39,7 @@ export const faqs = [
   },
   {
     q: 'How does this relate to what school already teaches? Does it replace it?',
-    a: "It supplements school — it replaces nothing. For CBSE schools specifically: Computational Thinking & AI is integrated into Classes 3 to 8 for every student, and Artificial Intelligence (Code 417) is an optional but substantial Skill Subject in Grades 9 and 10. Other boards are moving in the same direction at their own pace. We're designed as a lab companion either way: a short, project-dense block that gives students reps on building and questioning AI systems.",
+    a: "It supplements school — it replaces nothing. For CBSE schools specifically: Computational Thinking & AI is integrated into Classes 3 to 8 for every student, and Artificial Intelligence (Code 417) is an optional but substantial Skill Subject in Grades 9 and 10. Other boards are moving in the same direction at their own pace. We're designed as a companion either way: a short, project-dense block that gives students reps on building and questioning AI systems.",
   },
   {
     q: 'What is the Student AI Portfolio, and why does it matter?',
@@ -43,7 +47,7 @@ export const faqs = [
   },
   {
     q: 'What will my child actually build?',
-    a: 'Modules end in something real rather than a quiz — working prompts, hands-on exercises with AI tools, and their own tests of where a model breaks down. Students later invited into the selective Expert tier go on to build one full capstone — a chatbot, an image classifier, or a bias audit — and present it at a parent-attended Demo Day. That invitation comes from inside the main program, so there is nothing separate to sign up for.',
+    a: 'Modules end in something real rather than a quiz — working prompts, hands-on exercises with AI tools, and their own tests of where a model breaks down. Students later invited into the selective Expert tier go on to build one full capstone — a chatbot, an image classifier, or a bias audit — and present it at a live online Demo Day that parents join by link. That invitation comes from inside the main program, so there is nothing separate to sign up for.',
     more: { href: `${base}/#how-it-works`, label: 'See how the two stages run' },
   },
   {
@@ -52,8 +56,8 @@ export const faqs = [
     cta: { href: mailto(EMAILS.learn, 'Winter Lab — dates and fees'), label: `Email ${EMAILS.learn}` },
   },
   {
-    q: 'How do schools bring this to their students?',
-    a: "We work as a delivery partner to schools across CBSE, ICSE and state boards — curriculum packs, teacher enablement, and a moderated student sandbox that fit into a school's existing computer lab or Atal Tinkering Lab. Funded implementations for government and rural schools are possible through CSR and state partnerships.",
-    cta: { href: mailto(EMAILS.partner, 'School partnership enquiry'), label: `Email ${EMAILS.partner}` },
+    q: 'Can schools or sponsors partner with you?',
+    a: `Not yet. We're running one founding cohort first, and school and sponsor partnerships are planned after it. When schools are onboarded, our live online sessions will run for the classroom. If you'd like to hear when partnerships open, email ${EMAILS.partner}.`,
+    cta: { href: mailto(EMAILS.partner, 'School or sponsor interest'), label: `Email ${EMAILS.partner}` },
   },
 ];

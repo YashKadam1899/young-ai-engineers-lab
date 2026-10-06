@@ -79,7 +79,7 @@ export function organizationSchema(site: URL | undefined) {
       },
       {
         '@type': 'ContactPoint',
-        contactType: 'school and CSR partnerships',
+        contactType: 'school and sponsor partnerships',
         email: EMAILS.partner,
         availableLanguage: ['en'],
       },
@@ -127,7 +127,7 @@ export function courseSchema(site: URL | undefined) {
         '@type': 'CourseInstance',
         name: 'Expert tier — capstone stage',
         description:
-          'A separate 8-session stage built around one capstone project and a parent-attended Demo Day. Offered by invitation to students from the main program; it cannot be registered for directly.',
+          'A separate 8-session stage built around one capstone project and a live online Demo Day that parents join by link. Offered by invitation to students from the main program; it cannot be registered for directly.',
         courseMode: 'Online',
       },
     ],

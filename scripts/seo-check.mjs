@@ -6,6 +6,10 @@
  *   node scripts/seo-check.mjs [dir]              live site: must be indexable
  *   node scripts/seo-check.mjs [dir] --archive    frozen /v1/: must be noindex,
  *                                                 canonical pointing out of it
+ *   ... --archive-path=/v2/                       the archive lives somewhere other
+ *                                                 than /v1/ (default /v1/). Also sets
+ *                                                 which path the live sitemap must
+ *                                                 not list.
  *
  * The site's own URL is read from the Sitemap: line of dir/robots.txt, so the
  * script works for any `site` + `base` without being told them.
@@ -18,8 +22,24 @@ import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
 const args = process.argv.slice(2);
+// A mistyped flag must not be ignored silently (a bad --archive-path would fall
+// back to the default and pass a page the gate should have failed).
+const unknown = args.filter((a) => a.startsWith('--') && a !== '--archive' && !a.startsWith('--archive-path='));
+if (unknown.length) {
+  console.error(`seo-check: unknown argument(s): ${unknown.join(' ')}. Use [dir] [--archive] [--archive-path=/x/].`);
+  process.exit(2);
+}
 const archive = args.includes('--archive');
 const dir = args.find((a) => !a.startsWith('--')) ?? 'dist';
+
+// Where the archive is served, relative to the site root. A canonical or sitemap
+// entry containing this path means "points into the archive". Default /v1/.
+const archivePath = args.find((a) => a.startsWith('--archive-path='))?.slice('--archive-path='.length) ?? '/v1/';
+if (!/^\/[A-Za-z0-9._~-]+(\/[A-Za-z0-9._~-]+)*\/$/.test(archivePath)) {
+  console.error(`seo-check: --archive-path must look like /v1/ (leading and trailing slash), got "${archivePath}".`);
+  process.exit(2);
+}
+const inArchive = (url) => url.includes(archivePath);
 
 const errors = [];
 const warnings = [];
@@ -75,6 +95,7 @@ for (const file of pages) {
   const desc = decode(one(html, /<meta name="description" content="([^"]*)"/));
   const canonical = one(html, /<link rel="canonical" href="([^"]*)"/);
   const robots = one(html, /<meta name="robots" content="([^"]*)"/);
+  const ogUrl = one(html, /<meta property="og:url" content="([^"]*)"/);
   const ogImage = one(html, /<meta property="og:image" content="([^"]*)"/);
 
   // Length limits matter only where search results show the page.
@@ -99,11 +120,17 @@ for (const file of pages) {
 
   if (archive) {
     if (!robots?.includes('noindex')) fail(page, 'archive page is indexable (no noindex)');
-    if (canonical && /\/v1\//.test(canonical)) fail(page, `archive canonical points at itself: ${canonical}`);
+    if (canonical && inArchive(canonical)) fail(page, `archive canonical points at itself: ${canonical}`);
+    // Warning, not failure: the archive is built from its own frozen branch, whose
+    // og:url is its own page URL. Failing here would drop the whole archive from the
+    // deploy until that branch is patched. Share cards would name the noindex copy.
+    if (canonical && ogUrl && ogUrl !== canonical) warn(page, `og:url ${ogUrl} differs from canonical ${canonical}`);
     continue;
   }
 
   if (robots?.includes('noindex')) fail(page, 'live page carries noindex');
+  if (!ogUrl) fail(page, 'no og:url');
+  if (canonical && ogUrl && ogUrl !== canonical) fail(page, `og:url ${ogUrl} differs from canonical ${canonical}`);
   if (siteUrl && canonical) {
     const expected = new URL(page.slice(1), siteUrl).href;
     if (canonical !== expected) fail(page, `canonical ${canonical}, expected ${expected}`);
@@ -128,7 +155,7 @@ if (!archive) {
   const listed = new Set(smFiles.flatMap((n) => [...readFileSync(join(dir, n), 'utf8').matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1])));
   for (const c of canonicals) if (!listed.has(c)) fail('sitemap', `missing ${c}`);
   for (const l of listed) if (!canonicals.has(l)) fail('sitemap', `lists ${l}, which is not a built page`);
-  if ([...listed].some((l) => /\/v1\//.test(l))) fail('sitemap', 'lists /v1/ archive pages');
+  if ([...listed].some(inArchive)) fail('sitemap', `lists ${archivePath} archive pages`);
 }
 
 for (const w of warnings) console.log(`warn  ${w}`);

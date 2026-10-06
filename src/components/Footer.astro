@@ -8,10 +8,10 @@ const year = new Date().getFullYear();
 <footer class="border-t border-line bg-surface-inverse">
   <div class="max-w-content mx-auto px-gutter py-8 text-small text-fg-inverse/70">
     <nav aria-label="Footer">
-      <ul class="flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-7">
+      <ul class="-my-2.5 flex flex-col items-center sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-7">
         {links.map((link) => (
           <li>
-            <a href={`${base}/${link.href}`} class="transition-colors hover:text-white">{link.label}</a>
+            <a href={`${base}/${link.href}`} class="flex min-h-11 min-w-11 items-center justify-center transition-colors hover:text-white">{link.label}</a>
           </li>
         ))}
       </ul>

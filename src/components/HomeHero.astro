@@ -13,9 +13,12 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 <section data-beat="arrival" class="relative overflow-hidden bg-surface">
   <HeroScene>
-    <h1 class="font-display text-hero text-balance font-bold tracking-tight text-fg">
-      Turning India's <span class="whitespace-nowrap">10–15 year-olds</span> from AI consumers into AI developers
+    <h1 class="@container font-display text-hero text-balance wrap-break-word font-bold tracking-tight text-fg">
+      Turning India's <span class="@min-[15.7rem]:whitespace-nowrap">10–15 year-olds</span> from AI consumers into AI developers
     </h1>
+    <p class="mx-auto mt-5 max-w-prose text-body font-medium text-fg-muted">
+      Live online · 12 sessions over 6 weeks · taught in English
+    </p>
     <div class="mt-9 flex flex-col sm:flex-row justify-center gap-4">
       <a href={mailto(EMAILS.learn, 'Winter Batch signup')} class="rounded-full bg-cta px-6 py-3.5 text-cta-fg font-semibold shadow-lg shadow-cta/25 transition-all hover:-translate-y-0.5 hover:bg-cta-hover hover:shadow-xl hover:shadow-cta/30">Sign Up for the Winter Batch</a>
       <a href={`${base}/for-investors/`} class="rounded-full border-2 border-line-medium bg-surface-raised px-6 py-3.5 text-fg-secondary font-semibold transition-all hover:-translate-y-0.5 hover:border-line-strong hover:bg-surface-tint">See the Investor Overview</a>
