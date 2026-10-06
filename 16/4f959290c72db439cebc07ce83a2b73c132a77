@@ -1,0 +1,23 @@
+.githooks/pre-push
+  s_4bfb9ee9508f92::t_1a5f50255ce515 28-32
+.github/workflows/deploy.yml
+  s_4bfb9ee9508f92::t_3e60b042500ebb 44,126-130
+astro.config.mjs
+  s_4bfb9ee9508f92::t_0489d844b88e2c 10-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "164f959290c72db439cebc07ce83a2b73c132a77",
+  "prompts": {},
+  "sessions": {
+    "s_4bfb9ee9508f92": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "s_4bfb9ee9508f92",
+        "model": "unknown"
+      },
+      "human_author": "YashKadam1899 <50652438+YashKadam1899@users.noreply.github.com>"
+    }
+  }
+}
