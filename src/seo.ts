@@ -26,7 +26,7 @@ export const SITE_LOCALE = 'en_IN';
 /** 1200x630 PNG in public/ — see README note on replacing it with a designed asset. */
 export const OG_IMAGE_PATH = 'og-image.png';
 export const OG_IMAGE_ALT =
-  'The Young AI Engineers Lab — turning India’s 10–15 year-olds from AI consumers into AI developers';
+  'The Young AI Engineers Lab — turning India’s future workforce from AI consumers into AI developers';
 
 /**
  * Resolves a path against the deployed origin, preserving Astro's configured
