@@ -15,7 +15,7 @@
 // viewport, which is fine, as nothing on it follows the scroll.
 //
 // Motion is one reveal, run by the script at the end of this file, which sets
-// data-reveal on the figure: pending (below the fold) then done.
+// data-artifact-state on the figure: pending (below the fold) then done.
 import DeviceFrame from './DeviceFrame.astro';
 
 const messages = [
@@ -88,32 +88,32 @@ const messages = [
     --artifact-ease: cubic-bezier(0.23, 1, 0.32, 1);
   }
 
-  :global(html[data-motion='ok']) .artifact[data-reveal='pending'] {
+  :global(html[data-motion='ok']) .artifact[data-artifact-state='pending'] {
     opacity: 0;
     transform: translateY(28px) scale(0.97);
   }
 
-  :global(html[data-motion='ok']) .artifact[data-reveal='pending'] .artifact-msg {
+  :global(html[data-motion='ok']) .artifact[data-artifact-state='pending'] .artifact-msg {
     opacity: 0;
     transform: translateY(8px);
   }
 
-  .artifact[data-reveal='done'] {
+  .artifact[data-artifact-state='done'] {
     transition:
       opacity 800ms var(--artifact-ease),
       transform 800ms var(--artifact-ease);
   }
 
-  .artifact[data-reveal='done'] .artifact-msg {
+  .artifact[data-artifact-state='done'] .artifact-msg {
     transition:
       opacity 500ms var(--artifact-ease),
       transform 500ms var(--artifact-ease);
   }
 
-  .artifact[data-reveal='done'] .artifact-msg:nth-child(1) { transition-delay: 200ms; }
-  .artifact[data-reveal='done'] .artifact-msg:nth-child(2) { transition-delay: 260ms; }
-  .artifact[data-reveal='done'] .artifact-msg:nth-child(3) { transition-delay: 320ms; }
-  .artifact[data-reveal='done'] .artifact-msg:nth-child(4) { transition-delay: 380ms; }
+  .artifact[data-artifact-state='done'] .artifact-msg:nth-child(1) { transition-delay: 200ms; }
+  .artifact[data-artifact-state='done'] .artifact-msg:nth-child(2) { transition-delay: 260ms; }
+  .artifact[data-artifact-state='done'] .artifact-msg:nth-child(3) { transition-delay: 320ms; }
+  .artifact[data-artifact-state='done'] .artifact-msg:nth-child(4) { transition-delay: 380ms; }
 
   /* The cursor blinks four times (about 4.2 s, inside WCAG's 5 s) once the screen lands, then
      rests solid: ready, not restless, next to the buttons. */
@@ -121,7 +121,7 @@ const messages = [
     50% { opacity: 0; }
   }
 
-  :global(html[data-motion='ok']) .artifact[data-reveal='done'] .artifact-caret {
+  :global(html[data-motion='ok']) .artifact[data-artifact-state='done'] .artifact-caret {
     animation: artifact-caret 1.06s step-end 900ms 4;
   }
 
@@ -146,7 +146,7 @@ const messages = [
       (entries) => {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue;
-          (entry.target as HTMLElement).dataset.reveal = 'done';
+          (entry.target as HTMLElement).dataset.artifactState = 'done';
           io.unobserve(entry.target);
         }
       },
@@ -154,7 +154,7 @@ const messages = [
     );
     for (const screen of document.querySelectorAll<HTMLElement>('[data-artifact]')) {
       if (screen.getBoundingClientRect().top < window.innerHeight) continue;
-      screen.dataset.reveal = 'pending';
+      screen.dataset.artifactState = 'pending';
       io.observe(screen);
     }
   }
