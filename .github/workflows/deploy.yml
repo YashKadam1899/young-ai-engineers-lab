@@ -41,7 +41,7 @@ concurrency:
 
 env:
   V1_BRANCH: website-1.0
-  V1_BASE: /young-ai-engineers-lab/v1
+  V1_BASE: /v1
 
 jobs:
   build:
@@ -123,7 +123,11 @@ jobs:
           PUBLIC_PREVIEW: "1"
         run: |
           npm ci
-          npx astro build --base "$V1_BASE"
+          # The archive branch carries its own (older) astro config, so give it
+          # the live site's origin: canonicals then point at the live pages.
+          SITE_URL=$(sed -n "s/^ *site: '\([^']*\)'.*/\1/p" ../live/astro.config.mjs)
+          test -n "$SITE_URL" || { echo "Could not read site from live/astro.config.mjs" >&2; exit 1; }
+          npx astro build --base "$V1_BASE" --site "$SITE_URL"
           # main's checker, not the archive branch's own copy.
           node ../live/scripts/seo-check.mjs dist --archive
           rm -f dist/robots.txt dist/sitemap-index.xml dist/sitemap-*.xml
