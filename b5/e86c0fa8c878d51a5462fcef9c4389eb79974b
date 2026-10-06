@@ -1,0 +1,19 @@
+astro.config.mjs
+  s_e6eafe64bb8e46::t_fedc6905891525 15-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b5e86c0fa8c878d51a5462fcef9c4389eb79974b",
+  "prompts": {},
+  "sessions": {
+    "s_e6eafe64bb8e46": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "s_e6eafe64bb8e46",
+        "model": "unknown"
+      },
+      "human_author": "YashKadam1899 <50652438+YashKadam1899@users.noreply.github.com>"
+    }
+  }
+}
