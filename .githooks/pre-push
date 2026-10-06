@@ -25,7 +25,11 @@ while read -r _local_ref local_sha remote_ref _remote_sha; do
     npx astro build >/dev/null
     node scripts/seo-check.mjs dist
   else
-    PUBLIC_PREVIEW=1 npx astro build --base /young-ai-engineers-lab/v1 >/dev/null
+    # Same as the deploy workflow: the archive is built under /v1 against the
+    # live site's origin, read from main's astro.config.mjs.
+    site_url=$(git show main:astro.config.mjs | sed -n "s/^ *site: '\([^']*\)'.*/\1/p")
+    [ -n "$site_url" ] || { echo "pre-push: could not read site from main:astro.config.mjs" >&2; exit 1; }
+    PUBLIC_PREVIEW=1 npx astro build --base /v1 --site "$site_url" >/dev/null
     node scripts/seo-check.mjs dist --archive
   fi
 done
