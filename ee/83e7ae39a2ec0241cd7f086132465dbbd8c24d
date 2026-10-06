@@ -1,0 +1,65 @@
+.githooks/pre-push
+  s_ea3b23c59a58fa::t_df9891d0e6907d 28-32
+README.md
+  s_ea3b23c59a58fa::t_a58a277e46296d 3-4,11-13,16,18-21,23,25-28,30,32-33
+public/favicon.svg
+  s_ea3b23c59a58fa::t_419e96dba2f47e 1-8
+scripts/make-favicon-ico.mjs
+  s_ea3b23c59a58fa::t_b05df89bff7997 1-39
+scripts/seo-check.mjs
+  s_ea3b23c59a58fa::t_fc8138753c4d52 9-12,25-31,35-43,98,123-127,132-133,158
+src/components/Footer.astro
+  s_ea3b23c59a58fa::t_e072e94ef2f8c5 11,14
+src/components/Header.astro
+  s_ea3b23c59a58fa::t_635202171f0573 11-13,16,26,34,42,48-56
+src/components/HomeClosingCta.astro
+  s_ea3b23c59a58fa::t_75e8c0289250ee 21,38
+src/components/HomeDifferentiators.astro
+  s_ea3b23c59a58fa::t_86b2bf96eb2ddb 6,8
+src/components/HomeFaq.astro
+  s_ea3b23c59a58fa::t_89d43c88fd08cd 15-16,22-23,25,34
+src/components/HomeHero.astro
+  s_ea3b23c59a58fa::t_6def7412df6e5a 16-17,19-21
+src/components/HomeHowItRuns.astro
+  s_ea3b23c59a58fa::t_76e9a46ad82ae2 83
+src/components/HomeInstructor.astro
+  s_ea3b23c59a58fa::t_a51ef18665f461 28,37
+src/components/HomeSchools.astro
+  s_ea3b23c59a58fa::t_a562c554c4a6cf 2-4,10-13,15-18
+src/components/HomeStats.astro
+  s_ea3b23c59a58fa::t_2aaf19027881e6 25
+src/content/faqs.ts
+  s_ea3b23c59a58fa::t_65ac49ca9574b8 23-26,42,50,59-61
+src/emails.ts
+  s_ea3b23c59a58fa::t_73ddf377db0cc9 5-6,11
+src/layouts/BaseLayout.astro
+  s_ea3b23c59a58fa::t_c254825d23abd6 12,35-38,40-42,58-59,81,85
+src/pages/about.astro
+  s_ea3b23c59a58fa::t_8485ac3f5d0df5 20,51-52,55-56,72
+src/pages/contact.astro
+  s_ea3b23c59a58fa::t_4cee214b491b5e 11,16-19,21,33-34,49
+src/pages/for-investors.astro
+  s_ea3b23c59a58fa::t_872ab7bd700b1e 18,23,26,46
+src/pages/our-team.astro
+  s_ea3b23c59a58fa::t_2f83130f9df113 49
+src/seo.ts
+  s_ea3b23c59a58fa::t_57cf3f93b8ac86 82,130
+src/styles/global.css
+  s_ea3b23c59a58fa::t_6ffbd605ba9888 123-129,131-137
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ee83e7ae39a2ec0241cd7f086132465dbbd8c24d",
+  "prompts": {},
+  "sessions": {
+    "s_ea3b23c59a58fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "s_ea3b23c59a58fa",
+        "model": "unknown"
+      },
+      "human_author": "YashKadam1899 <50652438+YashKadam1899@users.noreply.github.com>"
+    }
+  }
+}
