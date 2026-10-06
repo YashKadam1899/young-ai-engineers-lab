@@ -1,0 +1,19 @@
+.github/workflows/deploy.yml
+  s_c69c699b8a24b6::t_aea6d2aab87743 3,5-7,9-10,30,40,45,50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b561698c1390ed7e421f70ea1294bcaf7c97cf29",
+  "prompts": {},
+  "sessions": {
+    "s_c69c699b8a24b6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "s_c69c699b8a24b6",
+        "model": "unknown"
+      },
+      "human_author": "YashKadam1899 <50652438+YashKadam1899@users.noreply.github.com>"
+    }
+  }
+}
