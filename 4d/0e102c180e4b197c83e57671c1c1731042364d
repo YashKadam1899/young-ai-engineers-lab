@@ -1,0 +1,19 @@
+src/content/faqs.ts
+  s_84ac11835b7f33::t_978b91d933b492 54
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4d0e102c180e4b197c83e57671c1c1731042364d",
+  "prompts": {},
+  "sessions": {
+    "s_84ac11835b7f33": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "s_84ac11835b7f33",
+        "model": "unknown"
+      },
+      "human_author": "YashKadam1899 <50652438+YashKadam1899@users.noreply.github.com>"
+    }
+  }
+}
