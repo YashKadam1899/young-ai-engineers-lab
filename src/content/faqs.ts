@@ -52,8 +52,8 @@ export const faqs = [
   },
   {
     q: 'What does it cost, and when does the next cohort start?',
-    a: 'The founding Winter Lab cohort is open now. Email us and we will send you the current dates and fees, with no obligation.',
-    cta: { href: mailto(EMAILS.learn, 'Winter Lab — dates and fees'), label: `Email ${EMAILS.learn}` },
+    a: 'The founding Winter Lab cohort is open now. Fill in the sign-up form and we will email payment instructions to the address you give. If you would like to ask something first, you can email us with no obligation.',
+    cta: { href: mailto(EMAILS.learn, 'Winter Lab — dates and fees'), label: `Questions? Email ${EMAILS.learn}` },
   },
   {
     q: 'Can schools or sponsors partner with you?',

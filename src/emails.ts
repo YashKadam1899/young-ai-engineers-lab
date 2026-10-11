@@ -20,3 +20,11 @@ export const EMAILS = {
 export function mailto(address: string, subject: string): string {
   return `mailto:${address}?subject=${encodeURIComponent(subject)}`;
 }
+
+/**
+ * Winter Batch sign-up form (Google Forms). One place to change when a
+ * registration page replaces it. External site: link it with
+ * target="_blank" rel="noopener noreferrer".
+ */
+export const SIGNUP_FORM_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLSejhg5q9NUPDKCw4bcAILoy-lA226lQKzqkLRZcgp1ydx6NaQ/viewform';
