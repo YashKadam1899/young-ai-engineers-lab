@@ -51,7 +51,7 @@ export const faqs = [
     more: { href: `${base}/#how-it-works`, label: 'See how the two stages run' },
   },
   {
-    q: 'What does it cost, and when does the next cohort start?',
+    q: 'How do I join the Winter Lab?',
     a: 'The founding Winter Lab cohort is open now. Fill in the sign-up form and we will email payment instructions to the address you give. If you would like to ask something first, you can email us with no obligation.',
     cta: { href: mailto(EMAILS.learn, 'Winter Lab — dates and fees'), label: `Questions? Email ${EMAILS.learn}` },
   },
