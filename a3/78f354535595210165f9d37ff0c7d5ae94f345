@@ -1,0 +1,25 @@
+src/components/HomeClosingCta.astro
+  s_a876cff937f412::t_9f585024a0a991 6,21,25-27,30
+src/components/HomeHero.astro
+  s_a876cff937f412::t_a1f59d404fa565 9,23
+src/content/faqs.ts
+  s_a876cff937f412::t_755b1cfc20a828 55-56
+src/emails.ts
+  s_a876cff937f412::t_100205d8706a3d 23-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a378f354535595210165f9d37ff0c7d5ae94f345",
+  "prompts": {},
+  "sessions": {
+    "s_a876cff937f412": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "s_a876cff937f412",
+        "model": "unknown"
+      },
+      "human_author": "YashKadam1899 <50652438+YashKadam1899@users.noreply.github.com>"
+    }
+  }
+}
