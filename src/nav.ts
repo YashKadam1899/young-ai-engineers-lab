@@ -1,7 +1,7 @@
 /*
  * Parent nav vs footer: header and hamburger use NAV_LINKS only. Footer uses
  * FOOTER_LINKS (those links plus For Investors), so investors stay reachable
- * without sitting in the parent-facing main nav (seo-strategy-2026-10-13).
+ * without sitting in the parent-facing main nav.
  *
  * `href` values are relative to Astro's configured `base` and must always be
  * joined with it (see Header.astro / Footer.astro) — hardcoding '/about' style

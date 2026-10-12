@@ -28,8 +28,10 @@ interface Props {
   schema?: Record<string, unknown>[];
   /** Story beat for the whole <main> (see the [data-beat] blocks in the palette files). Omit on the homepage, whose sections carry their own. */
   beat?: 'calm' | 'investor';
+  /** Optional robots content. Only the branded 404 sets `noindex`; live pages omit this. */
+  robots?: string;
 }
-const { title, description, ogTitle = title, ogType = 'website', schema = [] } = Astro.props;
+const { title, description, ogTitle = title, ogType = 'website', schema = [], robots } = Astro.props;
 
 // Canonical/og:url come from Astro.site (the one hostname setting, in
 // astro.config.mjs) plus Astro.url.pathname, which already carries the
@@ -59,6 +61,7 @@ const jsonLd = {
     <link rel="preload" href={jakartaLatin} as="font" type="font/woff2" crossorigin />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {robots && <meta name="robots" content={robots} />}
     <link rel="canonical" href={canonicalUrl} />
     <link rel="icon" href={faviconIcoHref} sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href={faviconSvgHref} sizes="any" />

@@ -130,7 +130,7 @@ const listed = new Set(smFiles.flatMap((n) => [...readFileSync(join(dir, n), 'ut
 for (const c of canonicals) if (!listed.has(c)) fail('sitemap', `missing ${c}`);
 for (const l of listed) if (!canonicals.has(l)) fail('sitemap', `lists ${l}, which is not a built page`);
 
-// Week 1 entity / share invariants (seo-strategy-2026-10-13).
+// Week 1 entity / share invariants.
 const homeHtml = readFileSync(join(dir, 'index.html'), 'utf8');
 const homeTitle = decode(one(homeHtml, /<title>([^<]*)<\/title>/));
 const homeOgTitle = decode(one(homeHtml, /<meta property="og:title" content="([^"]*)"/));
@@ -158,6 +158,8 @@ if (!existsSync(notFoundPath)) {
   if (h1s !== 1) fail('404.html', `${h1s} <h1> elements (want 1)`);
   const text = html.replace(/<style[\s\S]*?<\/style>/g, '').replace(/<script(?! type="application\/ld)[\s\S]*?<\/script>/g, '');
   for (const [re, label] of BANNED) if (re.test(text)) fail('404.html', `contains ${label}`);
+  const robots = one(html, /<meta name="robots" content="([^"]*)"/);
+  if (!robots?.includes('noindex')) fail('404.html', 'missing noindex (error page must not be indexed)');
 }
 
 for (const file of pages) {
