@@ -1,0 +1,47 @@
+.githooks/pre-push
+  s_667632ef3a027e::t_4109fb8287eda8 4-5,10,20,22-23
+scripts/seo-check.mjs
+  s_667632ef3a027e::t_9a1c1734b2a027 19-20,22,25,64,66,86,88,121-129,133
+src/components/Footer.astro
+  s_667632ef3a027e::t_cddd35fd8357fd 6-8,17
+src/components/Header.astro
+  s_667632ef3a027e::t_26ddeac11b4e98 16-18,21-22,28,34-35,41,43,54-58,61-65
+src/components/PhoneFrame.astro
+  s_667632ef3a027e::t_440504e1d706e0 1-94
+src/components/PortfolioCarousel.astro
+  s_667632ef3a027e::t_92ee4e535ff6c9 1-382
+src/components/PortfolioDialog.astro
+  s_667632ef3a027e::t_f3feb304cd9331 1-441
+src/components/PortfolioQA.astro
+  s_667632ef3a027e::t_1c3bc554b4e6cb 1-101
+src/content/portfolio.ts
+  s_667632ef3a027e::t_d3832e05699b04 1-239
+src/layouts/BaseLayout.astro
+  s_667632ef3a027e::t_13d0b02dde531b 34,51-53,56
+src/nav.ts
+  s_667632ef3a027e::t_59e484fc7a83c0 2,18
+src/pages/our-team.astro
+  s_667632ef3a027e::t_a68642b4028068 53
+src/pages/portfolio.astro
+  s_667632ef3a027e::t_644a78547a276f 1-85
+src/seo.ts
+  s_667632ef3a027e::t_f4871c78412b84 152,154
+src/styles/global.css
+  s_667632ef3a027e::t_378b9e359429c2 127-130,132-139
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c7e0cf80aba339da6404e3b963bdd30f8bd8ffe4",
+  "prompts": {},
+  "sessions": {
+    "s_667632ef3a027e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "s_667632ef3a027e",
+        "model": "unknown"
+      },
+      "human_author": "YashKadam1899 <50652438+YashKadam1899@users.noreply.github.com>"
+    }
+  }
+}
