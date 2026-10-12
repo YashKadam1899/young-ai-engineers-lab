@@ -7,6 +7,7 @@
 // original 2.0 hero, kept so any other version can be undone in one line.
 import HeroScene from './hero-scenes/LabArrival.astro';
 import { SIGNUP_FORM_URL } from '../emails';
+import { BRAND_SENTENCE } from '../seo';
 
 // Same base-joining rule as the header: hrefs are relative to Astro's `base`.
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -19,9 +20,12 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     <p class="mx-auto mt-5 max-w-prose text-body font-medium text-fg-muted">
       Live online · 12 sessions over 6 weeks · taught in English
     </p>
+    <p class="mx-auto mt-3 max-w-prose text-small text-fg-muted">
+      {BRAND_SENTENCE}
+    </p>
     <div class="mt-9 flex flex-col sm:flex-row justify-center gap-4">
       <a href={SIGNUP_FORM_URL} target="_blank" rel="noopener noreferrer" class="rounded-full bg-cta px-6 py-3.5 text-cta-fg font-semibold shadow-lg shadow-cta/25 transition-all hover:-translate-y-0.5 hover:bg-cta-hover hover:shadow-xl hover:shadow-cta/30">Sign Up for the Winter Batch<span class="sr-only"> (opens the sign-up form in a new tab)</span></a>
-      <a href={`${base}/for-investors/`} class="rounded-full border-2 border-line-medium bg-surface-raised px-6 py-3.5 text-fg-secondary font-semibold transition-all hover:-translate-y-0.5 hover:border-line-strong hover:bg-surface-tint">See the Investor Overview</a>
+      <a href={`${base}/#how-it-works`} class="rounded-full border-2 border-line-medium bg-surface-raised px-6 py-3.5 text-fg-secondary font-semibold transition-all hover:-translate-y-0.5 hover:border-line-strong hover:bg-surface-tint">See how the Lab runs</a>
     </div>
   </HeroScene>
 </section>

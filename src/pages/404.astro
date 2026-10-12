@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { FOOTER_LINKS } from '../nav';
+import { SIGNUP_FORM_URL } from '../emails';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<BaseLayout
+  beat="calm"
+  title="Page not found · Young AI Engineers Lab"
+  description="That page is not on Young AI Engineers Lab. Use the links below for the live online AI programme for ages 10 to 15 in India."
+>
+  <section class="max-w-content mx-auto px-gutter py-section">
+    <h1 class="font-display text-h1 font-bold text-fg">Page not found</h1>
+    <p class="mt-3 max-w-prose text-fg-muted">
+      The link may be outdated. These are the pages on this site:
+    </p>
+    <ul class="mt-8 flex flex-col gap-3 text-small font-semibold">
+      {FOOTER_LINKS.map((link) => (
+        <li>
+          <a href={`${base}/${link.href}`} class="text-accent underline decoration-link-underline decoration-2 underline-offset-4 hover:text-accent-strong">{link.label}</a>
+        </li>
+      ))}
+    </ul>
+    <p class="mt-10">
+      <a href={SIGNUP_FORM_URL} target="_blank" rel="noopener noreferrer" class="rounded-full bg-cta px-6 py-3.5 text-cta-fg font-semibold shadow-lg shadow-cta/25 hover:bg-cta-hover">Sign up for the Winter Batch<span class="sr-only"> (opens the sign-up form in a new tab)</span></a>
+    </p>
+  </section>
+</BaseLayout>

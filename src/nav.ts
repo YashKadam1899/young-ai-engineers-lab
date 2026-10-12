@@ -1,6 +1,7 @@
 /*
- * The site's six pages, in nav order. Shared by the header and the footer so
- * the two can never drift apart.
+ * Parent nav vs footer: header and hamburger use NAV_LINKS only. Footer uses
+ * FOOTER_LINKS (those links plus For Investors), so investors stay reachable
+ * without sitting in the parent-facing main nav (seo-strategy-2026-10-13).
  *
  * `href` values are relative to Astro's configured `base` and must always be
  * joined with it (see Header.astro / Footer.astro) — hardcoding '/about' style
@@ -17,5 +18,9 @@ export const NAV_LINKS = [
   { href: 'our-team/', label: 'Our Team' },
   { href: 'portfolio/', label: 'Portfolio' },
   { href: 'contact/', label: 'Contact Us' },
+] as const;
+
+export const FOOTER_LINKS = [
+  ...NAV_LINKS,
   { href: 'for-investors/', label: 'For Investors' },
 ] as const;

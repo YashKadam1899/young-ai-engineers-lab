@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { BRAND_SENTENCE } from '../seo';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
@@ -69,6 +70,9 @@ const responses = [
   <section class="max-w-content mx-auto px-gutter py-section">
     <h1 class="font-display text-h1 font-bold text-fg">What we're building, and why</h1>
     <p class="mt-2 max-w-prose text-fg-muted">
+      {BRAND_SENTENCE}
+    </p>
+    <p class="mt-3 max-w-prose text-fg-muted">
       AI is arriving in Indian classrooms faster than teachers can be trained for it. We exist to make sure the next generation can build with AI and challenge it — not just ask it for answers.
     </p>
 

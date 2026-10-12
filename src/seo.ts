@@ -19,14 +19,16 @@
  */
 import { EMAILS } from './emails';
 
-export const SITE_NAME = 'The Young AI Engineers Lab';
+export const SITE_NAME = 'Young AI Engineers Lab';
 /** Used for og:site_name and the <title> suffix — the short, spoken form. */
 export const SITE_SHORT_NAME = 'Young AI Engineers Lab';
+export const BRAND_SENTENCE =
+  'Young AI Engineers Lab is a live, instructor-led online AI programme for 10 to 15 year-olds in India, taught in English.';
 export const SITE_LOCALE = 'en_IN';
 /** 1200x630 PNG in public/ — see README note on replacing it with a designed asset. */
 export const OG_IMAGE_PATH = 'og-image.png';
 export const OG_IMAGE_ALT =
-  'The Young AI Engineers Lab — turning India’s future workforce from AI consumers into AI developers';
+  'Young AI Engineers Lab — turning India’s future workforce from AI consumers into AI developers';
 
 /**
  * Resolves a path against the deployed origin, preserving Astro's configured
@@ -46,7 +48,6 @@ export function organizationSchema(site: URL | undefined) {
     '@type': 'EducationalOrganization',
     '@id': `${home}#organization`,
     name: SITE_NAME,
-    alternateName: SITE_SHORT_NAME,
     url: home,
     description:
       "An Indian programme that teaches 10–15 year-olds how AI actually works and how to build with it, alongside what schools across CBSE, ICSE and state boards are now starting to teach about AI. Taught in English.",
@@ -89,6 +90,19 @@ export function organizationSchema(site: URL | undefined) {
   };
 }
 
+/** Site-wide WebSite node; publisher points at the Organization @id. */
+export function websiteSchema(site: URL | undefined) {
+  const home = absoluteUrl(site);
+  return {
+    '@type': 'WebSite',
+    '@id': `${home}#website`,
+    name: SITE_NAME,
+    url: home,
+    publisher: { '@id': `${home}#organization` },
+    inLanguage: 'en-IN',
+  };
+}
+
 /**
  * The programme. Every field maps to copy already on the homepage.
  * No `offers`: a price is published nowhere on the site, and an Offer without
@@ -100,7 +114,7 @@ export function courseSchema(site: URL | undefined) {
   return {
     '@type': 'Course',
     '@id': `${home}#course`,
-    name: 'The Winter Lab — AI for 10–15 year-olds',
+    name: 'Live online AI lab for ages 10–15',
     url: `${home}#how-it-works`,
     description:
       "A live online AI lab for students aged roughly 10 to 15, with depth scaling by tier. The main program runs 12 sessions over 6 weeks across three tiers — Beginner, Intermediate and Practitioner — taught in English. A separate, selective 8-session Expert tier is offered by invitation to students from the main program, and is not separately registrable. Designed as a companion to the AI curriculum Indian schools are now introducing, across CBSE, ICSE and state boards.",

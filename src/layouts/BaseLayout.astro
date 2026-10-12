@@ -2,6 +2,8 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import MotionLayer from '../components/motion/MotionLayer.astro';
+import bricolageLatin from '@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wght-normal.woff2?url';
+import jakartaLatin from '@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-wght-normal.woff2?url';
 import {
   OG_IMAGE_ALT,
   OG_IMAGE_PATH,
@@ -10,6 +12,7 @@ import {
   absoluteUrl,
   canonicalUrl as pageCanonicalUrl,
   organizationSchema,
+  websiteSchema,
 } from '../seo';
 import '../styles/global.css';
 
@@ -37,10 +40,11 @@ const ogImageUrl = absoluteUrl(Astro.site, OG_IMAGE_PATH);
 const faviconBase = import.meta.env.BASE_URL.replace(/\/$/, '');
 const faviconSvgHref = `${faviconBase}/favicon.svg`;
 const faviconIcoHref = `${faviconBase}/favicon.ico`;
+const appleTouchHref = `${faviconBase}/apple-touch-icon.png`;
 
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@graph': [organizationSchema(Astro.site), ...schema],
+  '@graph': [organizationSchema(Astro.site), websiteSchema(Astro.site), ...schema],
 };
 ---
 <!doctype html>
@@ -51,11 +55,14 @@ const jsonLd = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- Must match --color-surface in the active palette (styles/palettes/daylight.css). -->
     <meta name="theme-color" content="#faf6ec" />
+    <link rel="preload" href={bricolageLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={jakartaLatin} as="font" type="font/woff2" crossorigin />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
-    <link rel="icon" href={faviconIcoHref} sizes="48x48" />
+    <link rel="icon" href={faviconIcoHref} sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href={faviconSvgHref} sizes="any" />
+    <link rel="apple-touch-icon" href={appleTouchHref} />
 
     <meta property="og:title" content={ogTitle} />
     <meta property="og:description" content={description} />

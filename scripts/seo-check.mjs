@@ -65,7 +65,9 @@ if (existsSync(robotsPath)) {
 }
 if (!siteUrl) fail('robots.txt', 'missing, or has no Sitemap: line to read the site URL from');
 
-const pages = htmlFiles(dir).sort();
+// 404.html is served by the host on missing URLs; it is not an indexable sitemap URL.
+const allHtml = htmlFiles(dir).sort();
+const pages = allHtml.filter((p) => !relative(dir, p).replace(/\\/g, '/').endsWith('404.html'));
 const titles = new Map();
 const descriptions = new Map();
 const canonicals = new Set();
@@ -127,6 +129,61 @@ if (!existsSync(join(dir, 'sitemap-index.xml')) || smFiles.length === 0) fail('s
 const listed = new Set(smFiles.flatMap((n) => [...readFileSync(join(dir, n), 'utf8').matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1])));
 for (const c of canonicals) if (!listed.has(c)) fail('sitemap', `missing ${c}`);
 for (const l of listed) if (!canonicals.has(l)) fail('sitemap', `lists ${l}, which is not a built page`);
+
+// Week 1 entity / share invariants (seo-strategy-2026-10-13).
+const homeHtml = readFileSync(join(dir, 'index.html'), 'utf8');
+const homeTitle = decode(one(homeHtml, /<title>([^<]*)<\/title>/));
+const homeOgTitle = decode(one(homeHtml, /<meta property="og:title" content="([^"]*)"/));
+const homeTwTitle = decode(one(homeHtml, /<meta name="twitter:title" content="([^"]*)"/));
+if (homeTitle && homeOgTitle && homeOgTitle !== homeTitle) {
+  fail('/', `og:title "${homeOgTitle}" differs from <title>`);
+}
+if (homeTitle && homeTwTitle && homeTwTitle !== homeTitle) {
+  fail('/', 'twitter:title differs from <title>');
+}
+const notFoundPath = join(dir, '404.html');
+if (!existsSync(notFoundPath)) {
+  fail('404.html', 'missing branded 404 from build');
+} else {
+  // Content gates only — exclude from sitemap/canonical reconciliation above.
+  const html = readFileSync(notFoundPath, 'utf8');
+  const title = decode(one(html, /<title>([^<]*)<\/title>/));
+  const desc = decode(one(html, /<meta name="description" content="([^"]*)"/));
+  if (!title) fail('404.html', 'no <title>');
+  else if (title.length > 60) warn('404.html', `title is ${title.length} chars (search results cut at ~60)`);
+  if (!desc) fail('404.html', 'no meta description');
+  else if (desc.length < 70 || desc.length > 160) fail('404.html', `description is ${desc.length} chars (want 70–160)`);
+  if (!/<html lang="[^"]+"/.test(html)) fail('404.html', 'no <html lang>');
+  const h1s = (html.match(/<h1[\s>]/g) ?? []).length;
+  if (h1s !== 1) fail('404.html', `${h1s} <h1> elements (want 1)`);
+  const text = html.replace(/<style[\s\S]*?<\/style>/g, '').replace(/<script(?! type="application\/ld)[\s\S]*?<\/script>/g, '');
+  for (const [re, label] of BANNED) if (re.test(text)) fail('404.html', `contains ${label}`);
+}
+
+for (const file of pages) {
+  const page = '/' + relative(dir, file).replace(/index\.html$/, '');
+  const html = readFileSync(file, 'utf8');
+  const scripts = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
+  let sawOrg = false;
+  let sawSite = false;
+  for (const m of scripts) {
+    let data;
+    try { data = JSON.parse(m[1]); } catch { continue; }
+    const nodes = data['@graph'] ?? (Array.isArray(data) ? data : [data]);
+    for (const n of nodes) {
+      const types = Array.isArray(n['@type']) ? n['@type'] : [n['@type']];
+      if (types.includes('EducationalOrganization') || types.includes('Organization')) {
+        sawOrg = true;
+        if (n.name !== 'Young AI Engineers Lab') {
+          fail(page, `Organization name is "${n.name}", want "Young AI Engineers Lab"`);
+        }
+      }
+      if (types.includes('WebSite')) sawSite = true;
+    }
+  }
+  if (!sawOrg) fail(page, 'JSON-LD missing Organization / EducationalOrganization');
+  if (!sawSite) fail(page, 'JSON-LD missing WebSite');
+}
 
 for (const w of warnings) console.log(`warn  ${w}`);
 for (const e of errors) console.log(`FAIL  ${e}`);
