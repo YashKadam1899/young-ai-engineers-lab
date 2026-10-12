@@ -1,0 +1,20 @@
+scripts/seo-check.mjs
+  h_492abb7d337648 133,161-162
+src/layouts/BaseLayout.astro
+  h_492abb7d337648 31-32,34,64
+src/nav.ts
+  h_492abb7d337648 4
+src/pages/404.astro
+  h_492abb7d337648 10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4f1177a02143508b879f11068aabc7d29228989e",
+  "prompts": {},
+  "humans": {
+    "h_492abb7d337648": {
+      "author": "YashKadam1899 <50652438+YashKadam1899@users.noreply.github.com>"
+    }
+  }
+}
