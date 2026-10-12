@@ -1,0 +1,30 @@
+scripts/seo-check.mjs
+  h_492abb7d337648 68-70,133-187
+src/components/Footer.astro
+  h_492abb7d337648 2
+src/components/HomeHero.astro
+  h_492abb7d337648 10,23-25,28
+src/layouts/BaseLayout.astro
+  h_492abb7d337648 5-6,15,43,47,58-59,63,65
+src/nav.ts
+  h_492abb7d337648 2-4,21-24
+src/pages/404.astro
+  h_492abb7d337648 1-29
+src/pages/about.astro
+  h_492abb7d337648 3,73-75
+src/pages/index.astro
+  h_492abb7d337648 23
+src/seo.ts
+  h_492abb7d337648 22,25-26,31,93-105,117
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "521b13b4cd5c796e5f2af87ab69908695e72376d",
+  "prompts": {},
+  "humans": {
+    "h_492abb7d337648": {
+      "author": "YashKadam1899 <50652438+YashKadam1899@users.noreply.github.com>"
+    }
+  }
+}
