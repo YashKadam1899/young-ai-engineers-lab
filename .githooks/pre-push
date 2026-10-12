@@ -1,15 +1,13 @@
 #!/usr/bin/env bash
 # SEO gate for the PUBLIC repo (enable once per clone:
 #   git config core.hooksPath .githooks).
-# Every push to `main` (the live site) or `website-1.0` (the frozen /v1/
-# archive) is built exactly as the deploy workflow builds it and must pass
-# scripts/seo-check.mjs. Bypass only knowingly: git push --no-verify.
+# Every push to `main` (the live site) is built exactly as the deploy workflow
+# builds it and must pass scripts/seo-check.mjs. Bypass only knowingly: git push --no-verify.
 set -euo pipefail
 
 while read -r _local_ref local_sha remote_ref _remote_sha; do
   case "$remote_ref" in
-    refs/heads/main)        mode=live ;;
-    refs/heads/website-1.0) mode=archive ;;
+    refs/heads/main) ;;
     *) continue ;;
   esac
   [ "$local_sha" = "0000000000000000000000000000000000000000" ] && continue
@@ -19,17 +17,8 @@ while read -r _local_ref local_sha remote_ref _remote_sha; do
     exit 1
   fi
 
-  echo "pre-push: SEO check ($mode) for ${remote_ref#refs/heads/} @ ${local_sha:0:7}"
+  echo "pre-push: SEO check for ${remote_ref#refs/heads/} @ ${local_sha:0:7}"
   rm -rf dist
-  if [ "$mode" = live ]; then
-    npx astro build >/dev/null
-    node scripts/seo-check.mjs dist
-  else
-    # Same as the deploy workflow: the archive is built under /v1 against the
-    # live site's origin, read from main's astro.config.mjs.
-    site_url=$(git show main:astro.config.mjs | sed -n "s/^ *site: '\([^']*\)'.*/\1/p")
-    [ -n "$site_url" ] || { echo "pre-push: could not read site from main:astro.config.mjs" >&2; exit 1; }
-    PUBLIC_PREVIEW=1 npx astro build --base /v1 --site "$site_url" >/dev/null
-    node scripts/seo-check.mjs dist --archive
-  fi
+  npx astro build >/dev/null
+  node scripts/seo-check.mjs dist
 done

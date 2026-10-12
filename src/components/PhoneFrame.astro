@@ -1,0 +1,94 @@
+---
+// A generic phone, at every width: a thin navy bezel, a camera pill and a home
+// indicator, no brand, notch or buttons. Unlike DeviceFrame there is no monitor
+// and no media query: the portfolio page shows the same standard-proportion
+// phone on a 320 px handset and on a 1440 px desktop. The screen content goes
+// in the slot, so every text on it exists once.
+//
+// The phone's width is the --phone-w custom property (default 18.5rem), capped
+// at 100% of its parent so it never overflows a narrow viewport. The screen is
+// always 9 : 19.5, a standard modern phone, never elongated.
+//
+// Props:
+//   class        on the root, for placement from the parent
+//   screenClass  on the screen: its fill, its layout and its text
+//
+// The screen clips with overflow: clip. Any other value but visible makes it a
+// scroll container, and view timelines would bind to it rather than to the
+// page. No container-type on the screen either: inside a shrink-to-fit parent
+// it collapses the frame to zero width.
+//
+// The root is never aria-hidden; the owner decides what is read out, and the
+// chrome keeps itself out of the accessibility tree.
+interface Props {
+  class?: string;
+  screenClass?: string;
+}
+const { class: className, screenClass } = Astro.props;
+---
+<div class:list={['phone', className]}>
+  <div class="phone-bezel">
+    <span aria-hidden="true" class="phone-camera"></span>
+    <div class:list={['phone-screen', screenClass]}><slot /></div>
+    <span aria-hidden="true" class="phone-home"></span>
+  </div>
+</div>
+
+<style>
+  .phone {
+    position: relative;
+    /* Capped by the viewport's height as well as its width, so the whole phone
+       (and the carousel controls inside it) fits one short screen: the screen
+       is 19.5/9 of the width, plus the bezel and a sticky header's worth of
+       room. Never below 13rem, never wider than the parent. */
+    width: min(var(--phone-w, 18.5rem), max(13rem, calc((100dvh - 7rem) / 2.17)));
+    max-width: 100%;
+    margin-inline: auto;
+  }
+  .phone-bezel {
+    position: relative;
+    width: 100%;
+    padding: 0.375rem;
+    border-radius: 2rem;
+    background: var(--color-fg);
+    box-shadow: 0 0.75rem 2rem -1rem color-mix(in oklab, var(--color-fg) 45%, transparent);
+  }
+  /* Concentric corners: the bezel's radius less its padding. Status bar and
+     home bar room inside the screen, so the camera and the home indicator sit
+     over the screen's own fill, as on a real phone. */
+  .phone-screen {
+    position: relative;
+    overflow: clip;
+    aspect-ratio: 9 / 19.5;
+    /* Without this, Chrome grows an aspect-ratio box to fit taller content
+       instead of clipping it. */
+    min-height: 0;
+    padding-top: 1.75rem;
+    padding-bottom: 0.875rem;
+    border-radius: 1.625rem;
+  }
+  .phone-camera {
+    position: absolute;
+    z-index: 1;
+    top: 0.725rem;
+    left: 0;
+    right: 0;
+    width: 4.25rem;
+    height: 1.05rem;
+    margin-inline: auto;
+    border-radius: 9999px;
+    background: var(--color-fg);
+  }
+  .phone-home {
+    position: absolute;
+    z-index: 1;
+    bottom: 0.6875rem;
+    left: 0;
+    right: 0;
+    width: 33%;
+    height: 4px;
+    margin-inline: auto;
+    border-radius: 9999px;
+    background: color-mix(in oklab, var(--color-fg) 25%, transparent);
+  }
+</style>

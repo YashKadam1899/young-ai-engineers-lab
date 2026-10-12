@@ -3,6 +3,9 @@ import { NAV_LINKS as links } from '../nav';
 
 // Same base-joining rule as the header: hrefs are relative to Astro's `base`.
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+// Same trailing-slash-normalised comparison as the header.
+const here = Astro.url.pathname.replace(/\/?$/, '/');
+const current = (href: string) => (here === `${base}/${href}` ? 'page' : undefined);
 const year = new Date().getFullYear();
 ---
 <footer class="border-t border-line bg-surface-inverse">
@@ -11,7 +14,7 @@ const year = new Date().getFullYear();
       <ul class="-my-2.5 flex flex-col items-center sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-7">
         {links.map((link) => (
           <li>
-            <a href={`${base}/${link.href}`} class="flex min-h-11 min-w-11 items-center justify-center transition-colors hover:text-white">{link.label}</a>
+            <a href={`${base}/${link.href}`} aria-current={current(link.href)} class="flex min-h-11 min-w-11 items-center justify-center transition-colors hover:text-white aria-[current=page]:font-bold aria-[current=page]:text-white aria-[current=page]:underline aria-[current=page]:decoration-2 aria-[current=page]:underline-offset-8 aria-[current=page]:decoration-cta">{link.label}</a>
           </li>
         ))}
       </ul>

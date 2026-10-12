@@ -124,11 +124,19 @@
    motion; everyone else jumps. The scroll padding is in rem, like the
    pinned header it clears (61 px wide screens, 73 px phones at normal text
    size; both scale with text size), so anchored headings and focused
-   elements are never left under it, with a little air to spare. The header
-   grows to about 5.6rem where the brand wraps to two lines (narrow phones,
-   large text), so 6.5rem clears that too. */
+   elements are never left under it, with a little air to spare. The brand
+   wraps onto more lines only at the largest text sizes; measured header height
+   is about 3.8rem at 150% and 200% text (61 px at 16 px root), so 5.5rem clears
+   it with air to spare. */
 html {
-  scroll-padding-top: 6.5rem;
+  scroll-padding-top: 5.5rem;
+}
+
+/* Short landscape: the header is more compact (see Header.astro). */
+@media (max-height: 480px) {
+  html {
+    scroll-padding-top: 4rem;
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {

@@ -1,0 +1,85 @@
+---
+// Student AI Portfolio: one featured example entry in a phone beside its
+// anatomy (four questions), then pop-up example entries, then a closing band.
+// Everything here is an EXAMPLE; real entries will come from the founding cohort.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PhoneFrame from '../components/PhoneFrame.astro';
+import PortfolioCarousel from '../components/PortfolioCarousel.astro';
+import PortfolioQA from '../components/PortfolioQA.astro';
+import PortfolioDialog from '../components/PortfolioDialog.astro';
+import { anatomy, featured, examples } from '../content/portfolio';
+import { SIGNUP_FORM_URL } from '../emails';
+---
+<BaseLayout
+  beat="calm"
+  title="Student AI Portfolio: examples of what children build"
+  description="See how a child's AI project will be shown: what they made, how they tried to break it, what went wrong and what is next. Examples for now."
+>
+  <section class="bg-linear-to-b from-surface-tint to-surface">
+   <div class="max-w-content mx-auto px-gutter pt-section pb-6 sm:pb-10">
+    <h1 class="font-display text-h1 font-bold text-fg">This is how your child's work will be shown.</h1>
+    <p class="mt-2 max-w-prose text-fg-muted">
+      These are examples. The real entries will come from the founding cohort, in live, instructor-led online sessions.
+    </p>
+   </div>
+  </section>
+
+  <section class="max-w-content mx-auto px-gutter py-section">
+    <div class="grid grid-cols-1 gap-y-4 lg:grid-cols-2 lg:gap-x-14 lg:gap-y-0">
+      <div class="lg:col-start-1 lg:row-start-1" data-reveal>
+        <div class="mx-auto mb-1 max-w-[24rem] text-center lg:mb-4 lg:max-w-[18.5rem] lg:text-left">
+          <span class="inline-block rounded-full bg-surface-tint px-3 py-1 text-xs font-semibold uppercase tracking-wider text-accent">Example</span>
+          <h2 class="mt-1.5 font-display text-h3 font-semibold text-fg lg:mt-2">{featured.title}</h2>
+          <p class="mt-1 text-small text-fg-muted">{featured.summary}</p>
+          <ul class="mt-2 flex flex-wrap justify-center gap-2 lg:justify-start">
+            {featured.tags.map((t) => <li class="rounded-full border border-line px-2.5 py-0.5 text-xs text-fg-secondary">{t}</li>)}
+          </ul>
+        </div>
+      </div>
+      <div class="lg:col-start-1 lg:row-start-2" data-reveal>
+        <PhoneFrame screenClass="bg-surface-raised">
+          <PortfolioCarousel slides={featured.slides} label={`Example entry: ${featured.title}`} />
+        </PhoneFrame>
+      </div>
+      {/* Beside the phone screen, vertically centred on it (not on the caption above it). */}
+      <div class="mt-6 lg:mt-0 lg:col-start-2 lg:row-start-2 lg:self-center" data-reveal>
+        <h2 class="font-display text-h2 font-bold text-fg">{anatomy.heading}</h2>
+        <p class="mt-3 max-w-prose text-fg-muted">{anatomy.intro}</p>
+        <div class="mt-6">
+          <PortfolioQA qa={featured.qa} group="featured" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="max-w-content mx-auto px-gutter pb-section">
+    <h2 class="font-display text-h2 font-bold text-fg">More projects</h2>
+    <p class="mt-3 max-w-prose text-fg-muted">These are placeholders showing the kinds of projects that will appear here. Tap one to open it.</p>
+    <div class="mt-stack grid grid-cols-1 gap-grid sm:grid-cols-2" data-reveal-stagger>
+      {examples.map((e) => <PortfolioDialog entry={e} />)}
+    </div>
+  </section>
+
+  <section class="bg-surface">
+    <div class="max-w-content mx-auto px-gutter pb-section pt-4">
+      <div data-reveal class="relative overflow-hidden rounded-2xl bg-surface-inverse px-5 py-section text-center text-white sm:px-10 lg:px-14">
+        <div aria-hidden="true" class="pointer-events-none absolute -top-16 -right-10 h-56 w-56 rounded-full bg-glow-inverse/30 blur-3xl"></div>
+        <div aria-hidden="true" class="pointer-events-none absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-cta/20 blur-3xl"></div>
+        <div class="relative">
+          <h2 class="font-display text-h2 font-bold">Help build the first real entries</h2>
+          <p class="mx-auto mt-4 max-w-prose text-fg-inverse/80">
+            The founding cohort will create the first real entries, in live, instructor-led online sessions.
+          </p>
+          <a
+            href={SIGNUP_FORM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mt-8 inline-block w-full rounded-full bg-cta px-6 py-3.5 font-semibold text-cta-fg shadow-lg shadow-cta/25 transition-[translate,scale,background-color,box-shadow] duration-200 ease-(--motion-ease-out) hover:-translate-y-0.5 hover:bg-cta-hover active:translate-y-0 active:scale-[0.97] sm:w-auto"
+          >
+            Sign up for the Winter Batch<span class="sr-only"> (opens the sign-up form in a new tab)</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,382 @@
+---
+// A swipeable carousel of portfolio slides (see Slide in content/portfolio.ts).
+// Used inside the phone screen on the Portfolio page and again, later, inside
+// the example dialog, so it is self-contained per instance and fills whatever
+// it is placed in (h-full, min-h-0 flex column).
+//
+// Without JS the track is still a scroll-snap strip you can swipe, and every
+// slide is readable. The Prev/Next/dot controls and the "Slide n of N" live
+// region are hidden until the script marks the root data-carousel-ready, so
+// there are never dead buttons. Slides scroll vertically inside themselves, so
+// large text is never clipped by the phone screen. No autoplay, ever.
+//
+// To go back to slide 1 (e.g. when a dialog reopens), dispatch a
+// 'carousel:reset' event on the root: root.dispatchEvent(new Event('carousel:reset')).
+import type { Slide } from '../content/portfolio';
+
+interface Props {
+  slides: Slide[];
+  label: string;
+  compact?: boolean;
+}
+
+const { slides, label, compact = false } = Astro.props;
+const total = slides.length;
+
+// Plain-list lines that start "Pass:", "Next:" and so on get their lead word set
+// apart, so the meaning never rests on colour alone.
+function split(text: string) {
+  const m = text.match(/^([A-Z][a-z]+):\s+(.*)$/s);
+  return m ? { lead: m[1], rest: m[2] } : { lead: '', rest: text };
+}
+const pad = compact ? 'px-3 py-3' : 'px-4 py-4 sm:px-5';
+// Featured carousel only: slides with few lines get a size step up (text and
+// spacing) so a sparse slide fills its screen on purpose instead of looking
+// empty. The pop-up (compact) keeps the base size.
+function tier(n: number) {
+  if (compact || n > 5) return { t: 'text-small', title: 'text-h3', gap: 'gap-2', pad: 'px-3 py-2', mt: 'mt-3' };
+  // The body size grows with the viewport, so on wide screens (same phone size) 4 lines step back to small.
+  if (n === 4) return { t: 'text-body lg:text-small', title: 'text-h3', gap: 'gap-3 lg:gap-3.5', pad: 'px-3.5 py-2.5 lg:py-3', mt: 'mt-4' };
+  return { t: 'text-h3 lg:text-body', title: 'text-h2', gap: 'gap-5 lg:gap-4', pad: 'px-4 py-5 lg:py-4', mt: 'mt-6 lg:mt-5' };
+}
+---
+<div
+  role="group"
+  aria-roledescription="carousel"
+  aria-label={label}
+  data-carousel
+  class="flex h-full min-h-0 w-full flex-col text-left text-fg"
+>
+  <div class="carousel-viewport relative flex min-h-0 flex-1 flex-col">
+  <div
+    data-carousel-track
+    class="carousel-track flex min-h-0 flex-1 overflow-x-auto overflow-y-hidden"
+  >
+    {slides.map((slide, i) => { const z = tier(slide.lines.length); return (
+      <div
+        role="group"
+        aria-roledescription="slide"
+        aria-label={`${i + 1} of ${total}`}
+        tabindex="0"
+        class={`carousel-slide min-w-full shrink-0 [overflow-wrap:anywhere] basis-full snap-start snap-always flex flex-col overflow-y-auto ${pad}`}
+      >
+        <div class="carousel-body">
+        <p class="sr-only">{slide.alt}</p>
+        <p class={`font-display font-bold text-fg ${compact ? 'text-small' : z.title}`}>{slide.title}</p>
+
+        {slide.kind === 'chat' ? (
+          <ol class={`${z.mt} m-0 flex list-none flex-col ${z.gap} p-0`}>
+            {slide.lines.map((m) =>
+              m.from === 'student' ? (
+                <li class={`max-w-[85%] self-end rounded-2xl rounded-br-md bg-accent ${z.pad} ${z.t} text-accent-fg`}>
+                  <span class="sr-only">Student: </span>{m.text}
+                </li>
+              ) : (
+                <li class={`max-w-[88%] self-start rounded-2xl rounded-bl-md border border-line bg-surface ${z.pad} ${z.t} text-fg`}>
+                  <span class="sr-only">Bot: </span>{m.text}
+                </li>
+              ),
+            )}
+          </ol>
+        ) : (
+          <ul class={`${z.mt} m-0 flex list-none flex-col ${z.gap} p-0`}>
+            {slide.lines.map((l) => {
+              const { lead, rest } = split(l.text);
+              const fail = lead === 'Fail';
+              return (
+                <li
+                  class={`flex items-start gap-2 rounded-lg border ${z.pad} ${z.t} text-fg ${
+                    fail ? 'border-fg border-dashed bg-surface' : 'border-line bg-surface'
+                  }`}
+                >
+                  {lead && (
+                    <span aria-hidden="true" class="shrink-0 rounded-full bg-surface-tint px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-fg">
+                      {lead === 'Pass' && <span aria-hidden="true">{'✓ '}</span>}
+                      {fail && <span aria-hidden="true">{'✗ '}</span>}
+                      {lead}
+                    </span>
+                  )}
+                  <span class="min-w-0">{lead ? <span class="sr-only">{lead}: </span> : null}{rest}</span>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+        </div>
+      </div>
+    ); })}
+  </div>
+  <div data-carousel-cue aria-hidden="true" class="carousel-cue" hidden>
+    <svg viewBox="0 0 20 20" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 5 5 5-5" /></svg>
+  </div>
+  </div>
+
+  <div data-carousel-controls hidden class="flex shrink-0 items-center justify-between gap-1 border-t border-line px-2">
+    <button
+      type="button"
+      data-carousel-prev
+      aria-label="Previous slide"
+      class="grid min-h-11 min-w-11 place-items-center rounded-full text-fg aria-disabled:cursor-default aria-disabled:opacity-40"
+    >
+      <svg aria-hidden="true" viewBox="0 0 20 20" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 4 6.5 10l6 6" /></svg>
+    </button>
+    <p data-carousel-count aria-hidden="true" class="m-0 text-small font-semibold text-fg" hidden></p>
+    <div data-carousel-dots class="flex items-center justify-center">
+      {slides.map((s, i) => (
+        <button
+          type="button"
+          data-carousel-dot
+          aria-label={`Go to slide ${i + 1} of ${total}: ${s.title}`}
+          class="carousel-dot grid min-h-11 min-w-9 place-items-center rounded-full"
+        >
+          <span class="carousel-dot-ring col-start-1 row-start-1 block h-2.5 w-2.5 rounded-full border-2 border-fg"></span>
+          <span class="carousel-dot-fill col-start-1 row-start-1 block h-2.5 w-6 rounded-full bg-fg"></span>
+        </button>
+      ))}
+    </div>
+    <button
+      type="button"
+      data-carousel-next
+      aria-label="Next slide"
+      class="grid min-h-11 min-w-11 place-items-center rounded-full text-fg aria-disabled:cursor-default aria-disabled:opacity-40"
+    >
+      <svg aria-hidden="true" viewBox="0 0 20 20" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4 6 6-6 6" /></svg>
+    </button>
+  </div>
+  <p data-carousel-status class="sr-only" aria-live="polite" aria-atomic="true"></p>
+</div>
+
+<style>
+  /* Swipe and scroll still work; only the scrollbar is hidden. */
+  .carousel-track {
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+  .carousel-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Without JS there are no controls, so the slides stack and the strip scrolls
+     down instead of across: every slide is reachable and readable. Gated on
+     scripting: none so JS-on browsers never show it, not even before the script runs. */
+  @media (scripting: none) {
+    [data-carousel] .carousel-track {
+      flex-direction: column;
+      overflow-x: hidden;
+      overflow-y: auto;
+      scroll-snap-type: none;
+    }
+    [data-carousel] .carousel-slide {
+      min-width: 0;
+      flex-basis: auto;
+      overflow-y: visible;
+      border-bottom: 1px solid var(--color-line);
+    }
+    [data-carousel] .carousel-slide:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  /* A slide shorter than the screen centres its content; a taller one starts at
+     the top and scrolls (auto margins collapse to 0 on overflow). */
+  .carousel-body {
+    margin-block: auto;
+  }
+  .carousel-slide:focus-visible {
+    outline: 3px solid var(--color-focus, var(--color-fg));
+    outline-offset: -3px;
+  }
+
+  /* Scroll cue: a fade (and a chevron) over the bottom of the slide area while
+     the active slide has more below. Decorative; the slide itself is a
+     keyboard-scrollable region. */
+  .carousel-cue {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 2.75rem;
+    padding-bottom: 0.125rem;
+    color: var(--color-fg);
+    background: linear-gradient(to top, var(--carousel-fade, var(--color-surface-raised)) 30%, transparent);
+    pointer-events: none;
+  }
+  .carousel-cue[hidden] {
+    display: none;
+  }
+
+  /* Dots: a fixed-width slot each; the filled pill grows by transform only. */
+  .carousel-dot-fill {
+    transform: scaleX(0.4167);
+    opacity: 0;
+    transition: transform 200ms var(--motion-ease-out), opacity 200ms var(--motion-ease-out);
+  }
+  .carousel-dot[aria-current='true'] .carousel-dot-fill {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .carousel-dot-fill {
+      transition: none;
+    }
+  }
+
+  /* Tight row: the dot slots shrink from 36px to 28px wide (still 44px tall). */
+  [data-carousel][data-tight-controls] .carousel-dot {
+    min-width: 1.75rem;
+  }
+
+  /* Narrow or enlarged text: the dots give way to an "n / N" count. */
+  [data-carousel][data-compact-controls] [data-carousel-dots] {
+    display: none;
+  }
+</style>
+
+<script>
+  // One setup per carousel root, so any number of instances can share a page.
+  for (const root of document.querySelectorAll<HTMLElement>('[data-carousel]')) {
+    const track = root.querySelector<HTMLElement>('[data-carousel-track]');
+    const slides = track ? Array.from(track.children) as HTMLElement[] : [];
+    const prev = root.querySelector<HTMLButtonElement>('[data-carousel-prev]');
+    const next = root.querySelector<HTMLButtonElement>('[data-carousel-next]');
+    const dots = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-carousel-dot]'));
+    const status = root.querySelector<HTMLElement>('[data-carousel-status]');
+    const controls = root.querySelector<HTMLElement>('[data-carousel-controls]');
+    const count = root.querySelector<HTMLElement>('[data-carousel-count]');
+    const cue = root.querySelector<HTMLElement>('[data-carousel-cue]');
+    if (!track || !prev || !next || slides.length === 0) continue;
+
+    const total = slides.length;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let current = -1;
+    let target = -1; // where the last request is heading; -1 once the scroll has settled
+    let announced = 0;
+    let raf = 0;
+    let settleTimer = 0;
+
+    const clamp = (i: number) => Math.max(0, Math.min(total - 1, i));
+    // The slide a new request counts from: the in-flight target, else where we are.
+    const base = () => (target >= 0 ? target : Math.max(current, 0));
+
+    const updateCue = () => {
+      if (!cue) return;
+      const s = slides[Math.max(current, 0)];
+      const more = s.scrollHeight - s.clientHeight - s.scrollTop > 2;
+      cue.hidden = !more;
+    };
+
+    const settle = () => {
+      settleTimer = 0;
+      target = -1;
+      if (current >= 0 && current !== announced) {
+        announced = current;
+        if (status) status.textContent = `Slide ${current + 1} of ${total}`;
+      }
+    };
+    const armSettle = () => {
+      clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(settle, 200);
+    };
+
+    const goTo = (i: number, instant = false) => {
+      const n = clamp(i);
+      target = n;
+      track.scrollTo({ left: n * track.clientWidth, behavior: instant || reduce.matches ? 'auto' : 'smooth' });
+      armSettle();
+    };
+
+    const fitControls = () => {
+      if (!controls || controls.hidden) return;
+      root.removeAttribute('data-compact-controls');
+      root.removeAttribute('data-tight-controls');
+      if (count) count.hidden = true;
+      const over = () => controls.scrollWidth > controls.clientWidth + 1;
+      if (!over()) return;
+      root.setAttribute('data-tight-controls', '');
+      if (!over()) return;
+      root.removeAttribute('data-tight-controls');
+      root.setAttribute('data-compact-controls', '');
+      if (count) count.hidden = false;
+    };
+
+    const sync = () => {
+      const i = clamp(Math.round(track.scrollLeft / (track.clientWidth || 1)));
+      if (i === current) return;
+      current = i;
+      slides.forEach((s, k) => s.setAttribute('tabindex', k === i ? '0' : '-1'));
+      dots.forEach((d, k) => {
+        if (k === i) d.setAttribute('aria-current', 'true');
+        else d.removeAttribute('aria-current');
+      });
+      // aria-disabled, not disabled: a disabled button drops keyboard focus to <body>.
+      prev.setAttribute('aria-disabled', String(i === 0));
+      next.setAttribute('aria-disabled', String(i === total - 1));
+      if (count) count.textContent = `${i + 1} / ${total}`;
+      updateCue();
+    };
+
+    track.addEventListener(
+      'scroll',
+      () => {
+        armSettle();
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          raf = 0;
+          sync();
+        });
+      },
+      { passive: true },
+    );
+    for (const s of slides) s.addEventListener('scroll', updateCue, { passive: true });
+
+    prev.addEventListener('click', () => {
+      if (base() > 0) goTo(base() - 1);
+    });
+    next.addEventListener('click', () => {
+      if (base() < total - 1) goTo(base() + 1);
+    });
+    dots.forEach((d, k) => d.addEventListener('click', () => goTo(k)));
+
+    // Arrow, Home and End keys on a focused slide (the event bubbles up).
+    track.addEventListener('keydown', (e) => {
+      if (e.target !== track && !slides.includes(e.target as HTMLElement)) return;
+      let n: number;
+      if (e.key === 'ArrowRight') n = base() + 1;
+      else if (e.key === 'ArrowLeft') n = base() - 1;
+      else if (e.key === 'Home') n = 0;
+      else if (e.key === 'End') n = total - 1;
+      else return;
+      e.preventDefault();
+      goTo(n);
+      slides[clamp(n)].focus({ preventScroll: true });
+    });
+
+    // Back to slide 1 without animation (the dialog sends this on reopen).
+    root.addEventListener('carousel:reset', () => {
+      track.scrollTo({ left: 0, behavior: 'auto' });
+      slides.forEach((s) => (s.scrollTop = 0));
+      clearTimeout(settleTimer);
+      target = -1;
+      announced = 0;
+      if (status) status.textContent = '';
+      current = -1;
+      sync();
+    });
+
+    const onResize = () => {
+      track.scrollLeft = Math.max(current, 0) * track.clientWidth;
+      fitControls();
+      updateCue();
+    };
+    window.addEventListener('resize', onResize);
+    if ('ResizeObserver' in window) new ResizeObserver(onResize).observe(root);
+
+    root.setAttribute('data-carousel-ready', '');
+    controls?.removeAttribute('hidden');
+    sync();
+    fitControls();
+  }
+</script>

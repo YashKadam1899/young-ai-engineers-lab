@@ -149,25 +149,7 @@ export function faqPageSchema(faqs: ReadonlyArray<{ q: string; a: string }>) {
   };
 }
 
-/**
- * Archive builds: a frozen older version served beside the live site, e.g. 1.0
- * at /v1/. Set PUBLIC_PREVIEW=1 at build time; see src/components/RobotsMeta.astro
- * and scripts/seo-check.mjs --archive. (Named for its first use, the 2.0 preview.)
- */
-export const isPreviewBuild = import.meta.env.PUBLIC_PREVIEW === '1';
-
-/**
- * The page's canonical URL. Normally the page's own URL. In a preview build it
- * is the matching page of the live site: the path with the final segment of
- * `base` removed, e.g. /young-ai-engineers-lab/v1/about/ -> /young-ai-engineers-lab/about/.
- */
+/** The page's canonical URL: the page's own URL on the configured site. */
 export function canonicalUrl(site: URL | undefined, pageUrl: URL): string {
-  let path = pageUrl.pathname;
-  if (isPreviewBuild) {
-    const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-    const liveBase = base.replace(/\/[^/]+$/, '');
-    if (base && path.startsWith(base)) path = liveBase + path.slice(base.length);
-    if (!path.startsWith('/')) path = `/${path}`;
-  }
-  return new URL(path, site ?? pageUrl.origin).href;
+  return new URL(pageUrl.pathname, site ?? pageUrl.origin).href;
 }

@@ -1,5 +1,5 @@
 /*
- * The site's five pages, in nav order. Shared by the header and the footer so
+ * The site's six pages, in nav order. Shared by the header and the footer so
  * the two can never drift apart.
  *
  * `href` values are relative to Astro's configured `base` and must always be
@@ -15,6 +15,7 @@ export const NAV_LINKS = [
   { href: '', label: 'Home' },
   { href: 'about/', label: 'About' },
   { href: 'our-team/', label: 'Our Team' },
+  { href: 'portfolio/', label: 'Portfolio' },
   { href: 'contact/', label: 'Contact Us' },
   { href: 'for-investors/', label: 'For Investors' },
 ] as const;
