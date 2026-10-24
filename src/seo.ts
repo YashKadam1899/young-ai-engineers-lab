@@ -2,7 +2,7 @@
  * Shared SEO constants and JSON-LD builders.
  *
  * SINGLE POINT OF CHANGE for the deployed origin: `site` in astro.config.mjs.
- * Nothing in this file (or in any template) hardcodes a hostname — every
+ * Nothing in this file (or in any template) hardcodes a hostname - every
  * absolute URL is derived from `Astro.site` and the configured `base`, which
  * Astro folds into `Astro.url.pathname`. Moving to a custom domain is a
  * one-line edit to `site` (plus dropping `base` if the site lands at a
@@ -10,7 +10,7 @@
  *
  * Everything asserted here must be true and must already be visible on the
  * site. Deliberately absent: aggregateRating, review, foundingDate,
- * numberOfStudents, and any price — all of those would be fabricated, and
+ * numberOfStudents, and any price - all of those would be fabricated, and
  * fabricated structured data is a manual action risk, not just a quality
  * problem.
  *
@@ -20,15 +20,17 @@
 import { EMAILS } from './emails';
 
 export const SITE_NAME = 'Young AI Engineers Lab';
-/** Used for og:site_name and the <title> suffix — the short, spoken form. */
+/** Used for og:site_name and the <title> suffix - the short, spoken form. */
 export const SITE_SHORT_NAME = 'Young AI Engineers Lab';
 export const BRAND_SENTENCE =
-  'Young AI Engineers Lab is a live, instructor-led online AI programme for 10 to 15 year-olds in India, taught in English.';
+  'Young AI Engineers Lab teaches 10 to 15 year-olds in India how AI works and how to build with it: live online for parent-sponsored cohorts for their children, and on campus for schools. Taught in English.';
+/** Company LinkedIn page - also linked from the footer. Trailing slash matches the public URL. */
+export const COMPANY_LINKEDIN_URL = 'https://www.linkedin.com/company/young-ai-engineers-lab/';
 export const SITE_LOCALE = 'en_IN';
-/** 1200x630 PNG in public/ — see README note on replacing it with a designed asset. */
+/** 1200x630 PNG in public/ - see README note on replacing it with a designed asset. */
 export const OG_IMAGE_PATH = 'og-image.png';
 export const OG_IMAGE_ALT =
-  'Young AI Engineers Lab — turning India’s future workforce from AI consumers into AI developers';
+  'Young AI Engineers Lab - turning India’s future workforce from AI consumers into AI developers';
 
 /**
  * Resolves a path against the deployed origin, preserving Astro's configured
@@ -50,9 +52,10 @@ export function organizationSchema(site: URL | undefined) {
     name: SITE_NAME,
     url: home,
     description:
-      "An Indian programme that teaches 10–15 year-olds how AI actually works and how to build with it, alongside what schools across CBSE, ICSE and state boards are now starting to teach about AI. Taught in English.",
+      'An Indian programme that teaches 10–15 year-olds how AI actually works and how to build with it, alongside what schools across CBSE, ICSE and state boards are now starting to teach about AI. Live online for parent-sponsored cohorts for their children; on campus for schools. Taught in English.',
     areaServed: { '@type': 'Country', name: 'India' },
     knowsLanguage: ['en'],
+    sameAs: [COMPANY_LINKEDIN_URL],
     // Mirrors the two founders shown on /our-team/, including the LinkedIn
     // profiles published there. sameAs is how a search engine ties the person
     // to an identity it already knows.
@@ -114,10 +117,10 @@ export function courseSchema(site: URL | undefined) {
   return {
     '@type': 'Course',
     '@id': `${home}#course`,
-    name: 'Live online AI lab for ages 10–15',
+    name: 'AI lab for ages 10–15',
     url: `${home}#how-it-works`,
     description:
-      "A live online AI lab for students aged roughly 10 to 15, with depth scaling by tier. The main program runs 12 sessions over 6 weeks across three tiers — Beginner, Intermediate and Practitioner — taught in English. A separate, selective 8-session Expert tier is offered by invitation to students from the main program, and is not separately registrable. Designed as a companion to the AI curriculum Indian schools are now introducing, across CBSE, ICSE and state boards.",
+      'An AI lab for students aged roughly 10 to 15, with depth scaling by tier. Parent-sponsored cohorts join live online; schools run the same curriculum on campus. The main program runs 12 sessions over 6 weeks across three tiers (Beginner, Intermediate and Practitioner), taught in English. A separate, selective 8-session Expert tier is offered by invitation to students from the main program, and is not separately registrable. Designed as a companion to the AI curriculum Indian schools are now introducing, across CBSE, ICSE and state boards.',
     provider: { '@id': `${home}#organization` },
     inLanguage: ['en'],
     typicalAgeRange: '10-15',
@@ -132,19 +135,39 @@ export function courseSchema(site: URL | undefined) {
     hasCourseInstance: [
       {
         '@type': 'CourseInstance',
-        name: 'Main program — Beginner, Intermediate and Practitioner tiers',
+        name: 'Main program - Beginner, Intermediate and Practitioner tiers (live online)',
         description:
-          '12 live sessions over 6 weeks, in three tiers of four sessions. This is the stage students enrol in.',
+          '12 live online sessions over 6 weeks, in three tiers of four sessions. This is the parent-sponsored cohort path.',
         courseMode: 'Online',
       },
       {
         '@type': 'CourseInstance',
-        name: 'Expert tier — capstone stage',
+        name: 'Main program - on campus for schools',
+        description:
+          'The same 12-session main program delivered on campus when a school engages. Free one-hour teacher and student seminars are offered first.',
+        courseMode: 'Onsite',
+      },
+      {
+        '@type': 'CourseInstance',
+        name: 'Expert tier - capstone stage',
         description:
           'A separate 8-session stage built around one capstone project and a live online Demo Day that parents join by link. Offered by invitation to students from the main program; it cannot be registered for directly.',
         courseMode: 'Online',
       },
     ],
+  };
+}
+
+/** BreadcrumbList for secondary pages (e.g. /faq/). */
+export function breadcrumbListSchema(items: ReadonlyArray<{ name: string; url: string }>) {
+  return {
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: item.name,
+      item: item.url,
+    })),
   };
 }
 

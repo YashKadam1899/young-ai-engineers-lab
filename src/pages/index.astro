@@ -14,14 +14,14 @@ import HomeSchools from '../components/HomeSchools.astro';
 import HomeFaq from '../components/HomeFaq.astro';
 import HomeClosingCta from '../components/HomeClosingCta.astro';
 
-// FAQ schema is built from the same `faqs` array that HomeFaq.astro renders —
-// both import src/content/faqs.ts — so the structured data always matches the
+// FAQ schema is built from the same `faqs` array that HomeFaq.astro renders  - 
+// both import src/content/faqs.ts - so the structured data always matches the
 // visible Q&A exactly. Never let these diverge into two arrays.
 const schema = [courseSchema(Astro.site), faqPageSchema(faqs)];
 ---
 <BaseLayout
   title="AI Course for Ages 10–15 in India · Young AI Engineers Lab"
-  description="A live online AI lab for 10–15 year-olds in India: 12 sessions over 6 weeks, taught in English, alongside what schools are now starting to teach about AI."
+  description="AI lab for 10–15 year-olds in India: live online for parent-sponsored cohorts for their children; on campus for schools. Taught in English."
   schema={schema}
 >
   <HomeHero />

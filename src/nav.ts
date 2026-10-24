@@ -4,7 +4,7 @@
  * without sitting in the parent-facing main nav.
  *
  * `href` values are relative to Astro's configured `base` and must always be
- * joined with it (see Header.astro / Footer.astro) — hardcoding '/about' style
+ * joined with it (see Header.astro / Footer.astro) - hardcoding '/about' style
  * paths 404s on the GitHub Pages project-site deploy, which serves from a
  * subpath.
  *
@@ -22,5 +22,6 @@ export const NAV_LINKS = [
 
 export const FOOTER_LINKS = [
   ...NAV_LINKS,
+  { href: 'faq/', label: 'FAQ' },
   { href: 'for-investors/', label: 'For Investors' },
 ] as const;

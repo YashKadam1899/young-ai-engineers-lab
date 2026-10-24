@@ -1,7 +1,7 @@
 <!--
   Source for public/og-image.png (1200x630 Open Graph / Twitter share card).
   Interim asset: system Helvetica, not the brand fonts (Bricolage Grotesque /
-  Plus Jakarta Sans) — a designer should replace it. Regenerate the PNG with
+  Plus Jakarta Sans) - a designer should replace it. Regenerate the PNG with
   the sharp copy Astro already installs:
 
     node -e "require(\"sharp\")(\"src/assets/og-image.svg\").png().flatten({background:\"#faf6ec\"}).toFile(\"public/og-image.png\")"

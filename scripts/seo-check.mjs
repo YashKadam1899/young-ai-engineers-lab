@@ -52,7 +52,7 @@ const one = (html, re) => html.match(re)?.[1];
 const decode = (s) => s?.replace(/&amp;/g, '&').replace(/&#39;/g, "'").replace(/&quot;/g, '"');
 
 if (!existsSync(join(dir, 'index.html'))) {
-  console.error(`seo-check: no ${dir}/index.html — build first.`);
+  console.error(`seo-check: no ${dir}/index.html - build first.`);
   process.exit(1);
 }
 
@@ -145,7 +145,7 @@ const notFoundPath = join(dir, '404.html');
 if (!existsSync(notFoundPath)) {
   fail('404.html', 'missing branded 404 from build');
 } else {
-  // Content gates only — exclude from sitemap/canonical reconciliation above.
+  // Content gates only - exclude from sitemap/canonical reconciliation above.
   const html = readFileSync(notFoundPath, 'utf8');
   const title = decode(one(html, /<title>([^<]*)<\/title>/));
   const desc = decode(one(html, /<meta name="description" content="([^"]*)"/));

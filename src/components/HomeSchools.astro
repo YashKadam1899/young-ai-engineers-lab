@@ -1,18 +1,25 @@
 ---
-// Homepage section 8 of 10: a compact note on school and sponsor partnerships.
-// Partnerships are planned after the founding cohort. Keep this to one short
-// note and a way to hear when they open: no formats, funding or seats.
+// Homepage section 8 of 10: free on-campus seminars for schools (#for-schools).
+// Labs on campus come when a school engages; this section does not invent
+// partnerships, sandbox, CPD, or an on-campus Demo Day.
 import { EMAILS, mailto } from '../emails';
 ---
-<section data-beat="building" class="bg-surface">
+<section data-beat="building" id="for-schools" class="bg-surface">
   <div class="max-w-content mx-auto px-gutter py-section">
     <div class="rounded-2xl border border-line bg-surface-raised p-6 shadow-sm sm:p-8" data-reveal>
-      <p class="text-xs font-semibold uppercase tracking-wider text-accent">Schools and sponsors</p>
-      <h2 class="mt-3 font-display text-h2 font-bold text-fg">Partnerships come after our founding cohort</h2>
+      <p class="text-xs font-semibold uppercase tracking-wider text-accent">For schools</p>
+      <h2 class="mt-3 font-display text-h2 font-bold text-fg">Free on-campus seminars, then labs on campus</h2>
       <p class="mt-3 max-w-prose text-fg-muted">
-        School and sponsor partnerships are planned after the founding cohort. When schools are onboarded, our live online sessions will run for the classroom. If you would like to hear when partnerships open, send us a note at{' '}
+        We offer two free one-hour seminars on your campus: one for teachers and one for students. When a school is ready for a full lab, sessions run on campus with the same curriculum parent-sponsored cohorts take live online, or customize as per needs after consultations.
+      </p>
+      <ul class="mt-5 max-w-prose list-disc space-y-2 pl-5 text-fg-muted">
+        <li>Teacher seminar: what AI is doing in the classroom, and how to spot confident wrong answers.</li>
+        <li>Student seminar: a hands-on taste of prompting and checking an AI's output.</li>
+      </ul>
+      <p class="mt-5 max-w-prose text-fg-muted">
+        Book a visit at{' '}
         <a
-          href={mailto(EMAILS.partner, 'School or sponsor interest')}
+          href={mailto(EMAILS.partner, 'School seminar booking')}
           class="font-semibold wrap-anywhere text-accent underline decoration-link-underline decoration-2 underline-offset-4 hover:text-accent-strong"
         >{EMAILS.partner}</a>.
       </p>
